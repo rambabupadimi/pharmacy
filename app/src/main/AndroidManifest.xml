@@ -50,40 +50,74 @@
         </activity>
         <activity
             android:name=".pharmacy.PharmacyRegistration"
-            android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".SignupOrLoginActivity" />
-        <activity android:name=".login.AppSettings_new" />
-        <activity android:name=".pharmacy.PharmacyRegistrationTwo" />
-        <activity android:name=".pharmacy.PharmacyProcessing" />
+            android:windowSoftInputMode="stateHidden"
+           android:screenOrientation="portrait"/>
+        <activity android:name=".SignupOrLoginActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".login.AppSettings_new"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".pharmacy.PharmacyRegistrationTwo"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".pharmacy.PharmacyProcessing"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".pharmacy.PharmacyRunningListWithNavigation"
             android:label="@string/title_activity_pharmacy_running_list_with_navigation"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".agent.AgentRegistration"
-            android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".agent.AgentRegistrationTwo" />
-        <activity android:name=".agent.AgentProcessing" />
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".agent.AgentRegistrationTwo"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".agent.AgentProcessing"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".agent.AgentPharmacyListWithNavigation"
             android:label="@string/title_activity_agent_pharmacy_list_with_navigation"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".agent.AgentRunningList" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".agent.AgentRunningList"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".agent.AddNewPharmacyStepOne"
-            android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".agent.AddNewPharmacyStepTwo" />
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait" />
+        <activity android:name=".agent.AddNewPharmacyStepTwo"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".PickLocationActivity" />
-        <activity android:name=".db.AndroidDatabaseManager" />
-        <activity android:name=".pharmacy.PharmacyProfileView" />
-        <activity android:name=".agent.AgentProfieView" />
+        <activity android:name=".PickLocationActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".db.AndroidDatabaseManager"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".pharmacy.PharmacyProfileView"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".agent.AgentProfieView"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ShowProductQuantityDialog"
-            android:theme="@android:style/Theme.Holo.Light.Dialog" />
-        <activity android:name=".agent.ViewPharmacyDetails"></activity>
+            android:theme="@android:style/Theme.Holo.Light.Dialog"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".agent.ViewPharmacyDetails"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

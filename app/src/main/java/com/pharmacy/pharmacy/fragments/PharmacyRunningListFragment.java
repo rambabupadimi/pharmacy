@@ -83,7 +83,7 @@ public class PharmacyRunningListFragment extends Fragment {
     private void inflateData()
     {
         OrderDAO orderDAO = new OrderDAO(getContext());
-        List<OrderModel> orderModelList =orderDAO.getOrderData("running");
+        List<OrderModel> orderModelList =orderDAO.getOrderData("running",null);
         Log.i("tag","order list is"+gson.toJson(orderModelList));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         runningListRecyclerView.setLayoutManager(linearLayoutManager);

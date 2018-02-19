@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#f5f5f5">
 
 
 
@@ -11,12 +12,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/frl_cardview"
         android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp">
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp">
         <android.support.v7.widget.SearchView
             android:id="@+id/frl_search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:queryHint="@string/text_here"
+            app:queryHint="Search Medicine"
+
             />
 
 
@@ -55,5 +58,7 @@
 
     </android.support.v7.widget.RecyclerView>
 
+
+    <include layout="@layout/not_found_layout"></include>
 
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.mocehat.mocehatstore.adapters;
+package com.pharmacy.adapters;
 
 /**
  * Created by BookMEds on 20-06-2016.
@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.mocehat.R;
+
+import com.pharmacy.R;
 
 import java.util.ArrayList;
 

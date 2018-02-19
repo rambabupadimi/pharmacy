@@ -4,5 +4,98 @@ package com.pharmacy.adapters;
  * Created by PCCS-0007 on 15-Feb-18.
  */
 
-public class SearchProductListAdapter {
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.pharmacy.R;
+import com.pharmacy.ShowProductQuantityDialog;
+import com.pharmacy.models.ProductModel;
+
+import java.util.ArrayList;
+
+/**
+ * Created by PCCS-0007 on 06-Feb-18.
+ */
+
+
+
+public class SearchProductListAdapter extends RecyclerView.Adapter<SearchProductListAdapter.MyViewHolder> {
+
+    Context context;
+    ArrayList<ProductModel> productModelArrayList;
+    Gson gson;
+    public SearchProductListAdapter(Context context, ArrayList<ProductModel> productModelArrayList) {
+
+        this.context    =   context;
+        this.productModelArrayList =   productModelArrayList;
+        gson    = new Gson();
+    }
+
+    @Override
+    public SearchProductListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.search_product_list_adapter, parent, false);
+
+        return new SearchProductListAdapter.MyViewHolder(itemView);
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        TextView spProductName;
+        LinearLayout spParentLayout;
+         public MyViewHolder(View view) {
+            super(view);
+
+             spProductName =   view.findViewById(R.id.sp_product_name);
+             spParentLayout =   view.findViewById(R.id.sp_parent_layout);
+        }
+
+    }
+
+
+    @Override
+    public void onBindViewHolder(final SearchProductListAdapter.MyViewHolder holder, final int position) {
+            final ProductModel productModel = productModelArrayList.get(position);
+            holder.spProductName.setText(productModel.Name);
+
+            final Intent intent = new Intent(context, ShowProductQuantityDialog.class);
+            holder.spParentLayout.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                @Override
+                public void onClick(View v) {
+                    intent.putExtra("product_model",gson.toJson(productModel));
+                    Pair[] pairs = new Pair[1];
+                    pairs[0]    =  new  Pair<View,String>(holder.spProductName,"product_name");
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+
+                    Bundle bndlanimation = ActivityOptions.makeCustomAnimation(context, R.anim.fade_in, R.anim.fade_out).toBundle();
+
+                    context.startActivity(intent,bndlanimation);
+
+                }
+            });
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return (productModelArrayList != null) ? productModelArrayList.size() : 0;
+    }
+
+
+
 }

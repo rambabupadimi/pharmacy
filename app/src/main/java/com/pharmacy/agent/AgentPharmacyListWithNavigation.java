@@ -17,8 +17,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.pharmacy.AppConstants;
 import com.pharmacy.CommonMethods;
@@ -52,6 +55,10 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
     TextView toolbarHeading;
     PharmacyDAO pharmacyDAO;
 
+    LinearLayout notFoundLayout;
+    TextView notFoundText;
+    ImageView notFoundIcon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,10 +71,13 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
         initialiseClickListeners();
         initialiseStatus();
         setToolbarAndNavbarData();
+
+
     }
 
     private void initialiseAdapterData()
     {
+
         agentPharmacyListAdapter = new AgentPharmacyListAdapter(this,pharmacyModelArrayList);
       ArrayList<com.pharmacy.db.models.PharmacyModel> pharmacyModelList1 =   pharmacyDAO.getListOfPharmacys(userPreferences.getUserGid());
       pharmacyModelArrayList.clear();
@@ -82,14 +92,22 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
             profileName.setText(agentModel.Name);
             toolbarHeading.setText(agentModel.Name);
 
-            if (agentModel.ImageLocalPath != null) {
-                try {
-                    Bitmap bitmap = BitmapFactory.decodeFile(agentModel.ImageLocalPath);
-                    if (bitmap != null) {
-                        profileIcon.setImageBitmap(bitmap);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+            if (agentModel.ImageLocalPath != null && agentModel.IdProofLocalPath.trim().length()>0) {
+                Glide.with(this)
+                        .load(agentModel.ImageLocalPath)
+                        .placeholder(R.drawable.default_image)
+                        .error(R.drawable.default_image)
+                        .into(profileIcon);
+
+            }
+            else
+            {
+                if(agentModel.Image!=null) {
+                    Glide.with(this)
+                            .load(agentModel.Image)
+                            .placeholder(R.drawable.default_image)
+                            .error(R.drawable.default_image)
+                            .into(profileIcon);
                 }
             }
         }catch (Exception e)
@@ -124,6 +142,9 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
         profileName =   headerLayout.findViewById(R.id.ar_nav_profile_name);
         toolbarHeading  =   findViewById(R.id.agent_toolbar_heading);
 
+        notFoundLayout          =   findViewById(R.id.not_found_layout);
+        notFoundText            =   findViewById(R.id.not_found_text);
+        notFoundIcon            = findViewById(R.id.not_found_icon);
         setSupportActionBar(aplnToolbar);
     }
 
@@ -162,10 +183,18 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
     private void initialiseAdapter(ArrayList<com.pharmacy.db.models.PharmacyModel> pharmacyModelArrayList)
     {
 
-        agentPharmacyListAdapter =   new AgentPharmacyListAdapter(this, pharmacyModelArrayList);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        aplnRecyclerView.setLayoutManager(linearLayoutManager);
-        aplnRecyclerView.setAdapter(agentPharmacyListAdapter);
+        if(pharmacyModelArrayList!=null && pharmacyModelArrayList.size()>0) {
+            notFoundLayout.setVisibility(View.GONE);
+            agentPharmacyListAdapter = new AgentPharmacyListAdapter(this, pharmacyModelArrayList);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+            aplnRecyclerView.setLayoutManager(linearLayoutManager);
+            aplnRecyclerView.setAdapter(agentPharmacyListAdapter);
+        }
+        else
+        {
+            notFoundLayout.setVisibility(View.VISIBLE);
+            notFoundText.setText("CLICK + TO ADD NEW PHARMACY");
+        }
 
     }
 

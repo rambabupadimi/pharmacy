@@ -1,4 +1,4 @@
-package com.pharmacy.pharmacy.adapters;
+package com.pharmacy.agent.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -18,12 +18,12 @@ import java.util.ArrayList;
  */
 
 
-public class PharmacyCommonListAdapter extends RecyclerView.Adapter<PharmacyCommonListAdapter.MyViewHolder> {
+public class AgentCommonListAdapter extends RecyclerView.Adapter<AgentCommonListAdapter.MyViewHolder> {
 
     Context context;
     ArrayList<OrderModel> productModelArrayList;
     Gson gson;
-    public PharmacyCommonListAdapter(Context context, ArrayList<OrderModel> productModelArrayList) {
+    public AgentCommonListAdapter(Context context, ArrayList<OrderModel> productModelArrayList) {
 
         this.context    =   context;
         this.productModelArrayList =   productModelArrayList;
@@ -31,11 +31,11 @@ public class PharmacyCommonListAdapter extends RecyclerView.Adapter<PharmacyComm
     }
 
     @Override
-    public PharmacyCommonListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AgentCommonListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.adapter_pharmacy_running_list, parent, false);
 
-        return new PharmacyCommonListAdapter.MyViewHolder(itemView);
+        return new AgentCommonListAdapter.MyViewHolder(itemView);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -51,7 +51,7 @@ public class PharmacyCommonListAdapter extends RecyclerView.Adapter<PharmacyComm
 
 
     @Override
-    public void onBindViewHolder(final PharmacyCommonListAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final AgentCommonListAdapter.MyViewHolder holder, final int position) {
        OrderModel orderModel = productModelArrayList.get(position);
         holder.pharmacyTitle.setText(orderModel.ProductName);
         holder.pharmacyQuantity.setText(""+orderModel.Quantity);

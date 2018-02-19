@@ -1,5 +1,6 @@
 package com.pharmacy.agent;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -20,6 +22,7 @@ import com.pharmacy.agent.fragments.AgentApprovedListFragment;
 import com.pharmacy.agent.fragments.AgentDeliveredListFragment;
 import com.pharmacy.agent.fragments.AgentRunningListFragment;
 import com.pharmacy.db.models.PharmacyModel;
+import com.pharmacy.preferences.UserPreferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,21 +38,43 @@ public class AgentRunningList extends AppCompatActivity {
     private TextView viewPharmacy;
     PharmacyModel pharmacyModel;
     Gson gson;
+    UserPreferences userPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agent_running_list);
 
 
+
+        initialiseObjects();
         initialiseIDs();
+        getIntentData();
+     //   initialiseArguments();
+
         initialiseFragments();
         addViewPagerToTabLayout();
         initialiseBackButton();
-        getIntentData();
+
         setToolbarTitle();
         initialiseClickListeners();
+        hideKeyboard();
     }
 
+    private void hideKeyboard()
+    {
+        View view = this.getCurrentFocus();
+        if(view!=null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+    }
+
+    private void initialiseObjects()
+    {
+        userPreferences = new UserPreferences(this);
+    }
 
     private void initialiseClickListeners()
     {
@@ -69,6 +94,10 @@ public class AgentRunningList extends AppCompatActivity {
             String json = getIntent().getStringExtra("pharmacy_object");
              pharmacyModel = gson.fromJson(json,PharmacyModel.class);
             toolbarHeading = pharmacyModel.StoreName;
+            userPreferences.setAgentSelectedPharmacyId(pharmacyModel.PharmacyID);
+
+
+
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -94,10 +123,24 @@ public class AgentRunningList extends AppCompatActivity {
 
     private void initialiseFragments()
     {
+        Bundle bundle = new Bundle();
+        bundle.putString("pharmacy_id", pharmacyModel.PharmacyID);
+
+
+        AgentRunningListFragment agentRunningListFragment = new AgentRunningListFragment();
+        AgentApprovedListFragment agentApprovedListFragment = new AgentApprovedListFragment();
+        AgentDeliveredListFragment agentDeliveredListFragment = new AgentDeliveredListFragment();
+
+        agentRunningListFragment.setArguments(bundle);
+        agentApprovedListFragment.setArguments(bundle);
+        agentDeliveredListFragment.setArguments(bundle);
         // Add Fragments to adapter one by one
-        adapter.addFragment(new AgentRunningListFragment(), "RUNNING LIST");
-        adapter.addFragment(new AgentApprovedListFragment(), "APPROVED");
-        adapter.addFragment(new AgentDeliveredListFragment(), "DELIVERED");
+        adapter.addFragment(agentRunningListFragment, "RUNNING LIST");
+        adapter.addFragment(agentApprovedListFragment, "APPROVED");
+        adapter.addFragment(agentDeliveredListFragment, "DELIVERED");
+
+
+
         viewPager.setAdapter(adapter);
     }
 
@@ -126,6 +169,7 @@ public class AgentRunningList extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        userPreferences.setAgentSelectedPharmacyId("");
         Intent intent = new Intent(AgentRunningList.this,AgentPharmacyListWithNavigation.class);
         startActivity(intent);
     }

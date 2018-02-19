@@ -317,5 +317,8 @@
     <!-- objects -->
 
     <string name="add_new_pharmacy_sending">Add New Pharmacy</string>
+    <string name="licence">Licence</string>
+    <string name="register_certificate">Register Certificate</string>
+    <string name="pharmacy_photo">Pharmacy Photo</string>
 
 </resources>

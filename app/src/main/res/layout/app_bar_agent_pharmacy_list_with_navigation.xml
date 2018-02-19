@@ -26,6 +26,8 @@
 
     <include layout="@layout/content_agent_pharmacy_list_with_navigation" />
 
+    <include layout="@layout/not_found_layout"></include>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"

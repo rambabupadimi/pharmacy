@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="24dp">
+    <com.pharmacy.RobotoTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Paracetamol"
+        android:layout_weight="1"
+        android:id="@+id/pharmacy_list_title"
+        app:typeface="robotoMedium"
+        android:textColor="@color/colorBlack"/>
+    <com.pharmacy.RobotoTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12"
+        app:typeface="robotoMedium"
+        android:textColor="@color/colorBlack"
+        android:id="@+id/pharmacy_list_quantity"
+        />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.6dp"
+        android:background="@drawable/list_divider"></View>
 </LinearLayout>

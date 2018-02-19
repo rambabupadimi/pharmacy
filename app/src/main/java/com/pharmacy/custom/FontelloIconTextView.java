@@ -1,4 +1,4 @@
-package com.mocehat.mocehatstore.NewUI;
+package com.pharmacy.custom;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -24,7 +24,7 @@ public class FontelloIconTextView extends TextView {
 	}
 
 	public FontelloIconTextView(Context context, AttributeSet attrs,
-								int defStyle) {
+                                int defStyle) {
 		super(context, attrs, defStyle);
 		if (isInEditMode())
 			return;

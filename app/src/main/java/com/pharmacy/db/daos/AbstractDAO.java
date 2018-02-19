@@ -1,9 +1,10 @@
-package com.pharmacy.db;
+package com.pharmacy.db.daos;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.pharmacy.DbConstants;
+import com.pharmacy.db.DatabaseManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -17,6 +18,7 @@ import java.util.TimeZone;
 public class AbstractDAO implements DbConstants {
 
     Context context;
+    String currentTimeStamp;
     public AbstractDAO(Context context){
         this.context = context;
         Date myDate = new Date();

@@ -30,6 +30,7 @@ public class UserPreferences {
     public static final String SERVER_TOKEN = "server_token";
 
 
+    public static final String AGENT_SELECTED_PHARMACY_ID = "agent_selected_pharmacy_id";
 
     public static final String ADD_NEW_PHARMACY_ID = "add_new_pharmacy_id";
 
@@ -141,6 +142,18 @@ public class UserPreferences {
         editor.commit();
     }
 
+
+    public void setAgentSelectedPharmacyId(String agentSelectedPharmacyId)
+    {
+        editor.putString(AGENT_SELECTED_PHARMACY_ID, agentSelectedPharmacyId);
+        editor.commit();
+    }
+
+
+    public String getAgentSelectedPharmacyId()
+    {
+        return pref.getString(AGENT_SELECTED_PHARMACY_ID, "");
+    }
     public String getDeviceUniqueId() {
         return pref.getString(DEVICE_UNIQUE_ID, "");
     }

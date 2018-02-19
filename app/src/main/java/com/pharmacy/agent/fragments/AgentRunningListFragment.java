@@ -1,5 +1,6 @@
 package com.pharmacy.agent.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,11 +12,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.pharmacy.CommonMethods;
 import com.pharmacy.R;
 import com.pharmacy.adapters.SearchProductListAdapter;
+import com.pharmacy.agent.adapters.AgentCommonListAdapter;
 import com.pharmacy.db.daos.OrderDAO;
 import com.pharmacy.db.models.OrderModel;
 import com.pharmacy.models.ProductModel;
@@ -44,11 +50,15 @@ public class AgentRunningListFragment extends Fragment {
     ArrayList<OrderModel> runningList = new ArrayList<>();
     CardView searchCardView;
     RecyclerView searchRecyclerView,runningListRecyclerView;
-    PharmacyCommonListAdapter pharmacyCommonListAdapter;
+    AgentCommonListAdapter agentCommonListAdapter;
+
+    LinearLayout notFoundLayout;
+    TextView notFoundText;
+    ImageView notFoundIcon;
 
     public AgentRunningListFragment()
     {
-        pharmacyCommonListAdapter = new PharmacyCommonListAdapter(getContext(),runningList);
+        agentCommonListAdapter = new AgentCommonListAdapter(getContext(),runningList);
     }
 
     @Nullable
@@ -58,9 +68,19 @@ public class AgentRunningListFragment extends Fragment {
         initialiseObjects();
         initialiseIDs(view);
         initialiseClickListeners();
+        hideKeyboard(view);
         return view;
     }
 
+    private void hideKeyboard(View view)
+    {
+
+        if(view!=null) {
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -69,16 +89,27 @@ public class AgentRunningListFragment extends Fragment {
 
     private void inflateData()
     {
+
+       String pharmacyLocalId =  getArguments().getString("pharmacy_id");
         OrderDAO orderDAO = new OrderDAO(getContext());
-        List<OrderModel> orderModelList =orderDAO.getOrderData("running");
+        List<OrderModel> orderModelList =orderDAO.getOrderData("running",pharmacyLocalId);
         Log.i("tag","order list is"+gson.toJson(orderModelList));
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        runningListRecyclerView.setLayoutManager(linearLayoutManager);
-        Collections.reverse(orderModelList);
-        runningList.clear();
-        runningList.addAll(orderModelList);
-        runningListRecyclerView.setAdapter(pharmacyCommonListAdapter);
-        pharmacyCommonListAdapter.notifyDataSetChanged();
+        if(orderModelList!=null && orderModelList.size()>0) {
+            notFoundLayout.setVisibility(View.GONE);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            runningListRecyclerView.setLayoutManager(linearLayoutManager);
+            Collections.reverse(orderModelList);
+            runningList.clear();
+            runningList.addAll(orderModelList);
+            runningListRecyclerView.setAdapter(agentCommonListAdapter);
+            agentCommonListAdapter.notifyDataSetChanged();
+        }
+        else
+        {
+            notFoundLayout.setVisibility(View.VISIBLE);
+            notFoundText.setText("CLICK SEARCH ICON TO ADD MEDICINE");
+            notFoundIcon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.running_icon));
+        }
 
     }
 
@@ -97,6 +128,16 @@ public class AgentRunningListFragment extends Fragment {
         searchRecyclerView  =   view.findViewById(R.id.frl_search_recyclerview);
         runningListRecyclerView =   view.findViewById(R.id.frl_runninglist_recyclerview);
 
+        notFoundLayout  =   view.findViewById(R.id.not_found_layout);
+        notFoundText    =   view.findViewById(R.id.not_found_text);
+        notFoundIcon    =   view.findViewById(R.id.not_found_icon);
+
+
+        //afrlSearchView.setActivated(true);
+        afrlSearchView.onActionViewExpanded();
+        afrlSearchView.setIconified(false);
+        afrlSearchView.clearFocus();
+
     }
 
     private void initialiseClickListeners()
@@ -109,10 +150,25 @@ public class AgentRunningListFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText.toString().trim().length()>0)
+                if(newText.toString().trim().length()>0) {
                     getProductsList(newText);
+                }
+                else {
+                    searchCardView.setVisibility(View.GONE);
+                    afrlSearchView.clearFocus();
+                }
+
+                return false;
+            }
+        });
 
 
+
+        afrlSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                afrlSearchView.clearFocus();
+                searchCardView.setVisibility(View.GONE);
                 return false;
             }
         });

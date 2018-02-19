@@ -5,4 +5,19 @@ package com.pharmacy.db.models;
  */
 
 public class UserModel {
+
+   public String UserID;
+   public String UserType;
+   public String PhoneNumber;
+   public String DistributorID;
+   public boolean IsVerified;
+   public String DeviceType;
+   public String DeviceId;
+   public String DeviceUniqueId;
+   public String CreatedTime;
+   public String UpdatedTime;
+   public String Token;
+   public String Email;
+   public boolean IsNewUser;
+
 }

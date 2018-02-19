@@ -1,4 +1,4 @@
-package com.xampr.NewUi;
+package com.pharmacy;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -6,11 +6,8 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.vanniktech.emoji.EmojiTextView;
-import com.xampr.R;
 
-
-public class RobotoTextView extends EmojiTextView {
+public class RobotoTextView extends TextView {
 
     public RobotoTextView(Context context) {
         super(context);
@@ -24,16 +21,11 @@ public class RobotoTextView extends EmojiTextView {
         if (isInEditMode())
             return;
         parseAttributes(attrs);
-        setEmojiSize(50);
+
 
 
     }
 
-
-    @Override
-    public void setEmojiSize(int pixels) {
-        super.setEmojiSize(pixels);
-    }
 
 /*
     public RobotoTextView(Context context, AttributeSet attrs, int defStyle) {

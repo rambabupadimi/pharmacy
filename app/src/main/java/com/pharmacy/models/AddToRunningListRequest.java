@@ -5,4 +5,11 @@ package com.pharmacy.models;
  */
 
 public class AddToRunningListRequest {
+
+    public String DistributorID;
+    public String PharmacyID;
+    public String UserID;
+    public String ProductID;
+    public int Quantity;
+    public String Description;
 }

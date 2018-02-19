@@ -33,7 +33,9 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     RadioGroup          solRadioGroup;
     RadioButton         testButton;
     UserPreferences     userPreferences;
-    String[] PERMISSIONS = {"android.permission.ACCESS_FINE_LOCATION",
+    String[] PERMISSIONS = {
+            "android.permission.READ_PHONE_STATE",
+            "android.permission.ACCESS_FINE_LOCATION",
             "android.permission.ACCESS_COARSE_LOCATION",
             "android.permission.WRITE_EXTERNAL_STORAGE",
             "android.permission.READ_EXTERNAL_STORAGE"};
@@ -61,7 +63,8 @@ public class SignupOrLoginActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestPermission() {
         try {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ||
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ||
                     ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ||
                     ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) ||
                     ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {

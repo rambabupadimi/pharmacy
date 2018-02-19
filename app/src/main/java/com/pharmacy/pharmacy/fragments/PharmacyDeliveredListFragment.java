@@ -69,7 +69,7 @@ public class PharmacyDeliveredListFragment extends Fragment {
     private void inflateData()
     {
         OrderDAO orderDAO = new OrderDAO(getContext());
-        List<OrderModel> orderModelList =orderDAO.getOrderData("delivered");
+        List<OrderModel> orderModelList =orderDAO.getOrderData("delivered",null);
         Log.i("tag","order list is"+gson.toJson(orderModelList));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         deliveredListRecyclerView.setLayoutManager(linearLayoutManager);

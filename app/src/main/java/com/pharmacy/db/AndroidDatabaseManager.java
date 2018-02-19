@@ -1,8 +1,7 @@
-package com.xampr;//add your package name here example: package com.example.dbm;
+package com.pharmacy.db;//add your package name here example: package com.example.dbm;
 
 //all required import files
-import java.util.ArrayList;
-import java.util.LinkedList;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,6 +13,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,21 +23,22 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.xampr.Utils.ZibMiDBHandler;
+
+
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class AndroidDatabaseManager extends Activity implements OnItemClickListener {
 
 	//in the below line Change the text 'yourCustomSqlHelper' with your custom sqlitehelper class name.
 	//Do not change the variable name dbm
-	ZibMiDBHandler dbm;
+	DatabaseManager dbm;
 
 // all global variables
 	TableLayout tableLayout;
@@ -57,7 +59,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 
 
 		//in the below line Change the text 'yourCustomSqlHelper' with your custom sqlitehelper class name
-		dbm = new ZibMiDBHandler(AndroidDatabaseManager.this);
+		dbm = new DatabaseManager(AndroidDatabaseManager.this);
 
 		mainscrollview = new ScrollView(AndroidDatabaseManager.this);
 
@@ -233,7 +235,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 			}
 		});
 		//layout parameters for each row in the table
-       tableRowParams = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+       tableRowParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
        tableRowParams.setMargins(0, 0, 2, 0);
 
        // a query which returns a cursor with the list of tables in the database.We use this cursor to populate spinner in the first row
@@ -276,7 +278,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
                 }
 
 
-                public View getDropDownView(int position,  View convertView,  ViewGroup parent) {
+                public View getDropDownView(int position, View convertView, ViewGroup parent) {
                          View v =super.getDropDownView(position, convertView, parent);
 
                         v.setBackgroundColor(Color.WHITE);
@@ -298,7 +300,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 
 	            @Override
 	            public void onItemSelected(AdapterView<?> parent,
-	                    View view, int pos, long id) {
+                                           View view, int pos, long id) {
 	            	if(pos==0&&!indexInfo.isCustomQuery)
 	            	{
 	            		secondrow.setVisibility(View.GONE);
@@ -355,7 +357,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 	                            return adap;
 	                    }
 
-	                    public View getDropDownView(int position,  View convertView,  ViewGroup parent) {
+	                    public View getDropDownView(int position, View convertView, ViewGroup parent) {
 	                             View v =super.getDropDownView(position, convertView, parent);
 
 	                            v.setBackgroundColor(Color.WHITE);
@@ -403,13 +405,13 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 
 		                    						        new AlertDialog.Builder(AndroidDatabaseManager.this)
 		                    							.setTitle("Are you sure ?")
-		                    							.setMessage("Pressing yes will remove "+indexInfo.table_name+" table from database")
+		                    							.setMessage("Pressing yes will remove "+ indexInfo.table_name+" table from database")
 		                    							.setPositiveButton("yes",
 		                          							new DialogInterface.OnClickListener() {
 		                          							// when user confirms by clicking on yes we drop the table by executing drop table query
 		                  								public void onClick(DialogInterface dialog, int which) {
 
-									                    		String Query6 = "Drop table "+indexInfo.table_name;
+									                    		String Query6 = "Drop table "+ indexInfo.table_name;
 									                    		ArrayList<Cursor> aldropt=dbm.getData(Query6);
 																	Cursor tempc=aldropt.get(1);
 																	tempc.moveToLast();
@@ -450,13 +452,13 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 
 		                    						        new AlertDialog.Builder(AndroidDatabaseManager.this)
 		                    							.setTitle("Are you sure?")
-		                    							.setMessage("Clicking on yes will deleteIcon all the contents of "+indexInfo.table_name+" table from database")
+		                    							.setMessage("Clicking on yes will deleteIcon all the contents of "+ indexInfo.table_name+" table from database")
 		                    							.setPositiveButton("yes",
 		                          							new DialogInterface.OnClickListener() {
 
 		                          							// when user confirms by clicking on yes we drop the table by executing deleteIcon table query
 		                  								public void onClick(DialogInterface dialog, int which) {
-									                    		String Query7 = "Delete  from "+indexInfo.table_name;
+									                    		String Query7 = "Delete  from "+ indexInfo.table_name;
 									                    		Log.d("deleteIcon table query",Query7);
 									                    		ArrayList<Cursor> aldeletet=dbm.getData(Query7);
 																	Cursor tempc=aldeletet.get(1);
@@ -501,7 +503,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 	                        	  if(indexInfo.isEmpty)
 	                        	  {
 	                        		  getcolumnnames();
-	                        		  for(int i=0;i<indexInfo.emptytablecolumnnames.size();i++)
+	                        		  for(int i = 0; i< indexInfo.emptytablecolumnnames.size(); i++)
 		                        	  {
 		                        	  String cname = indexInfo.emptytablecolumnnames.get(i);
 		                        	  TextView tv = new TextView(getApplicationContext());
@@ -584,7 +586,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 	                  									indexInfo.index = 10;
 	                  									//tableLayout.removeAllViews();
 	                  									//trigger select table listener to be triggerd
-	                  									String Query4 ="Insert into "+indexInfo.table_name+" (";
+	                  									String Query4 ="Insert into "+ indexInfo.table_name+" (";
 	                  									for(int i=0 ; i<addnewrownames.size();i++)
 	                  									{
 
@@ -628,7 +630,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 	                  									if(tempc.getString(0).equalsIgnoreCase("Success"))
 														{
 															tvmessage.setBackgroundColor(Color.parseColor("#2ecc71"));
-															tvmessage.setText("New Row added succesfully to "+indexInfo.table_name);
+															tvmessage.setText("New Row added succesfully to "+ indexInfo.table_name);
 															refreshTable(0);
 														}
 														else
@@ -722,7 +724,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 	//get columnnames of the empty tables and save them in a array list
 	public void getcolumnnames()
 	{
-		ArrayList<Cursor> alc3=dbm.getData("PRAGMA table_info("+indexInfo.table_name+")");
+		ArrayList<Cursor> alc3=dbm.getData("PRAGMA table_info("+ indexInfo.table_name+")");
     	Cursor c5=alc3.get(0);
     	indexInfo.isEmpty=true;
     	if(c5!=null)
@@ -745,7 +747,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 	//displays alert dialog from which use can update or deleteIcon a row
 	public void updateDeletePopup(int row)
 	{
-		Cursor c2=indexInfo.maincursor;
+		Cursor c2= indexInfo.maincursor;
 	// a spinner which gives options to update or deleteIcon the row which user has selected
   	  ArrayList<String> spinnerArray = new ArrayList<String>();
   	    spinnerArray.add("Click Here to Change this row");
@@ -806,7 +808,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
               }
 
 
-              public View getDropDownView(int position,  View convertView,  ViewGroup parent) {
+              public View getDropDownView(int position, View convertView, ViewGroup parent) {
                        View v =super.getDropDownView(position, convertView, parent);
 
                       v.setBackgroundColor(Color.WHITE);
@@ -885,7 +887,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 								if(spinner_value.equalsIgnoreCase("Update this row"))
 								{
 									indexInfo.index = 10;
-								String Query3="UPDATE "+indexInfo.table_name+" SET ";
+								String Query3="UPDATE "+ indexInfo.table_name+" SET ";
 
 								for(int i=0;i<columnames.size();i++)
 								{
@@ -959,7 +961,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 								{
 
 									indexInfo.index = 10;
-									String Query5="DELETE FROM "+indexInfo.table_name+" WHERE ";
+									String Query5="DELETE FROM "+ indexInfo.table_name+" WHERE ";
 
 									for(int i=0;i<columnames.size();i++)
 									{
@@ -994,7 +996,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 									if(tempc.getString(0).equalsIgnoreCase("Success"))
 									{
 										tvmessage.setBackgroundColor(Color.parseColor("#2ecc71"));
-										tvmessage.setText("Row deleted from "+indexInfo.table_name+" table");
+										tvmessage.setText("Row deleted from "+ indexInfo.table_name+" table");
 										refreshTable(0);
 									}
 									else
@@ -1031,7 +1033,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 		tableLayout.removeAllViews();
 		if(d==0)
 		{
-		String Query8 = "select * from "+indexInfo.table_name;
+		String Query8 = "select * from "+ indexInfo.table_name;
 		ArrayList<Cursor> alc3=dbm.getData(Query8);
     	c3=alc3.get(0);
     	//saving cursor to the static indexinfo class which can be resued by the other functions
@@ -1039,7 +1041,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 		}
 		if(d==1)
 		{
-		c3=indexInfo.maincursor;
+		c3= indexInfo.maincursor;
 		}
     	// if the cursor returened form tha database is not null we display the data in table layout
     	if(c3!=null)
@@ -1184,7 +1186,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 		            }
 		            else
 		            {
-		            	indexInfo.currentpage=indexInfo.currentpage-1;
+		            	indexInfo.currentpage= indexInfo.currentpage-1;
 		            	c3.moveToPosition(tobestartindex);
 
 		            	boolean decider=true;
@@ -1216,7 +1218,7 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 
 		            	indexInfo.index=tobestartindex;
 
-		            	Log.d("index =",""+indexInfo.index);
+		            	Log.d("index =",""+ indexInfo.index);
 		            }
 		        }
 		    });
@@ -1229,13 +1231,13 @@ public class AndroidDatabaseManager extends Activity implements OnItemClickListe
 		        {
 
 		        //if there are no tuples to be shown toast that this the last page
-		            if(indexInfo.currentpage>=indexInfo.numberofpages)
+		            if(indexInfo.currentpage>= indexInfo.numberofpages)
 		            {
 		            	Toast.makeText(getApplicationContext(), "This is the last page", Toast.LENGTH_LONG).show();
 		            }
 		            else
 		            {
-		            	indexInfo.currentpage=indexInfo.currentpage+1;
+		            	indexInfo.currentpage= indexInfo.currentpage+1;
 		            	boolean decider=true;
 
 

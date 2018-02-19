@@ -5,4 +5,8 @@ package com.pharmacy.models;
  */
 
 public class GetUserDetailsRequest {
+
+    public String UserID;
+    public String DistributorID;
+    public String UserType;
 }
