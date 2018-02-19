@@ -1,0 +1,86 @@
+<resources>
+
+    <dimen name="padding_small">18dp</dimen>
+    <!-- <dimen name="padding_medium">8dp</dimen> -->
+    <dimen name="padding_large">16dp</dimen>
+     <dimen name="panel_margin">20dp</dimen>
+    <dimen name="panel_margin_22">22dp</dimen>
+    <dimen name="panel_height">120dp</dimen>
+    <dimen name="overlay_margin">6dp</dimen>
+    <dimen name="overlay_height">40dp</dimen>
+    <dimen name="overlay_width">120dp</dimen>
+    <dimen name="corner_radius">3dp</dimen>
+    <dimen name="tab_space_top">4dp</dimen>
+    <dimen name="tab_space">1dp</dimen>
+    <dimen name="tab_space_plus1">1dp</dimen>
+    <dimen name="header_big">24sp</dimen>
+    <dimen name="header_big30dp">30sp</dimen>
+    <dimen name="header">16sp</dimen>
+    <dimen name="title">15sp</dimen>
+    <dimen name="body">14sp</dimen>
+    <dimen name="header_28sp">28sp</dimen>
+    <dimen name="text">12sp</dimen>
+    <dimen name="textsmall">10sp</dimen>
+    <dimen name="dotted">5sp</dimen>
+    <dimen name="meetingTimeSize">5sp</dimen>
+    <dimen name="drawer_width">300dp</dimen>
+    <dimen name="drawer_width_media">260dp</dimen>
+    <dimen name="drawer_width_travel">220dp</dimen>
+    <dimen name="spinnerSize">18sp</dimen>
+    <dimen name="spinnerSize20">20sp</dimen>
+    <dimen name="bigHeader">20sp</dimen>
+    <dimen name="orderDetailsBottomHeight">45dp</dimen>
+    <dimen name="menu_item_icon_size">24dp</dimen>
+
+
+    <dimen name="standard_55">55dp</dimen>
+    <dimen name="standard_45">45dp</dimen>
+    <dimen name="standard_21">21dp</dimen>
+    <dimen name="standard_105">105dp</dimen>
+    <dimen name="standard_155">155dp</dimen>
+
+    <dimen name="chat_message_text">16sp</dimen>
+    <dimen name="chat_message_reply_text">14sp</dimen>
+    <dimen name="chat_message_time">10sp</dimen>
+    <dimen name="chat_message_system_message">14sp</dimen>
+    <dimen name="chat_message_name">14sp</dimen>
+
+    <dimen name="underline_stroke_width">2.0dip</dimen>
+    <dimen name="underline_width">40.0dip</dimen>
+    <dimen name="section_reduction">5.0dip</dimen>
+    <dimen name="text_size">15.0dip</dimen>
+    <dimen name="hint_size">15.0dip</dimen>
+    <dimen name="hint_small_size">12.0dip</dimen>
+    <dimen name="text_margin_bottom">15dp</dimen>
+    <dimen name="hint_margin_bottom">25dp</dimen>
+    <dimen name="view_height">40dp</dimen>
+
+    <dimen name="margin_left">16dp</dimen>
+    <dimen name="margin_right">16dp</dimen>
+    <dimen name="tile_height">72dp</dimen>
+    <dimen name="margin_top">8dp</dimen>
+
+    <dimen name="chat_space_margin">6dp</dimen>
+    <dimen name="chat_space_padding">6dp</dimen>
+
+    <dimen name="chat_space_right_text_bubble_right">2dp</dimen>
+    <dimen name="chat_space_right_text_bubble_left">60dp</dimen>
+    <dimen name="chat_space_left_text_bubble_right">60dp</dimen>
+    <dimen name="chat_space_left_text_bubble_left">2dp</dimen>
+    <dimen name="chat_space_right_image_bubble_right">2dp</dimen>
+    <dimen name="chat_space_left_image_bubble_left">2dp</dimen>
+
+
+    <dimen name="toolbar_text_size">18sp</dimen>
+    <dimen name="edit_text_size">14sp</dimen>
+    <dimen name="textview_small_size">10sp</dimen>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+
+</resources>
