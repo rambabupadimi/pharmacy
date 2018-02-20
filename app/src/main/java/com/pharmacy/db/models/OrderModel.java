@@ -27,4 +27,6 @@ public class OrderModel {
     public String ProductName;
     public String Image;
     public String ProductType;
+
+    public String OrderDetailID;
 }

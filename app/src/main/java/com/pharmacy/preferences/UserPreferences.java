@@ -34,6 +34,8 @@ public class UserPreferences {
 
     public static final String ADD_NEW_PHARMACY_ID = "add_new_pharmacy_id";
 
+    public static final String GET_ALL_MY_LIST_TIMETICKS = "get_all_my_list_timeticks";
+
 
     public UserPreferences(Context context) {
         this.context = context;
@@ -95,6 +97,18 @@ public class UserPreferences {
     public String getAddNewPharmacyId()
     {
         return   pref.getString(ADD_NEW_PHARMACY_ID,"");
+    }
+
+
+    public void setGetAllMyListTimeticks(String value)
+    {
+        editor.putString(GET_ALL_MY_LIST_TIMETICKS,value);
+        editor.commit();
+    }
+
+    public String getGetAllMyListTimeticks()
+    {
+        return pref.getString(GET_ALL_MY_LIST_TIMETICKS,"0");
     }
 
     public void setUserHomePageStatus(boolean value)

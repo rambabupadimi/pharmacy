@@ -93,7 +93,7 @@ public interface DbConstants {
     public final String COLUMN_CREATED_TIME         =   "column_created_time";
     public final String COLUMN_UPDATED_TIME         =   "column_updated_time";
 
-
+    public final String COLUMN_ORDER_DETAIL_ID      =   "order_detail_id";
 
 
 

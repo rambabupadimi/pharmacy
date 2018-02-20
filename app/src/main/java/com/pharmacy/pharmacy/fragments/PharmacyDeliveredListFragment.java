@@ -9,6 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.pharmacy.R;
@@ -31,6 +34,9 @@ public class PharmacyDeliveredListFragment extends Fragment {
     ArrayList<OrderModel> deliveredList = new ArrayList<>();
     RecyclerView deliveredListRecyclerView;
     Gson gson;
+    LinearLayout notFoundLayout;
+    TextView notFoundText;
+    ImageView notFoundIcon;
 
 
     public PharmacyDeliveredListFragment()
@@ -51,6 +57,9 @@ public class PharmacyDeliveredListFragment extends Fragment {
     private void initialiseIDs(View view)
     {
         deliveredListRecyclerView  =  view.findViewById(R.id.pharmacy_delivered_list_recyclerview);
+        notFoundLayout  =   view.findViewById(R.id.not_found_layout);
+        notFoundText    =   view.findViewById(R.id.not_found_text);
+        notFoundIcon    =   view.findViewById(R.id.not_found_icon);
 
     }
 
@@ -70,14 +79,22 @@ public class PharmacyDeliveredListFragment extends Fragment {
     {
         OrderDAO orderDAO = new OrderDAO(getContext());
         List<OrderModel> orderModelList =orderDAO.getOrderData("delivered",null);
-        Log.i("tag","order list is"+gson.toJson(orderModelList));
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        deliveredListRecyclerView.setLayoutManager(linearLayoutManager);
-        Collections.reverse(orderModelList);
-        deliveredList.clear();
-        deliveredList.addAll(orderModelList);
-        deliveredListRecyclerView.setAdapter(pharmacyCommonListAdapter);
-        pharmacyCommonListAdapter.notifyDataSetChanged();
 
+       if(orderModelList!=null && orderModelList.size()>0) {
+           Log.i("tag", "order list is" + gson.toJson(orderModelList));
+           LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+           deliveredListRecyclerView.setLayoutManager(linearLayoutManager);
+           Collections.reverse(orderModelList);
+           deliveredList.clear();
+           deliveredList.addAll(orderModelList);
+           deliveredListRecyclerView.setAdapter(pharmacyCommonListAdapter);
+           pharmacyCommonListAdapter.notifyDataSetChanged();
+       }
+       else
+       {
+           notFoundLayout.setVisibility(View.VISIBLE);
+           notFoundText.setText("NO DELIVERED PRODUCTS");
+           notFoundIcon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.delived_icon));
+       }
     }
 }

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.pharmacy.R;
 import com.pharmacy.db.models.OrderModel;
+import com.pharmacy.db.models.PharmacyModel;
 
 import java.util.ArrayList;
 
@@ -63,5 +64,11 @@ public class PharmacyCommonListAdapter extends RecyclerView.Adapter<PharmacyComm
     }
 
 
+    public void addAll(ArrayList<OrderModel> orderModels)
+    {
+        productModelArrayList.addAll(orderModels);
+        notifyDataSetChanged();
+
+    }
 
 }

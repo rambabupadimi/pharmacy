@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -21,8 +22,15 @@ import com.pharmacy.R;
 import com.pharmacy.agent.fragments.AgentApprovedListFragment;
 import com.pharmacy.agent.fragments.AgentDeliveredListFragment;
 import com.pharmacy.agent.fragments.AgentRunningListFragment;
+import com.pharmacy.db.daos.UserDAO;
 import com.pharmacy.db.models.PharmacyModel;
+import com.pharmacy.db.models.UserModel;
+import com.pharmacy.operations.Post;
 import com.pharmacy.preferences.UserPreferences;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +56,8 @@ public class AgentRunningList extends AppCompatActivity {
 
 
         initialiseObjects();
+        initialiseApiCall();
+
         initialiseIDs();
         getIntentData();
      //   initialiseArguments();
@@ -201,6 +211,47 @@ public class AgentRunningList extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
+        }
+    }
+
+    private void initialiseApiCall()
+    {
+        UserDAO userDAO = new UserDAO(this);
+        UserModel  userModel = userDAO.getUserData(userPreferences.getUserGid());
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("DistributorID",userModel.DistributorID);
+            jsonObject.put("UserID",userModel.UserID);
+            jsonObject.put("LastUpdatedTimeTicks",userPreferences.getGetAllMyListTimeticks());
+            String json = jsonObject.toString();
+
+            Post post = new Post(this,CommonMethods.GET_ALL_MYLIST,json) {
+                @Override
+                public void onResponseReceived(String result) {
+                    if(result!=null)
+                    {
+                        try {
+                            JSONObject jsonObject1 = new JSONObject(result);
+                            if(jsonObject1.get("Status").toString().equalsIgnoreCase("Success")){
+                                JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
+
+                                String lastUpdatedTicks = jsonObject2.get("LastUpdatedTimeTicks").toString();
+                                userPreferences.setGetAllMyListTimeticks(lastUpdatedTicks);
+                                if(jsonObject2.get("OrderList")!=null){
+                                   JSONArray jsonArray = jsonObject2.getJSONArray("OrderList");
+                                    Log.i("Tag","json array"+jsonArray);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            };
+            post.execute();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

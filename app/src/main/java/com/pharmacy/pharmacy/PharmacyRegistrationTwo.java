@@ -173,6 +173,7 @@ public class PharmacyRegistrationTwo extends AppCompatActivity implements AppCon
                     if (doValidation()) {
                         PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyData(userPreferences.getUserGid());
                         pharmacyModel.UserType = "" + getString(R.string.pharmacy);
+                        pharmacyModel.PharmacyID    =   "0";
                         UserModel userModel = userDAO.getUserData(userPreferences.getUserGid());
                         pharmacyModel.PhoneNumber = userModel.PhoneNumber;
                         pharmacyModel.DistributorID = userModel.DistributorID;

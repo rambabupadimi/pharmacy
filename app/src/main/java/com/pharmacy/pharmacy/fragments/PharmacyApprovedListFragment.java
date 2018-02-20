@@ -11,6 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.pharmacy.R;
@@ -32,6 +35,9 @@ public class PharmacyApprovedListFragment extends Fragment {
     ArrayList<OrderModel> approvedList = new ArrayList<>();
     RecyclerView approvedListRecyclerView;
     Gson gson;
+    LinearLayout notFoundLayout;
+    TextView notFoundText;
+    ImageView notFoundIcon;
 
     public PharmacyApprovedListFragment()
     {
@@ -52,7 +58,9 @@ public class PharmacyApprovedListFragment extends Fragment {
     private void initialiseIDs(View view)
     {
         approvedListRecyclerView  =  view.findViewById(R.id.pharmacy_approved_list_recyclerview);
-
+        notFoundLayout  =   view.findViewById(R.id.not_found_layout);
+        notFoundText    =   view.findViewById(R.id.not_found_text);
+        notFoundIcon    =   view.findViewById(R.id.not_found_icon);
     }
 
     private void initialiseObjects()
@@ -71,15 +79,23 @@ public class PharmacyApprovedListFragment extends Fragment {
     {
         OrderDAO orderDAO = new OrderDAO(getContext());
         List<OrderModel> orderModelList =orderDAO.getOrderData("approved",null);
-        Log.i("tag","order list is"+gson.toJson(orderModelList));
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        approvedListRecyclerView.setLayoutManager(linearLayoutManager);
-        Collections.reverse(orderModelList);
-        approvedList.clear();
-        approvedList.addAll(orderModelList);
-        approvedListRecyclerView.setAdapter(pharmacyCommonListAdapter);
-        pharmacyCommonListAdapter.notifyDataSetChanged();
+        if(orderModelList!=null && orderModelList.size()>0) {
+            Log.i("tag", "order list is" + gson.toJson(orderModelList));
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            approvedListRecyclerView.setLayoutManager(linearLayoutManager);
+            Collections.reverse(orderModelList);
+            approvedList.clear();
+            approvedList.addAll(orderModelList);
+            approvedListRecyclerView.setAdapter(pharmacyCommonListAdapter);
+            pharmacyCommonListAdapter.notifyDataSetChanged();
+        }
+        else
+        {
+                notFoundLayout.setVisibility(View.VISIBLE);
+                notFoundText.setText("NO APPROVED PRODUCTS");
+                notFoundIcon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.approved_icon));
 
+        }
     }
 
 }

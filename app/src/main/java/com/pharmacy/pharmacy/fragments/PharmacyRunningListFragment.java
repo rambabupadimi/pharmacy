@@ -17,6 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -53,6 +56,10 @@ public class PharmacyRunningListFragment extends Fragment {
     UserPreferences userPreferences;
     PharmacyCommonListAdapter pharmacyCommonListAdapter;
     ArrayList<OrderModel> runningList = new ArrayList<>();
+    LinearLayout notFoundLayout;
+    TextView notFoundText;
+    ImageView notFoundIcon;
+
 
     public PharmacyRunningListFragment()
     {
@@ -84,15 +91,24 @@ public class PharmacyRunningListFragment extends Fragment {
     {
         OrderDAO orderDAO = new OrderDAO(getContext());
         List<OrderModel> orderModelList =orderDAO.getOrderData("running",null);
-        Log.i("tag","order list is"+gson.toJson(orderModelList));
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        runningListRecyclerView.setLayoutManager(linearLayoutManager);
-        Collections.reverse(orderModelList);
-        runningList.clear();
-        runningList.addAll(orderModelList);
-        runningListRecyclerView.setAdapter(pharmacyCommonListAdapter);
-        pharmacyCommonListAdapter.notifyDataSetChanged();
+     if(orderModelList!=null && orderModelList.size()>0) {
+         notFoundLayout.setVisibility(View.GONE);
+         Log.i("tag", "order list is" + gson.toJson(orderModelList));
+         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+         runningListRecyclerView.setLayoutManager(linearLayoutManager);
+         Collections.reverse(orderModelList);
+         runningList.clear();
+         runningList.addAll(orderModelList);
+         runningListRecyclerView.setAdapter(pharmacyCommonListAdapter);
+         pharmacyCommonListAdapter.notifyDataSetChanged();
+     }
+     else
+     {
+         notFoundLayout.setVisibility(View.VISIBLE);
+         notFoundText.setText("CLICK SEARCH ICON TO ADD MEDICINE");
+         notFoundIcon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.running_icon));
 
+     }
     }
 
     private void initialiseObjects()
@@ -109,7 +125,15 @@ public class PharmacyRunningListFragment extends Fragment {
         searchRecyclerView  =   view.findViewById(R.id.frl_search_recyclerview);
         runningListRecyclerView =   view.findViewById(R.id.frl_runninglist_recyclerview);
 
+        notFoundLayout  =   view.findViewById(R.id.not_found_layout);
+        notFoundText    =   view.findViewById(R.id.not_found_text);
+        notFoundIcon    =   view.findViewById(R.id.not_found_icon);
+
         searchCardView.setVisibility(View.GONE);
+        rlSearchView.onActionViewExpanded();
+        rlSearchView.setIconified(false);
+        rlSearchView.clearFocus();
+
     }
 
     private void initialiseClickListeners()
@@ -122,8 +146,12 @@ public class PharmacyRunningListFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText.toString().trim().length()>0)
-                     getProductsList(newText);
+                if(newText.toString().trim().length()>0) {
+                    getProductsList(newText);
+                } else {
+                    searchCardView.setVisibility(View.GONE);
+                    rlSearchView.clearFocus();
+                }
                 return false;
             }
 
@@ -132,6 +160,7 @@ public class PharmacyRunningListFragment extends Fragment {
             @Override
             public boolean onClose() {
                 searchCardView.setVisibility(View.GONE);
+                rlSearchView.clearFocus();
                 return false;
             }
         });

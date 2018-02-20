@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.pharmacy.R;
 import com.pharmacy.RobotoTextView;
@@ -34,6 +35,7 @@ public class PharmacyProfileView extends AppCompatActivity {
                     pharmacyRegisterPhoto,
                     pharmacyProfileImage;
 
+    LinearLayout    pharmacyProfileViewLayout;
     UserPreferences userPreferences;
     CollapsingToolbarLayout collapsingToolbarLayout;
     @Override
@@ -77,6 +79,9 @@ public class PharmacyProfileView extends AppCompatActivity {
         pharmacyRegisterPhoto    =   findViewById(R.id.p_pro_register_photo);
 
         pharmacyProfileImage    =   findViewById(R.id.p_pro_profile_image);
+
+        pharmacyProfileViewLayout   =   findViewById(R.id.p_pro_pharmacy_photo_layout);
+        pharmacyProfileViewLayout.setVisibility(View.GONE);
     }
 
     @Override

@@ -45,15 +45,15 @@ public class OrderDAO  extends AbstractDAO{
             values.put(COLUMN_PRODUCT_IMAGE,orderModel.Image);
             values.put(COLUMN_PRODUCT_TYPE,orderModel.ProductType);
 
-            values.put(COLUMN_ORDER_ID,orderModel.OrderID);
+            values.put(COLUMN_ORDER_ID,orderModel.OrderDetailID);
 
             long id=0;
 
-            Cursor cursor = db.query(TABLE_ORDERS, new String[]{COLUMN_ORDER_ID}, COLUMN_ORDER_ID + " = ?", new String[]{orderModel.OrderID},
+            Cursor cursor = db.query(TABLE_ORDERS, new String[]{COLUMN_ORDER_ID}, COLUMN_ORDER_ID + " = ?", new String[]{orderModel.OrderDetailID},
                     null, null, null, null);
             if (cursor.moveToFirst()) {
                 id =  db.updateWithOnConflict(TABLE_ORDERS, values,
-                        COLUMN_ORDER_ID+" ='" + orderModel.OrderID + "'",
+                        COLUMN_ORDER_ID+" ='" + orderModel.OrderDetailID + "'",
                         null, SQLiteDatabase.CONFLICT_IGNORE);
             }
             else
@@ -251,7 +251,14 @@ public class OrderDAO  extends AbstractDAO{
                         orderModel.ProductType  =   "";
                     }
 
-
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_ID))!=null)
+                        {
+                            orderModel.OrderDetailID  = cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_ID));
+                        }
+                        else
+                        {
+                            orderModel.OrderDetailID  =   "";
+                        }
 
                         orderModels.add(orderModel);
                     } catch (Exception ex) {

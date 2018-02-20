@@ -61,7 +61,7 @@ public class CommonMethods implements AppConstants{
     public static String ADD_TO_RUNNING_LIST    =   SITE_URL+"User/AddToList";
     public static String ADD_NEW_PHARMACY = SITE_URL+ "User/AddPharmacy";
 
-
+    public static String GET_ALL_MYLIST = SITE_URL+"User/GetAllMyList";
 
     public void maintainState(Context context,String status)
     {

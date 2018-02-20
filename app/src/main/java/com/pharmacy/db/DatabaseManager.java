@@ -70,7 +70,7 @@ public class DatabaseManager extends SQLiteOpenHelper implements DbConstants {
                 + COLUMN_ORDER_IS_DELIVERED + " TEXT  , "
                 + COLUMN_ORDER_IS_DELIVERED_DATE + " TEXT ,"
 
-
+                + COLUMN_ORDER_DETAIL_ID + " TEXT ,"
 
                 + COLUMN_PHARMACY_OWNER_NAME + " TEXT ,"
                 + COLUMN_ORDER_APPROVED_QUANTITY + " INTEGER DEFAULT 0 ,"

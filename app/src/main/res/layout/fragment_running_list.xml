@@ -10,6 +10,7 @@
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:id="@+id/frl_cardview"
+           android:layout_marginTop="12dp"
            android:layout_marginLeft="12dp"
            android:layout_marginRight="12dp">
            <android.support.v7.widget.SearchView
@@ -55,5 +56,7 @@
 
     </android.support.v7.widget.RecyclerView>
 
+
+    <include layout="@layout/not_found_layout"></include>
 
 </RelativeLayout>
