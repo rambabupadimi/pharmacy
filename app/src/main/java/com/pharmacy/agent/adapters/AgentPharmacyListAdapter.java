@@ -6,8 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.pharmacy.R;
@@ -45,10 +47,12 @@ public class AgentPharmacyListAdapter extends RecyclerView.Adapter<AgentPharmacy
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView aplAdapterName;
         LinearLayout aplParentLayout;
+        ImageView approvedIcon;
         public MyViewHolder(View view) {
             super(view);
             aplAdapterName   =   view.findViewById(R.id.apl_adapter_name);
             aplParentLayout  =   view.findViewById(R.id.apl_parent_layout);
+            approvedIcon     =  view.findViewById(R.id.apl_approved_icon);
         }
 
     }
@@ -61,12 +65,26 @@ public class AgentPharmacyListAdapter extends RecyclerView.Adapter<AgentPharmacy
         holder.aplParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, AgentRunningList.class);
-                intent.putExtra("pharmacy_object",gson.toJson(pharmacyModel).toString());
-                context.startActivity(intent);
+                if(pharmacyModel.IsApproved) {
+                    Intent intent = new Intent(context, AgentRunningList.class);
+                    intent.putExtra("pharmacy_object", gson.toJson(pharmacyModel).toString());
+                    context.startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(context,"Admin needs to approve",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
+        if (pharmacyModel.IsApproved)
+        {
+            holder.approvedIcon.setVisibility(View.GONE);
+        }
+        else
+        {
+            holder.approvedIcon.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

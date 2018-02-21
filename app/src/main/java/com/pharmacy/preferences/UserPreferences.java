@@ -35,6 +35,7 @@ public class UserPreferences {
     public static final String ADD_NEW_PHARMACY_ID = "add_new_pharmacy_id";
 
     public static final String GET_ALL_MY_LIST_TIMETICKS = "get_all_my_list_timeticks";
+    public static final String GET_AGENT_PHARMACY_TIMETICKS = "get_agent_pharmacy_timeticks";
 
 
     public UserPreferences(Context context) {
@@ -100,6 +101,8 @@ public class UserPreferences {
     }
 
 
+
+ // runninglist
     public void setGetAllMyListTimeticks(String value)
     {
         editor.putString(GET_ALL_MY_LIST_TIMETICKS,value);
@@ -110,6 +113,19 @@ public class UserPreferences {
     {
         return pref.getString(GET_ALL_MY_LIST_TIMETICKS,"0");
     }
+
+  //agent pharmacylist
+
+    public void setGetAgentPharmacyTimeticks(String value)
+    {
+        editor.putString(GET_AGENT_PHARMACY_TIMETICKS,value);
+        editor.commit();
+    }
+    public String getGetAgentPharmacyTimeticks()
+    {
+        return pref.getString(GET_AGENT_PHARMACY_TIMETICKS,"0");
+    }
+
 
     public void setUserHomePageStatus(boolean value)
     {

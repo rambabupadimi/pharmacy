@@ -41,5 +41,7 @@ public class AgentModel {
     public String ModifiedOn;
     public String ModifiedBy;
     public ArrayList<AgentModel>  AgentList;
+    public ArrayList<PharmacyModel> AgentPharmacyList;
+    public ArrayList<OrderModel> RunningList;
 
 }

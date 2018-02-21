@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -22,7 +23,9 @@ import com.pharmacy.R;
 import com.pharmacy.agent.fragments.AgentApprovedListFragment;
 import com.pharmacy.agent.fragments.AgentDeliveredListFragment;
 import com.pharmacy.agent.fragments.AgentRunningListFragment;
+import com.pharmacy.db.daos.OrderDAO;
 import com.pharmacy.db.daos.UserDAO;
+import com.pharmacy.db.models.OrderModel;
 import com.pharmacy.db.models.PharmacyModel;
 import com.pharmacy.db.models.UserModel;
 import com.pharmacy.operations.Post;
@@ -47,6 +50,8 @@ public class AgentRunningList extends AppCompatActivity {
     PharmacyModel pharmacyModel;
     Gson gson;
     UserPreferences userPreferences;
+    OrderDAO orderDAO;
+    ProgressBar agentHomeProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +61,10 @@ public class AgentRunningList extends AppCompatActivity {
 
 
         initialiseObjects();
-        initialiseApiCall();
-
         initialiseIDs();
         getIntentData();
+        initialiseApiCall();
+
      //   initialiseArguments();
 
         initialiseFragments();
@@ -84,6 +89,8 @@ public class AgentRunningList extends AppCompatActivity {
     private void initialiseObjects()
     {
         userPreferences = new UserPreferences(this);
+        orderDAO = new OrderDAO(AgentRunningList.this);
+
     }
 
     private void initialiseClickListeners()
@@ -129,6 +136,7 @@ public class AgentRunningList extends AppCompatActivity {
         gson    =   new Gson();
 
         viewPharmacy    =   findViewById(R.id.arl_toolbar_view_pharmacy);
+        agentHomeProgress   =   findViewById(R.id.agent_home_progress);
     }
 
     private void initialiseFragments()
@@ -223,13 +231,15 @@ public class AgentRunningList extends AppCompatActivity {
             jsonObject.put("DistributorID",userModel.DistributorID);
             jsonObject.put("UserID",userModel.UserID);
             jsonObject.put("LastUpdatedTimeTicks",userPreferences.getGetAllMyListTimeticks());
+            jsonObject.put("PharmacyID",pharmacyModel.PharmacyID);
             String json = jsonObject.toString();
-
+            agentHomeProgress.setVisibility(View.VISIBLE);
             Post post = new Post(this,CommonMethods.GET_ALL_MYLIST,json) {
                 @Override
                 public void onResponseReceived(String result) {
                     if(result!=null)
                     {
+                        agentHomeProgress.setVisibility(View.GONE);
                         try {
                             JSONObject jsonObject1 = new JSONObject(result);
                             if(jsonObject1.get("Status").toString().equalsIgnoreCase("Success")){
@@ -239,6 +249,28 @@ public class AgentRunningList extends AppCompatActivity {
                                 userPreferences.setGetAllMyListTimeticks(lastUpdatedTicks);
                                 if(jsonObject2.get("OrderList")!=null){
                                    JSONArray jsonArray = jsonObject2.getJSONArray("OrderList");
+                                   if(jsonArray.length()>0)
+                                   {
+                                       ArrayList<OrderModel> orderModelArrayList = new ArrayList<>();
+                                       for(int i=0;i<jsonArray.length();i++)
+                                       {
+                                           OrderModel orderModel = new OrderModel();
+                                           orderModel = gson.fromJson(jsonArray.getJSONObject(i).toString(),OrderModel.class);
+                                           orderModelArrayList.add(orderModel);
+                                       }
+
+                                       if(orderModelArrayList!=null && orderModelArrayList.size()>0) {
+                                           try {
+                                               for (int i = 0; i < orderModelArrayList.size(); i++) {
+                                                   Long id = orderDAO.insert(orderModelArrayList.get(i));
+                                                   Log.i("tag", "inserted order" + id);
+                                               }
+                                           }catch (Exception e)
+                                           {
+                                               e.printStackTrace();
+                                           }
+                                       }
+                                   }
                                     Log.i("Tag","json array"+jsonArray);
                                 }
                             }
@@ -246,6 +278,10 @@ public class AgentRunningList extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
+                    }
+                    else
+                    {
+                        agentHomeProgress.setVisibility(View.GONE);
                     }
                 }
             };

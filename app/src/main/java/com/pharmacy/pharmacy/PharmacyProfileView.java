@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
 import com.pharmacy.R;
 import com.pharmacy.RobotoTextView;
 import com.pharmacy.db.daos.PharmacyDAO;
@@ -180,45 +181,60 @@ public class PharmacyProfileView extends AppCompatActivity {
                 pharmacyDoorNumber.setVisibility(View.GONE);
             }
 
-            if(pharmacyModel.ImageLocalPath!=null)
+            if(pharmacyModel.ImageLocalPath!=null && pharmacyModel.ImageLocalPath.toString().trim().length()>0)
             {
-                try {
-                    Bitmap bitmap = BitmapFactory.decodeFile(pharmacyModel.ImageLocalPath);
-                    if (bitmap != null) {
-                        pharmacyProfileImage.setImageBitmap(bitmap);
-                    }
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
+                Glide.with(this)
+                        .load(pharmacyModel.ImageLocalPath)
+                        .placeholder(R.drawable.default_image)
+                        .error(R.drawable.default_image)
+                        .into(pharmacyProfileImage);
+            }
+            else
+            {
+                if(pharmacyModel.Image!=null) {
+                    Glide.with(this)
+                            .load(pharmacyModel.Image)
+                            .placeholder(R.drawable.default_image)
+                            .error(R.drawable.default_image)
+                            .into(pharmacyProfileImage);
                 }
             }
 
 
-            if(pharmacyModel.LicenceLocalPath!=null)
+            if(pharmacyModel.LicenceLocalPath!=null && pharmacyModel.LicenceLocalPath.toString().trim().length()>0)
             {
-                try {
-                    Bitmap bitmap = BitmapFactory.decodeFile(pharmacyModel.LicenceLocalPath);
-                    if (bitmap != null) {
-                        pharmacyLicencePhoto.setImageBitmap(bitmap);
-                    }
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                Glide.with(this)
+                        .load(pharmacyModel.LicenceLocalPath)
+                        .placeholder(R.drawable.default_image)
+                        .error(R.drawable.default_image)
+                        .into(pharmacyLicencePhoto);
+
+            }
+            else
+            {
+                Glide.with(this)
+                        .load(pharmacyModel.Licence)
+                        .placeholder(R.drawable.default_image)
+                        .error(R.drawable.default_image)
+                        .into(pharmacyLicencePhoto);
             }
 
-            if(pharmacyModel.BillingLocalPath!=null)
+            if(pharmacyModel.BillingLocalPath!=null && pharmacyModel.BillingLocalPath.trim().length()>0)
             {
-                try {
-                    Bitmap bitmap = BitmapFactory.decodeFile(pharmacyModel.BillingLocalPath);
-                    if (bitmap != null) {
-                        pharmacyRegisterPhoto.setImageBitmap(bitmap);
-                    }
+                Glide.with(this)
+                        .load(pharmacyModel.BillingLocalPath)
+                        .placeholder(R.drawable.default_image)
+                        .error(R.drawable.default_image)
+                        .into(pharmacyRegisterPhoto);
+            }
+            else
+            {
+                Glide.with(this)
+                        .load(pharmacyModel.Billing)
+                        .placeholder(R.drawable.default_image)
+                        .error(R.drawable.default_image)
+                        .into(pharmacyRegisterPhoto);
 
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
             }
 
 

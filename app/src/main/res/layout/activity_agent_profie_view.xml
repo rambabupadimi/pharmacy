@@ -342,7 +342,7 @@
                             <ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="120dp"
-                                android:src="@drawable/default_icon"
+                                android:src="@drawable/default_image"
                                 android:id="@+id/a_pro_agent_photo"
                                 />
 
@@ -363,7 +363,7 @@
                             <ImageView
                                 android:layout_width="120dp"
                                 android:layout_height="120dp"
-                                android:src="@drawable/default_icon"
+                                android:src="@drawable/default_image"
                                 android:id="@+id/a_pro_agent_id_proof"
                                 />
                             <com.pharmacy.RobotoTextView

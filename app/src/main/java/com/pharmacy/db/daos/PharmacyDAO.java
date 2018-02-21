@@ -21,7 +21,6 @@ public class PharmacyDAO  extends AbstractDAO{
         super(context);
     }
 
-
     public long insertOrUpdate(PharmacyModel pharmacyModel) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
@@ -46,6 +45,8 @@ public class PharmacyDAO  extends AbstractDAO{
             values.put(COLUMN_PHARMACY_PHOTO_LOCAL_PATH,pharmacyModel.ImageLocalPath);
             values.put(COLUMN_PHARMACY_LOCAL_ID,pharmacyModel.PharmacyLocalId);
             values.put(COLUMN_PHARMACY_PHONE_NUMBER,pharmacyModel.PhoneNumber);
+            values.put(COLUMN_PHARMACY_IS_APPROVED,pharmacyModel.IsApproved);
+            values.put(COLUMN_PHARMACY_IS_APPROVED_BY,pharmacyModel.ApprovedBy);
 
 
             long id=0;
@@ -70,10 +71,9 @@ public class PharmacyDAO  extends AbstractDAO{
         }
     }
 
+    public long
 
-
-
-    public long insertOrUpdateAddNewPharmacy(PharmacyModel pharmacyModel) {
+    insertOrUpdateAddNewPharmacy(PharmacyModel pharmacyModel) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -97,6 +97,8 @@ public class PharmacyDAO  extends AbstractDAO{
             values.put(COLUMN_PHARMACY_PHOTO_LOCAL_PATH,pharmacyModel.ImageLocalPath);
             values.put(COLUMN_PHARMACY_LOCAL_ID,pharmacyModel.PharmacyLocalId);
             values.put(COLUMN_PHARMACY_PHONE_NUMBER,pharmacyModel.PhoneNumber);
+            values.put(COLUMN_PHARMACY_IS_APPROVED,pharmacyModel.IsApproved);
+            values.put(COLUMN_PHARMACY_IS_APPROVED_BY,pharmacyModel.ApprovedBy);
 
 
             long id=0;
@@ -241,6 +243,29 @@ public class PharmacyDAO  extends AbstractDAO{
                         } else {
                             pharmacyModel.PharmacyID = "";
                         }
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED))!=null)
+                        {
+
+                            Log.i("tag","cursor value"+cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED)));
+                            if(cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED)).equalsIgnoreCase("1"))
+                               pharmacyModel.IsApproved  = true;
+                            else
+                               pharmacyModel.IsApproved = false;
+                        }
+                        else
+                        {
+                            pharmacyModel.IsApproved  =   false;
+                        }
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED_BY))!=null)
+                        {
+                            pharmacyModel.ApprovedBy  =cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED_BY));
+                        }
+                        else
+                        {
+                            pharmacyModel.ApprovedBy  =   "";
+                        }
+
+
 
                         pharmacyModelList.add(pharmacyModel);
                     }while (cursor.moveToNext());
@@ -253,8 +278,6 @@ public class PharmacyDAO  extends AbstractDAO{
         }
         return pharmacyModelList;
     }
-
-
 
     public PharmacyModel getPharmacyData(String userid) {
         try {
@@ -375,7 +398,26 @@ public class PharmacyDAO  extends AbstractDAO{
                         } else {
                             pharmacyModel.PharmacyID = "";
                         }
-
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED))!=null)
+                        {
+                            Log.i("tag","cursor value"+cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED)));
+                            if(cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED)).equalsIgnoreCase("1"))
+                                pharmacyModel.IsApproved  = true;
+                            else
+                                pharmacyModel.IsApproved = false;
+                        }
+                        else
+                        {
+                            pharmacyModel.IsApproved  =   false;
+                        }
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED_BY))!=null)
+                        {
+                            pharmacyModel.ApprovedBy  =cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED_BY));
+                        }
+                        else
+                        {
+                            pharmacyModel.ApprovedBy  =   "";
+                        }
                        return pharmacyModel;
 
                 }
@@ -387,8 +429,6 @@ public class PharmacyDAO  extends AbstractDAO{
         }
         return null;
     }
-
-
 
     public PharmacyModel getPharmacyDataByPharmacyID(String pharmacyLocalId) {
         try {
@@ -561,6 +601,29 @@ public class PharmacyDAO  extends AbstractDAO{
                     {
                         pharmacyModel.PharmacyID    =   "";
                     }
+
+
+                    if(cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED))!=null)
+                    {
+                        pharmacyModel.IsApproved  = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED)));
+                    }
+                    else
+                    {
+                        pharmacyModel.IsApproved  =   false;
+                    }
+                    if(cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED_BY))!=null)
+                    {
+                        Log.i("tag","cursor value"+cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED)));
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_IS_APPROVED)).equalsIgnoreCase("1"))
+                            pharmacyModel.IsApproved  = true;
+                        else
+                            pharmacyModel.IsApproved = false;
+                    }
+                    else
+                    {
+                        pharmacyModel.ApprovedBy  =   "";
+                    }
+
                     return pharmacyModel;
                 }
             }

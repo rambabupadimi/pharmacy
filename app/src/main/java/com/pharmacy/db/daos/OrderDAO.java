@@ -45,15 +45,15 @@ public class OrderDAO  extends AbstractDAO{
             values.put(COLUMN_PRODUCT_IMAGE,orderModel.Image);
             values.put(COLUMN_PRODUCT_TYPE,orderModel.ProductType);
 
-            values.put(COLUMN_ORDER_ID,orderModel.OrderDetailID);
-
+            values.put(COLUMN_ORDER_ID,orderModel.OrderID);
+            values.put(COLUMN_ORDER_DETAIL_ID,orderModel.OrderDetailID);
             long id=0;
 
-            Cursor cursor = db.query(TABLE_ORDERS, new String[]{COLUMN_ORDER_ID}, COLUMN_ORDER_ID + " = ?", new String[]{orderModel.OrderDetailID},
+            Cursor cursor = db.query(TABLE_ORDERS, new String[]{COLUMN_ORDER_DETAIL_ID}, COLUMN_ORDER_DETAIL_ID + " = ?", new String[]{orderModel.OrderDetailID},
                     null, null, null, null);
             if (cursor.moveToFirst()) {
                 id =  db.updateWithOnConflict(TABLE_ORDERS, values,
-                        COLUMN_ORDER_ID+" ='" + orderModel.OrderDetailID + "'",
+                        COLUMN_ORDER_DETAIL_ID+" ='" + orderModel.OrderDetailID + "'",
                         null, SQLiteDatabase.CONFLICT_IGNORE);
             }
             else
@@ -84,13 +84,13 @@ public class OrderDAO  extends AbstractDAO{
             String  query=null;
 
 
-            int val=1;
+            int val=1,valIs=0;
             if(from.equalsIgnoreCase("running")) {
 
                 if(pharmacyId==null)
-                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_RUNNING+" = "+val;
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+valIs+ " AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs;
                 else
-                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_RUNNING+" = "+val+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+" ";
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+valIs+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+" ";
             }
             else if(from.equalsIgnoreCase("approved")){
                if(pharmacyId==null)
@@ -99,7 +99,7 @@ public class OrderDAO  extends AbstractDAO{
                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+val+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+" ";
 
             }
-            else{
+            else if(from.equalsIgnoreCase("delivered")){
                 if(pharmacyId==null)
                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_DELIVERED+" = "+val;
                 else
@@ -251,9 +251,9 @@ public class OrderDAO  extends AbstractDAO{
                         orderModel.ProductType  =   "";
                     }
 
-                        if(cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_ID))!=null)
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_DETAIL_ID))!=null)
                         {
-                            orderModel.OrderDetailID  = cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_ID));
+                            orderModel.OrderDetailID  = cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_DETAIL_ID));
                         }
                         else
                         {

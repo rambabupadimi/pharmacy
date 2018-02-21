@@ -3,6 +3,7 @@ package com.pharmacy.login;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,9 +14,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -89,9 +92,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
+import dmax.dialog.SpotsDialog;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -137,6 +143,8 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
     private boolean mVerificationInProgress = false;
 
     Gson gson;
+
+    AlertDialog alertDialog;
 
     private String deviceUniqueID = "";
     public Fragment_Auth2() {
@@ -201,6 +209,7 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
         cInput.setInputType(InputType.TYPE_CLASS_NUMBER);
         userPreferences         = new UserPreferences(getActivity());
 
+        alertDialog             =   new SpotsDialog(getContext());
 
         cInput.setCodeReadyListener(new CodeInput.codeReadyListener() {
             @Override
@@ -944,8 +953,10 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
 
     private void registerInBackground() {
 
-        if(CommonMethods.isInternetConnected(getContext()))
+        if(CommonMethods.isInternetConnected(getContext())) {
+            alertDialog.show();
             new LongRunningGetIO().execute();
+        }
     }
 
 
@@ -1009,6 +1020,7 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
             return result;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         protected void onPostExecute(String response) {
             super.onPostExecute(response);
             try {
@@ -1016,11 +1028,15 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
                 if (!StringUtils.isBlank(response) && response.contains("Unable to resolve host")) {
 //                    mainActivity.show_snakbar(getString(R.string.check_internet),relative_main_header);
 //                    clearTwitterActiveSession();
+                    Toast.makeText(getContext(),"Unable to resolve host",Toast.LENGTH_LONG).show();
+
+                    alertDialog.dismiss();
 
                 } else if (!StringUtils.isBlank(response) && response.contains("failed to connect")) {
 //                    mainActivity.show_snakbar(getString(R.string.noServerResponse),relative_main_header);
 //                    clearTwitterActiveSession();
-                    Toast.makeText(getContext(),"wrong",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),"failed to connect",Toast.LENGTH_LONG).show();
+                    alertDialog.dismiss();
                 } else {
                     if (!StringUtils.isBlank(response)) {
 
@@ -1035,14 +1051,17 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
                                 if(userPreferences.getUserLoginType().toString().equalsIgnoreCase(getContext().getString(R.string.agent))) {
 
                                     if(userModel.IsNewUser) {
+                                        alertDialog.dismiss();
                                         intent = new Intent(getContext(), AgentRegistration.class);
                                     }
                                     else
                                     {
+                                       // alertDialog.setMessage("Agent Details Loading..");
                                         GetUserDetailsRequest getUserDetailsRequest = new GetUserDetailsRequest();
                                         getUserDetailsRequest.UserID    =   userPreferences.getUserGid();
                                         getUserDetailsRequest.UserType  =   getContext().getString(R.string.agent);
                                         getUserDetailsRequest.DistributorID =   userModel.DistributorID;
+                                        getUserDetailsRequest.LastUpdatedTimeTicks = "0";
                                         String json = gson.toJson(getUserDetailsRequest);
                                         Post post = new Post(getContext(),CommonMethods.GET_USER_DETAILS,json) {
                                             @Override
@@ -1053,23 +1072,34 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
                                                         JSONObject jsonObject1 = new JSONObject(result);
                                                         if(jsonObject1.get("Status").toString().equalsIgnoreCase("Success"))
                                                         {
-                                                            AgentModel agentModel = gson.fromJson(jsonObject1.get("Response").toString(),AgentModel.class);
-                                                            AgentDAO agentDAO = new AgentDAO(getContext());
-                                                            long id = agentDAO.insertOrUpdate(agentModel);
-                                                            if(id!=-1)
-                                                            {
-                                                              Intent intent = new Intent(getContext(), AgentPharmacyListWithNavigation.class);
-                                                              intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                              startActivity(intent);
-                                                            }
+                                                           if(jsonObject1.get("Response")!=null) {
+                                                               JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
+
+                                                               if(jsonObject2.get("UserDetails")!=null) {
+                                                                   AgentModel agentModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), AgentModel.class);
+                                                                   Long id = commonMethods.renderLoginDataForAgent(getContext(), agentModel);
+                                                                   if (id != -1) {
+                                                                       alertDialog.dismiss();
+                                                                       Intent intent = new Intent(getContext(), AgentPharmacyListWithNavigation.class);
+                                                                       intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                       startActivity(intent);
+                                                                   }
+                                                               }
+
+                                                           }
                                                         }
                                                         else
                                                         {
+                                                            alertDialog.dismiss();
                                                              Toast.makeText(getContext(),"Something wrong",Toast.LENGTH_LONG).show();
                                                         }
                                                     } catch (JSONException e) {
                                                         e.printStackTrace();
                                                     }
+                                                }
+                                                else
+                                                {
+                                                    alertDialog.dismiss();
                                                 }
                                             }
                                         };
@@ -1080,13 +1110,18 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
                                 {
                                     if(userModel.IsNewUser)
                                     {
+                                        alertDialog.dismiss();
                                         intent = new Intent(getContext(), PharmacyRegistration.class);
                                     }else
                                     {
+                                    //    alertDialog.setMessage("Pharmacy Details Loading..");
+
                                         GetUserDetailsRequest getUserDetailsRequest = new GetUserDetailsRequest();
                                         getUserDetailsRequest.UserID    =   userPreferences.getUserGid();
                                         getUserDetailsRequest.UserType  =   getContext().getString(R.string.pharmacy);
                                         getUserDetailsRequest.DistributorID =   userModel.DistributorID;
+                                        getUserDetailsRequest.LastUpdatedTimeTicks = "0";
+
                                         String json = gson.toJson(getUserDetailsRequest);
                                         Post post = new Post(getContext(),CommonMethods.GET_USER_DETAILS,json) {
                                             @Override
@@ -1097,23 +1132,36 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
                                                         JSONObject jsonObject1 = new JSONObject(result);
                                                         if(jsonObject1.get("Status").toString().equalsIgnoreCase("Success"))
                                                         {
-                                                            PharmacyModel pharmacyModel = gson.fromJson(jsonObject1.get("Response").toString(),PharmacyModel.class);
-                                                            PharmacyDAO pharmacyDAO = new PharmacyDAO(getContext());
-                                                            long id = pharmacyDAO.insertOrUpdate(pharmacyModel);
-                                                            if(id!=-1)
-                                                            {
-                                                                Intent intent = new Intent(getContext(), PharmacyRunningListWithNavigation.class);
-                                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                                startActivity(intent);
+                                                            if(jsonObject1.get("Response")!=null) {
+                                                                JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
+                                                                if(jsonObject2.get("UserDetails")!=null) {
+                                                                    PharmacyModel pharmacyModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), PharmacyModel.class);
+                                                                    Long id = commonMethods.renderLoginDataForPharmacy(getContext(), pharmacyModel);
+                                                                    if (id != -1) {
+                                                                        alertDialog.dismiss();
+                                                                        Intent intent = new Intent(getContext(), PharmacyRunningListWithNavigation.class);
+                                                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                        startActivity(intent);
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    alertDialog.dismiss();
+                                                                }
                                                             }
                                                         }
                                                         else
                                                         {
+                                                            alertDialog.dismiss();
                                                             Toast.makeText(getContext(),"Something wrong",Toast.LENGTH_LONG).show();
                                                         }
                                                     } catch (JSONException e) {
                                                         e.printStackTrace();
                                                     }
+                                                }
+                                                else{
+                                                    alertDialog.dismiss();
+
                                                 }
                                             }
                                         };
@@ -1124,25 +1172,30 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                         Intent.FLAG_ACTIVITY_NEW_TASK |
                                         Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
+                                Bundle bndlanimation = ActivityOptions.makeCustomAnimation(getContext(),
+                                        R.anim.next_swipe2, R.anim.next_swipe1).toBundle();
+
+                                startActivity(intent,bndlanimation);
                             }
                             else
                             {
+                                alertDialog.dismiss();
                                 Toast.makeText(getContext(),"Something wrong",Toast.LENGTH_LONG).show();
                             }
                         }
                         else
                         {
-
+                            alertDialog.dismiss();
                         }
 
                     } else {
+                        alertDialog.dismiss();
                         Toast.makeText(getContext(),"wrong",Toast.LENGTH_LONG).show();
                        // mainActivity.show_snakbar(getString(R.string.noServerResponse), relative_main_header);
                     }
                 }
             } catch (Exception e) {
-
+                alertDialog.dismiss();
                 if (progress_loading.getVisibility() == View.VISIBLE) {
                     progress_loading.setVisibility(View.GONE);
                     right_image.setVisibility(View.VISIBLE);

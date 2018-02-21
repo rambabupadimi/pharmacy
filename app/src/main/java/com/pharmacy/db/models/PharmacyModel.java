@@ -46,7 +46,7 @@ public class PharmacyModel {
     public String UpdatedTime;
 
 
-    public String IsApproved;
+    public boolean IsApproved;
     public String ApprovedBy;
     public String IsActive;
     public String IsDeleted;
@@ -55,4 +55,6 @@ public class PharmacyModel {
     public String ModifiedOn;
     public String IsModifiedBy;
     public ArrayList<PharmacyModel> PharmacyList;
+    public ArrayList<OrderModel> RunningList;
+
 }

@@ -11,11 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:id="@+id/arl_toolbar">
+        android:id="@+id/arl_toolbar"
+        app:contentInsetStartWithNavigation="0dp">
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="horizontal"
+          android:gravity="center_vertical"
           >
         <com.pharmacy.RobotoTextView
             android:layout_width="match_parent"
@@ -26,7 +28,19 @@
             android:id="@+id/arl_toolbar_heading"
             android:layout_weight="1"
             app:typeface="robotoMedium"
+            android:layout_marginRight="6dp"
             />
+
+          <ProgressBar
+              android:layout_width="24dp"
+              android:layout_height="24dp"
+              android:background="@drawable/progress_bar_color"
+              android:paddingLeft="12dp"
+              android:paddingRight="12dp"
+              android:id="@+id/agent_home_progress"
+              android:visibility="gone"
+
+              />
           <com.pharmacy.RobotoTextView
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -35,7 +49,8 @@
               android:textColor="@color/colorWhite"
               app:typeface="robotoLight"
               android:id="@+id/arl_toolbar_view_pharmacy"
-              android:textSize="16sp"/>
+              android:textSize="16sp"
+              android:layout_marginLeft="6dp"/>
 
       </LinearLayout>
     </android.support.v7.widget.Toolbar>

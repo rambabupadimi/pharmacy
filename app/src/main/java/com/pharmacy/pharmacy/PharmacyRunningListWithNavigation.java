@@ -78,20 +78,28 @@ public class PharmacyRunningListWithNavigation extends AppCompatActivity
         profileName.setText(pharmacyModel.StoreName);
         toolbarHeading.setText(pharmacyModel.StoreName);
 
-        if(pharmacyModel.ImageLocalPath!=null)
+        try{
+        if(pharmacyModel.ImageLocalPath!=null && pharmacyModel.ImageLocalPath.toString().length()>0)
         {
-            try {
                 Glide.with(this)
                         .load(pharmacyModel.ImageLocalPath)
                         .placeholder(R.drawable.default_icon)
                         .error(R.drawable.default_icon)
                         .into(profileIcon);
 
+        }
+        else
+        {
+            Glide.with(this)
+                    .load(pharmacyModel.Image)
+                    .placeholder(R.drawable.default_icon)
+                    .error(R.drawable.default_icon)
+                    .into(profileIcon);
 
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+        }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
 
 

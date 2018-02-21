@@ -178,7 +178,7 @@ public class ShowProductQuantityDialog extends Activity {
                                        JSONObject responseObject = jsonObject.getJSONObject("Response");
                                         String json = responseObject.getJSONObject("Orders").toString();
                                        OrderModel orderModel1 = gson.fromJson(json,OrderModel.class);
-                                       orderModel1.IsRunning = true;
+                                       orderModel1.IsRunning = false;
                                        if(orderModel1!=null)
                                        {
                                            try {

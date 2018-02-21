@@ -67,6 +67,9 @@ public interface DbConstants {
     public final String COLUMN_PHARMACY_REGISTER_CERTIFICATE_PHOTO_LOCAL_PATH = "pharmacy_register_certificate_photo_local_path";
     public final String COLUMN_PHARMACY_PHONE_NUMBER = "pharmacy_phone_number";
 
+    public final String COLUMN_PHARMACY_IS_APPROVED     =   "pharmacy_is_approved";
+    public final String COLUMN_PHARMACY_IS_APPROVED_BY  =   "pharmacy_is_approved_by";
+
 
 
     public final String TABLE_ORDERS                 =   "orders";

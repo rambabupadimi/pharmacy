@@ -9,4 +9,5 @@ public class GetUserDetailsRequest {
     public String UserID;
     public String DistributorID;
     public String UserType;
+    public String LastUpdatedTimeTicks;
 }

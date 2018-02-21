@@ -23,7 +23,12 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.pharmacy.db.daos.AgentDAO;
+import com.pharmacy.db.daos.OrderDAO;
 import com.pharmacy.db.daos.PharmacyDAO;
+import com.pharmacy.db.models.AgentModel;
+import com.pharmacy.db.models.OrderModel;
+import com.pharmacy.db.models.PharmacyModel;
 import com.pharmacy.operations.UploadFiles;
 import com.pharmacy.preferences.UserPreferences;
 
@@ -58,10 +63,11 @@ public class CommonMethods implements AppConstants{
     public static String CONFIRM_USER_REGISTRATION = SITE_URL+"Registration/ConfirmUserRegistration";
     public static String GET_USER_DETAILS =SITE_URL+"Registration/GetUserDetails";
     public static String SEARCH_PRODUCT =   SITE_URL+"User/SearchProduct";
-    public static String ADD_TO_RUNNING_LIST    =   SITE_URL+"User/AddToList";
+    public static String ADD_TO_RUNNING_LIST    =   SITE_URL+"User/AddToRunningList";
     public static String ADD_NEW_PHARMACY = SITE_URL+ "User/AddPharmacy";
 
-    public static String GET_ALL_MYLIST = SITE_URL+"User/GetAllMyList";
+    public static String GET_ALL_MYLIST = SITE_URL+"User/GetPharmacyRunningList";
+    public static String GET_AGENT_PHARMACY = SITE_URL+"User/GetAgentPharmacy";
 
     public void maintainState(Context context,String status)
     {
@@ -482,4 +488,57 @@ public class CommonMethods implements AppConstants{
         }
     }
 
+
+    public long renderLoginDataForAgent(Context context, AgentModel agentModel)
+    {
+        AgentDAO agentDAO = new AgentDAO(context);
+        PharmacyDAO pharmacyDAO = new PharmacyDAO(context);
+        OrderDAO orderDAO = new OrderDAO(context);
+
+        long id =-1;
+        try {
+            id = agentDAO.insertOrUpdate(agentModel);
+
+            ArrayList<PharmacyModel> pharmacyModelArrayList = agentModel.AgentPharmacyList;
+            if (pharmacyModelArrayList != null && pharmacyModelArrayList.size() > 0) {
+                for (int i = 0; i < pharmacyModelArrayList.size(); i++) {
+                    id = pharmacyDAO.insertOrUpdateAddNewPharmacy(pharmacyModelArrayList.get(i));
+                }
+            }
+
+            ArrayList<OrderModel> orderModelArrayList = agentModel.RunningList;
+            if (orderModelArrayList != null && orderModelArrayList.size() > 0) {
+                for (int i = 0; i < orderModelArrayList.size(); i++) {
+                    id = orderDAO.insert(orderModelArrayList.get(i));
+                }
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return id;
+    }
+
+
+    public long renderLoginDataForPharmacy(Context context, PharmacyModel pharmacyModel)
+    {
+        PharmacyDAO pharmacyDAO = new PharmacyDAO(context);
+        OrderDAO orderDAO = new OrderDAO(context);
+
+        long id =-1;
+        try {
+             id = pharmacyDAO.insertOrUpdateAddNewPharmacy(pharmacyModel);
+
+            ArrayList<OrderModel> orderModelArrayList = pharmacyModel.RunningList;
+            if (orderModelArrayList != null && orderModelArrayList.size() > 0) {
+                for (int i = 0; i < orderModelArrayList.size(); i++) {
+                    id = orderDAO.insert(orderModelArrayList.get(i));
+                }
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return id;
+    }
 }

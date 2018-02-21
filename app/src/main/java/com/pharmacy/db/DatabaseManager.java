@@ -101,6 +101,9 @@ public class DatabaseManager extends SQLiteOpenHelper implements DbConstants {
                 + COLUMN_PHARMACY_PINCODE + " TEXT , "
                 + COLUMN_PHARMACY_DOOR_NUMBER + " TEXT ,"
 
+                + COLUMN_PHARMACY_IS_APPROVED + " TEXT ,"
+                + COLUMN_PHARMACY_IS_APPROVED_BY + " TEXT ,"
+
                 + COLUMN_PHARMACY_PHOTO + " TEXT ,"
                 + COLUMN_PHARMACY_LICENCE_PHOTO + " TEXT , "
                 + COLUMN_PHARMACY_REGISTER_CERTIFICATE_PHOTO + " TEXT ,"

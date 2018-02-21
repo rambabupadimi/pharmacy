@@ -5,9 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,8 +22,10 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.pharmacy.AppConstants;
 import com.pharmacy.CommonMethods;
@@ -32,9 +36,15 @@ import com.pharmacy.db.daos.AgentDAO;
 import com.pharmacy.db.daos.PharmacyDAO;
 import com.pharmacy.db.models.AgentModel;
 import com.pharmacy.db.models.PharmacyModel;
+import com.pharmacy.operations.Post;
 import com.pharmacy.preferences.UserPreferences;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class AgentPharmacyListWithNavigation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener , AppConstants{
@@ -58,7 +68,9 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
     LinearLayout notFoundLayout;
     TextView notFoundText;
     ImageView notFoundIcon;
+    Gson gson;
 
+    SwipeRefreshLayout swipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,9 +83,90 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
         initialiseClickListeners();
         initialiseStatus();
         setToolbarAndNavbarData();
+        refreshList();
 
 
     }
+
+    private void refreshList()
+    {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+               if(CommonMethods.isInternetConnected(AgentPharmacyListWithNavigation.this))
+                    refreshItems();
+               else
+                   Toast.makeText(AgentPharmacyListWithNavigation.this,"Check Internet Connection",Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void refreshItems()
+    {
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("UserID",userPreferences.getUserGid());
+            jsonObject.put("LastUpdatedTimeTicks",userPreferences.getGetAgentPharmacyTimeticks());
+            String json = jsonObject.toString();
+            Post post = new Post(AgentPharmacyListWithNavigation.this,CommonMethods.GET_AGENT_PHARMACY,json) {
+                @Override
+                public void onResponseReceived(String result) {
+                    Log.i("tag","result is"+result);
+                    if(result!=null){
+                        try {
+                            JSONObject jsonObject1 = new JSONObject(result);
+                            if(jsonObject1.get("Status").toString().equalsIgnoreCase("Success"))
+                            {
+                                if(jsonObject1.get("Response")!=null)
+                                {
+                                    try {
+                                        JSONObject newObject = jsonObject1.getJSONObject("Response");
+                                        String ticks = newObject.get("LastUpdatedTimeTicks").toString();
+                                        userPreferences.setGetAgentPharmacyTimeticks(ticks);
+
+                                        if (newObject.get("Pharmacies") != null) {
+                                            JSONArray jsonArray = newObject.getJSONArray("Pharmacies");
+                                            if (jsonArray != null && jsonArray.length() > 0) {
+                                                for (int i = 0; i < jsonArray.length(); i++) {
+                                                    PharmacyModel pharmacyModel = gson.fromJson(jsonArray.getJSONObject(i).toString(), PharmacyModel.class);
+                                                    pharmacyDAO.insertOrUpdateAddNewPharmacy(pharmacyModel);
+
+                                                }
+                                                initialiseAdapterData();
+                                                swipeRefreshLayout.setRefreshing(false);
+                                            }
+                                        }
+                                    }catch (Exception e)
+                                    {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                else
+                                {
+                                    swipeRefreshLayout.setRefreshing(false);
+                                }
+
+                             }
+                            else
+                            {
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    }
+                }
+            };
+            post.execute();
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void initialiseAdapterData()
     {
@@ -127,6 +220,7 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
         agentDAO        =   new AgentDAO(this);
         userPreferences =   new UserPreferences(this);
         pharmacyDAO     =   new PharmacyDAO(this);
+        gson            =   new Gson();
     }
 
     private void initialiseIDs()
@@ -145,6 +239,8 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
         notFoundLayout          =   findViewById(R.id.not_found_layout);
         notFoundText            =   findViewById(R.id.not_found_text);
         notFoundIcon            = findViewById(R.id.not_found_icon);
+
+        swipeRefreshLayout      =   findViewById(R.id.swipeRefreshLayout);
         setSupportActionBar(aplnToolbar);
     }
 

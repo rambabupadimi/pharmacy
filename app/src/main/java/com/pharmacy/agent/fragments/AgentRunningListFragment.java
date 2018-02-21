@@ -90,7 +90,10 @@ public class AgentRunningListFragment extends Fragment {
     private void inflateData()
     {
 
-       String pharmacyLocalId =  getArguments().getString("pharmacy_id");
+       //String pharmacyLocalId =  getArguments().getString("pharmacy_id");
+
+        String pharmacyLocalId =  userPreferences.getAgentSelectedPharmacyId();
+
         OrderDAO orderDAO = new OrderDAO(getContext());
         List<OrderModel> orderModelList =orderDAO.getOrderData("running",pharmacyLocalId);
         Log.i("tag","order list is"+gson.toJson(orderModelList));
