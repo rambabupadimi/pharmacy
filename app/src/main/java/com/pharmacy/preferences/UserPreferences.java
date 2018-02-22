@@ -31,12 +31,16 @@ public class UserPreferences {
 
 
     public static final String AGENT_SELECTED_PHARMACY_ID = "agent_selected_pharmacy_id";
-
     public static final String ADD_NEW_PHARMACY_ID = "add_new_pharmacy_id";
+    public static final String PHARMACY_REGISTER_LOCAL_USER_ID ="pharmacy_register_local_user_id";
+
+
 
     public static final String GET_ALL_MY_LIST_TIMETICKS = "get_all_my_list_timeticks";
     public static final String GET_AGENT_PHARMACY_TIMETICKS = "get_agent_pharmacy_timeticks";
+    public static final String GET_ALL_USER_DETAILS_TIMETICKS = "get_all_user_details_timeticks";
 
+    public static final String FIREBASE_TOKEN = "firebase_token";
 
     public UserPreferences(Context context) {
         this.context = context;
@@ -98,6 +102,41 @@ public class UserPreferences {
     public String getAddNewPharmacyId()
     {
         return   pref.getString(ADD_NEW_PHARMACY_ID,"");
+    }
+
+
+    public void setFirebaseToken(String value)
+    {
+        editor.putString(FIREBASE_TOKEN,value);
+        editor.commit();
+    }
+
+    public String getFirebaseToken()
+    {
+        return pref.getString(FIREBASE_TOKEN,"");
+    }
+
+    // pharmacy register local userid
+    public void setPharmacyRegisterLocalUserId(String value)
+    {
+        editor.putString(PHARMACY_REGISTER_LOCAL_USER_ID,value);
+        editor.commit();
+    }
+    public String getPharmacyRegisterLocalUserId()
+    {
+        return pref.getString(PHARMACY_REGISTER_LOCAL_USER_ID,"");
+    }
+
+ //getall user details
+
+    public void setGetAllUserDetailsTimeticks(String value)
+    {
+        editor.putString(GET_ALL_USER_DETAILS_TIMETICKS,value);
+        editor.commit();
+    }
+    public String getGetAllUserDetailsTimeticks()
+    {
+        return pref.getString(GET_ALL_USER_DETAILS_TIMETICKS,"0");
     }
 
 

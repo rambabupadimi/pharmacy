@@ -92,7 +92,7 @@ public class ShowProductQuantityDialog extends Activity {
         pharmacyDAO =   new PharmacyDAO(this);
         orderDAO    =   new OrderDAO(this);
         userModel   =   userDAO.getUserData(userPreferences.getUserGid());
-        pharmacyModel   =   pharmacyDAO.getPharmacyData(userPreferences.getUserGid());
+        pharmacyModel   =   pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
     }
 
     private void initialiseClickListeners()

@@ -21,13 +21,35 @@
             />
     </android.support.v7.widget.Toolbar>
 
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_centerInParent="true">
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="Your request is processing....."
-        android:gravity="center"/>
+        android:id="@+id/request_processing_message"/>
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/request_processing_progressbar"
+        android:visibility="gone"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="Refresh"
+        android:layout_margin="6dp"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:textColor="@color/colorWhite"
+        android:id="@+id/request_processing_refresh"/>
+</LinearLayout>
 
 
     <Button
@@ -37,6 +59,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
         android:textColor="@color/colorWhite"
-        android:id="@+id/ap_go_to_homepage"/>
+        android:id="@+id/ap_go_to_homepage"
+        android:visibility="gone"/>
 
 </RelativeLayout>

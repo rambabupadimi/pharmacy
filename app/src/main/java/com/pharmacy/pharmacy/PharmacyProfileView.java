@@ -99,7 +99,7 @@ public class PharmacyProfileView extends AppCompatActivity {
     private void inflateProfileView()
     {
         PharmacyDAO pharmacyDAO = new PharmacyDAO(this);
-        PharmacyModel   pharmacyModel = pharmacyDAO.getPharmacyData(userPreferences.getUserGid());
+        PharmacyModel   pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
         if(pharmacyModel!=null)
         {
 

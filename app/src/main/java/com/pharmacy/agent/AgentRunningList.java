@@ -1,11 +1,14 @@
 package com.pharmacy.agent;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -231,6 +234,7 @@ public class AgentRunningList extends AppCompatActivity {
             jsonObject.put("DistributorID",userModel.DistributorID);
             jsonObject.put("UserID",userModel.UserID);
             jsonObject.put("LastUpdatedTimeTicks",userPreferences.getGetAllMyListTimeticks());
+  // here we need to send pharmacy id has pharmacy id
             jsonObject.put("PharmacyID",pharmacyModel.PharmacyID);
             String json = jsonObject.toString();
             agentHomeProgress.setVisibility(View.VISIBLE);
@@ -290,5 +294,10 @@ public class AgentRunningList extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
+
+
+
 
 }

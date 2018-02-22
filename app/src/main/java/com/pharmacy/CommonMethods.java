@@ -2,6 +2,7 @@ package com.pharmacy;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
@@ -22,13 +23,20 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.pharmacy.agent.AgentPharmacyListWithNavigation;
 import com.pharmacy.db.daos.AgentDAO;
 import com.pharmacy.db.daos.OrderDAO;
 import com.pharmacy.db.daos.PharmacyDAO;
+import com.pharmacy.db.daos.UserDAO;
 import com.pharmacy.db.models.AgentModel;
 import com.pharmacy.db.models.OrderModel;
 import com.pharmacy.db.models.PharmacyModel;
+import com.pharmacy.db.models.UserModel;
+import com.pharmacy.models.GetUserDetailsRequest;
+import com.pharmacy.operations.Post;
 import com.pharmacy.operations.UploadFiles;
 import com.pharmacy.preferences.UserPreferences;
 
@@ -61,11 +69,11 @@ public class CommonMethods implements AppConstants{
     public static String REGISTRATION_VERIFY_USER = ""+SITE_URL+"Registration/VerifyUser";
     public static String MEDIA_UPLOAD = SITE_URL+"Upload/MediaUpload";
     public static String CONFIRM_USER_REGISTRATION = SITE_URL+"Registration/ConfirmUserRegistration";
-    public static String GET_USER_DETAILS =SITE_URL+"Registration/GetUserDetails";
     public static String SEARCH_PRODUCT =   SITE_URL+"User/SearchProduct";
     public static String ADD_TO_RUNNING_LIST    =   SITE_URL+"User/AddToRunningList";
     public static String ADD_NEW_PHARMACY = SITE_URL+ "User/AddPharmacy";
 
+    public static String GET_USER_DETAILS =SITE_URL+"Registration/GetUserDetails";
     public static String GET_ALL_MYLIST = SITE_URL+"User/GetPharmacyRunningList";
     public static String GET_AGENT_PHARMACY = SITE_URL+"User/GetAgentPharmacy";
 
@@ -332,26 +340,26 @@ public class CommonMethods implements AppConstants{
 
                                 if(type.toString().equalsIgnoreCase("licence_photo"))
                                 {
-                                    com.pharmacy.db.models.PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyData(userPreferences.getUserGid());
+                                    com.pharmacy.db.models.PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
                                     pharmacyModel.LicenceLocalPath = path;
                                     pharmacyModel.Licence       =   url;
-                                    pharmacyDAO.insertOrUpdate(pharmacyModel);
+                                    pharmacyDAO.insertOrUpdateAddNewPharmacy(pharmacyModel);
 
                                 }
                                 else if(type.toString().equalsIgnoreCase("register_photo"))
                                 {
-                                    com.pharmacy.db.models.PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyData(userPreferences.getUserGid());
+                                    com.pharmacy.db.models.PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
                                     pharmacyModel.BillingLocalPath  =   path;
                                     pharmacyModel.Billing           =   url;
-                                    pharmacyDAO.insertOrUpdate(pharmacyModel);
+                                    pharmacyDAO.insertOrUpdateAddNewPharmacy(pharmacyModel);
 
                                 }
                                 else if(type.toString().equalsIgnoreCase("pharmacy_photo"))
                                 {
-                                    com.pharmacy.db.models.PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyData(userPreferences.getUserGid());
+                                    com.pharmacy.db.models.PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
                                     pharmacyModel.ImageLocalPath    =   path;
                                     pharmacyModel.Image     =   url;
-                                    pharmacyDAO.insertOrUpdate(pharmacyModel);
+                                    pharmacyDAO.insertOrUpdateAddNewPharmacy(pharmacyModel);
 
                                 }
 
@@ -541,4 +549,110 @@ public class CommonMethods implements AppConstants{
         }
         return id;
     }
+
+
+
+    public String getAgentRequestData(Context context,String type) {
+        UserPreferences userPreferences = new UserPreferences(context);
+        UserDAO userDAO                 = new UserDAO(context);
+        Gson gson                       = new Gson();
+        UserModel userModel             = userDAO.getUserData(userPreferences.getUserGid());
+        GetUserDetailsRequest getUserDetailsRequest = new GetUserDetailsRequest();
+        getUserDetailsRequest.UserID        =   userPreferences.getUserGid();
+        if(type.toString().equalsIgnoreCase(context.getString(R.string.agent)))
+           getUserDetailsRequest.UserType   =   context.getString(R.string.agent);
+        else
+            getUserDetailsRequest.UserType  = context.getString(R.string.pharmacy);
+        getUserDetailsRequest.DistributorID =   userModel.DistributorID;
+        getUserDetailsRequest.LastUpdatedTimeTicks  = userPreferences.getGetAllUserDetailsTimeticks();
+        String json = gson.toJson(getUserDetailsRequest);
+
+        return json;
+    }
+
+
+    private void updateAgentData(final Context context)
+    {
+        final Gson gson = new Gson();
+        String json = getAgentRequestData(context,context.getString(R.string.agent));
+        final UserPreferences userPreferences =new UserPreferences(context);
+
+        Post post = new Post(context, CommonMethods.GET_USER_DETAILS,json) {
+            @Override
+            public void onResponseReceived(String result) {
+                if(result!=null)
+                {
+                    try {
+                        JSONObject jsonObject1 = new JSONObject(result);
+                        if(jsonObject1.get("Status").toString().equalsIgnoreCase("Success"))
+                        {
+                            if(jsonObject1.get("Response")!=null) {
+                                JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
+
+                                try {
+                                    if (jsonObject2.get("UserDetails") != null) {
+                                        AgentModel agentModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), AgentModel.class);
+                                        Long id = renderLoginDataForAgent(context, agentModel);
+                                    }
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                String ticks = jsonObject2.get("LastUpdatedTimeTicks").toString();
+                                userPreferences.setGetAllUserDetailsTimeticks(ticks);
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        post.execute();
+    }
+
+
+
+    private void updatePharmacyData(final Context context)
+    {
+        final Gson gson = new Gson();
+        String json = getAgentRequestData(context,context.getString(R.string.pharmacy));
+        final UserPreferences userPreferences =new UserPreferences(context);
+
+        Post post = new Post(context, CommonMethods.GET_USER_DETAILS,json) {
+            @Override
+            public void onResponseReceived(String result) {
+                if(result!=null)
+                {
+                    try {
+                        JSONObject jsonObject1 = new JSONObject(result);
+                        if(jsonObject1.get("Status").toString().equalsIgnoreCase("Success"))
+                        {
+                            if(jsonObject1.get("Response")!=null) {
+                                JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
+
+                                try {
+                                    if (jsonObject2.get("UserDetails") != null) {
+                                        PharmacyModel pharmacyModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), PharmacyModel.class);
+                                        Long id = renderLoginDataForPharmacy(context, pharmacyModel);
+                                    }
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                String ticks = jsonObject2.get("LastUpdatedTimeTicks").toString();
+                                userPreferences.setGetAllUserDetailsTimeticks(ticks);
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        post.execute();
+    }
+
 }

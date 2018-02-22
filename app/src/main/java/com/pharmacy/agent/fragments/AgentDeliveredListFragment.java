@@ -1,8 +1,13 @@
 package com.pharmacy.agent.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -53,12 +58,6 @@ public class AgentDeliveredListFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        inflateData();
-    }
-
     private void initialiseObjects()
     {
         gson    =   new Gson();
@@ -101,4 +100,28 @@ public class AgentDeliveredListFragment extends Fragment {
 
     }
 
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i("tag","yes its called");
+
+        }
+    };
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(broadcastReceiver);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        inflateData();
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,new IntentFilter("product_status_delivered"));
+
+    }
 }

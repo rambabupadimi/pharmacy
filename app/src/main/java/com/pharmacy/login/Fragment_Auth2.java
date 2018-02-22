@@ -56,6 +56,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -960,6 +962,15 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
     }
 
 
+    private String getDeviceID()
+    {
+            String token = FirebaseInstanceId.getInstance().getToken();
+            Log.i("tag","token is"+token);
+            userPreferences.setFirebaseToken(token);
+            return token;
+
+    }
+
     public class LongRunningGetIO extends AsyncTask<String, String, String> {
         StringBuilder s;
         String json;
@@ -970,11 +981,11 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
             super.onPreExecute();
             UserModel request = new UserModel();
             request.PhoneNumber = _phoneNumber;
-            request.DeviceId    = deviceUniqueID;
+            request.DeviceId    =getDeviceID() ;
             request.DeviceUniqueId = deviceUniqueID;
             request.DeviceType  = "Android";
             request.UserID      =   "0";
-            request.UserType    =   "agent";
+            request.UserType    =   userPreferences.getUserLoginType();
             request.DistributorID   = "1";
             request.IsVerified  =   true;
             Gson gson = new Gson();
@@ -1061,7 +1072,7 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
                                         getUserDetailsRequest.UserID    =   userPreferences.getUserGid();
                                         getUserDetailsRequest.UserType  =   getContext().getString(R.string.agent);
                                         getUserDetailsRequest.DistributorID =   userModel.DistributorID;
-                                        getUserDetailsRequest.LastUpdatedTimeTicks = "0";
+                                        getUserDetailsRequest.LastUpdatedTimeTicks = userPreferences.getGetAllUserDetailsTimeticks();
                                         String json = gson.toJson(getUserDetailsRequest);
                                         Post post = new Post(getContext(),CommonMethods.GET_USER_DETAILS,json) {
                                             @Override
@@ -1075,18 +1086,27 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
                                                            if(jsonObject1.get("Response")!=null) {
                                                                JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
 
-                                                               if(jsonObject2.get("UserDetails")!=null) {
-                                                                   AgentModel agentModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), AgentModel.class);
-                                                                   Long id = commonMethods.renderLoginDataForAgent(getContext(), agentModel);
-                                                                   if (id != -1) {
-                                                                       alertDialog.dismiss();
-                                                                       Intent intent = new Intent(getContext(), AgentPharmacyListWithNavigation.class);
-                                                                       intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                                       startActivity(intent);
+                                                               try {
+                                                                   if (jsonObject2.get("UserDetails") != null) {
+                                                                       AgentModel agentModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), AgentModel.class);
+                                                                       Long id = commonMethods.renderLoginDataForAgent(getContext(), agentModel);
+                                                                       if (id != -1) {
+                                                                           alertDialog.dismiss();
+                                                                           Intent intent = new Intent(getContext(), AgentPharmacyListWithNavigation.class);
+                                                                           intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                           startActivity(intent);
+                                                                       }
                                                                    }
+                                                               }catch (Exception e)
+                                                               {
+                                                                   e.printStackTrace();
                                                                }
+                                                               String ticks = jsonObject2.get("LastUpdatedTimeTicks").toString();
+                                                               userPreferences.setGetAllUserDetailsTimeticks(ticks);
 
                                                            }
+
+
                                                         }
                                                         else
                                                         {
@@ -1120,7 +1140,7 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
                                         getUserDetailsRequest.UserID    =   userPreferences.getUserGid();
                                         getUserDetailsRequest.UserType  =   getContext().getString(R.string.pharmacy);
                                         getUserDetailsRequest.DistributorID =   userModel.DistributorID;
-                                        getUserDetailsRequest.LastUpdatedTimeTicks = "0";
+                                        getUserDetailsRequest.LastUpdatedTimeTicks = userPreferences.getGetAllUserDetailsTimeticks();
 
                                         String json = gson.toJson(getUserDetailsRequest);
                                         Post post = new Post(getContext(),CommonMethods.GET_USER_DETAILS,json) {
@@ -1134,6 +1154,10 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
                                                         {
                                                             if(jsonObject1.get("Response")!=null) {
                                                                 JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
+
+                                                                String ticks = jsonObject2.get("LastUpdatedTimeTicks").toString();
+                                                                userPreferences.setGetAllUserDetailsTimeticks(ticks);
+
                                                                 if(jsonObject2.get("UserDetails")!=null) {
                                                                     PharmacyModel pharmacyModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), PharmacyModel.class);
                                                                     Long id = commonMethods.renderLoginDataForPharmacy(getContext(), pharmacyModel);
@@ -1148,6 +1172,7 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
                                                                 {
                                                                     alertDialog.dismiss();
                                                                 }
+
                                                             }
                                                         }
                                                         else

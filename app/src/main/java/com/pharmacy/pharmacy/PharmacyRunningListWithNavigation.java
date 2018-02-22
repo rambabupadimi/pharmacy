@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,19 +23,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.pharmacy.AppConstants;
 import com.pharmacy.CommonMethods;
 import com.pharmacy.R;
 import com.pharmacy.db.AndroidDatabaseManager;
+import com.pharmacy.db.daos.OrderDAO;
 import com.pharmacy.db.daos.PharmacyDAO;
+import com.pharmacy.db.daos.UserDAO;
 import com.pharmacy.db.models.AgentModel;
+import com.pharmacy.db.models.OrderModel;
 import com.pharmacy.db.models.PharmacyModel;
+import com.pharmacy.db.models.UserModel;
+import com.pharmacy.models.GetUserDetailsRequest;
+import com.pharmacy.operations.Post;
 import com.pharmacy.pharmacy.fragments.PharmacyApprovedListFragment;
 import com.pharmacy.pharmacy.fragments.PharmacyDeliveredListFragment;
 import com.pharmacy.pharmacy.fragments.PharmacyRunningListFragment;
 import com.pharmacy.preferences.UserPreferences;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +67,9 @@ public class PharmacyRunningListWithNavigation extends AppCompatActivity
     UserPreferences userPreferences;
     PharmacyDAO pharmacyDAO;
     TextView toolbarHeading;
+    UserDAO userDAO;
+    Gson gson;
+    OrderDAO orderDAO;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +77,7 @@ public class PharmacyRunningListWithNavigation extends AppCompatActivity
 
         initialiseObjects();
         initialiseIDs();
+        initialiseApiCall();
         initialiseFragments();
         addViewPagerToTabLayout();
         initialiseBackButton();
@@ -72,9 +89,76 @@ public class PharmacyRunningListWithNavigation extends AppCompatActivity
     }
 
 
+
+    private void initialiseApiCall()
+    {
+
+        UserDAO userDAO = new UserDAO(this);
+        UserModel  userModel = userDAO.getUserData(userPreferences.getUserGid());
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("DistributorID", userModel.DistributorID);
+            jsonObject.put("UserID", userModel.UserID);
+            jsonObject.put("LastUpdatedTimeTicks", userPreferences.getGetAllMyListTimeticks());
+/*
+ * pharmacy we need to send pharmacy id as userid
+ * */
+            jsonObject.put("PharmacyID",userModel.UserID);
+            String json = jsonObject.toString();
+            Post post = new Post(this, CommonMethods.GET_ALL_MYLIST, json) {
+                @Override
+                public void onResponseReceived(String result) {
+                    if (result != null) {
+                        try {
+                            JSONObject jsonObject1 = new JSONObject(result);
+                            if (jsonObject1.get("Status").toString().equalsIgnoreCase("Success")) {
+                                JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
+
+                                String lastUpdatedTicks = jsonObject2.get("LastUpdatedTimeTicks").toString();
+                                userPreferences.setGetAllMyListTimeticks(lastUpdatedTicks);
+                                if (jsonObject2.get("OrderList") != null) {
+                                    JSONArray jsonArray = jsonObject2.getJSONArray("OrderList");
+                                    if (jsonArray.length() > 0) {
+                                        ArrayList<OrderModel> orderModelArrayList = new ArrayList<>();
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            OrderModel orderModel = new OrderModel();
+                                            orderModel = gson.fromJson(jsonArray.getJSONObject(i).toString(), OrderModel.class);
+                                            orderModelArrayList.add(orderModel);
+                                        }
+
+                                        if (orderModelArrayList != null && orderModelArrayList.size() > 0) {
+                                            try {
+                                                for (int i = 0; i < orderModelArrayList.size(); i++) {
+                                                    Long id = orderDAO.insert(orderModelArrayList.get(i));
+                                                    Log.i("tag", "inserted order" + id);
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                    Log.i("Tag", "json array" + jsonArray);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else {
+
+                    }
+                }
+            };
+            post.execute();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     private void setToolbarAndNavbarData()
     {
-        PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyData(userPreferences.getUserGid());
+        PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
         profileName.setText(pharmacyModel.StoreName);
         toolbarHeading.setText(pharmacyModel.StoreName);
 
@@ -118,6 +202,9 @@ public class PharmacyRunningListWithNavigation extends AppCompatActivity
         commonMethods   =   new CommonMethods();
         userPreferences =   new UserPreferences(this);
         pharmacyDAO     =   new PharmacyDAO(this);
+        userDAO         =   new UserDAO(this);
+        gson            =   new Gson();
+        orderDAO        =   new OrderDAO(this);
     }
 
     private void initialiseDrawerLayout()

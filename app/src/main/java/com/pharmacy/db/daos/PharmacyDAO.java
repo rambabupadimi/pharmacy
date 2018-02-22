@@ -21,7 +21,7 @@ public class PharmacyDAO  extends AbstractDAO{
         super(context);
     }
 
-    public long insertOrUpdate(PharmacyModel pharmacyModel) {
+    /*public long insertOrUpdate(PharmacyModel pharmacyModel) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -70,10 +70,8 @@ public class PharmacyDAO  extends AbstractDAO{
             return 0;
         }
     }
-
-    public long
-
-    insertOrUpdateAddNewPharmacy(PharmacyModel pharmacyModel) {
+*/
+    public long insertOrUpdateAddNewPharmacy(PharmacyModel pharmacyModel) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -278,6 +276,7 @@ public class PharmacyDAO  extends AbstractDAO{
         }
         return pharmacyModelList;
     }
+/*
 
     public PharmacyModel getPharmacyData(String userid) {
         try {
@@ -429,6 +428,7 @@ public class PharmacyDAO  extends AbstractDAO{
         }
         return null;
     }
+*/
 
     public PharmacyModel getPharmacyDataByPharmacyID(String pharmacyLocalId) {
         try {

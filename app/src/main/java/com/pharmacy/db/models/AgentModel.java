@@ -32,7 +32,7 @@ public class AgentModel {
     public String ImageLocalPath;
     public String IdProofLocalPath;
 
-    public String IsApproved;
+    public boolean IsApproved;
     public String ApprovedBy;
     public String IsActive;
     public String IsDeleted;

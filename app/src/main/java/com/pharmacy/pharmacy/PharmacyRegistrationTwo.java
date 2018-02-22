@@ -94,7 +94,7 @@ public class PharmacyRegistrationTwo extends AppCompatActivity implements AppCon
 
     private void reinitialise()
     {
-        PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyData(userPreferences.getUserGid());
+        PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
         if(pharmacyModel!=null)
         {
             if(pharmacyModel.LicenceLocalPath!=null)
@@ -170,8 +170,8 @@ public class PharmacyRegistrationTwo extends AppCompatActivity implements AppCon
             public void onClick(View v) {
 
                 if (CommonMethods.isInternetConnected(PharmacyRegistrationTwo.this)) {
-                    if (doValidation()) {
-                        PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyData(userPreferences.getUserGid());
+                  //  if (doValidation()) {
+                        PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
                         pharmacyModel.UserType = "" + getString(R.string.pharmacy);
                         pharmacyModel.PharmacyID    =   "0";
                         UserModel userModel = userDAO.getUserData(userPreferences.getUserGid());
@@ -216,7 +216,7 @@ public class PharmacyRegistrationTwo extends AppCompatActivity implements AppCon
                             }
                         };
                         post.execute();
-                    }
+                   // }
                 }
                 else
                 {
@@ -258,7 +258,7 @@ public class PharmacyRegistrationTwo extends AppCompatActivity implements AppCon
     private boolean doValidation()
     {
 
-        PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyData(userPreferences.getUserGid());
+        PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
 
         if(pharmacyModel.ImageLocalPath!=null && pharmacyModel.ImageLocalPath.toString().trim().length()>2)
         {

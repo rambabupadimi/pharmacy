@@ -1,23 +1,8 @@
 package com.pharmacy.pharmacy;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -26,31 +11,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.pharmacy.AppConstants;
 import com.pharmacy.CommonMethods;
 import com.pharmacy.PickLocationActivity;
 import com.pharmacy.R;
-import com.pharmacy.SignupOrLoginActivity;
-import com.pharmacy.db.daos.AgentDAO;
 import com.pharmacy.db.daos.PharmacyDAO;
-import com.pharmacy.db.models.AgentModel;
 import com.pharmacy.db.models.PharmacyModel;
 import com.pharmacy.models.PickLocation;
 import com.pharmacy.preferences.UserPreferences;
-import com.theartofdev.edmodo.cropper.CropImage;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.UUID;
 
 public class PharmacyRegistration extends AppCompatActivity implements View.OnClickListener,AppConstants{
 
@@ -63,7 +36,7 @@ public class PharmacyRegistration extends AppCompatActivity implements View.OnCl
     RelativeLayout mainLayout;
     CommonMethods commonMethods;
     UserPreferences userPreferences;
-
+    String pharmacyLocalId="";
      @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,13 +44,27 @@ public class PharmacyRegistration extends AppCompatActivity implements View.OnCl
 
         initialiseObjects();
         initialiseIDs();
+         initialisePharmacyID();
         initialiseClickListeners();
         initialiseBackButton();
          reinitialiseData();
         initialiseAddress();
         initialiseStatus();
+
     }
 
+    private void initialisePharmacyID()
+    {
+        if(userPreferences.getPharmacyRegisterLocalUserId()!=null && userPreferences.getPharmacyRegisterLocalUserId().trim().length()>2)
+        {
+            pharmacyLocalId = userPreferences.getPharmacyRegisterLocalUserId();
+        }
+        else
+        {
+            pharmacyLocalId = UUID.randomUUID().toString();
+            userPreferences.setPharmacyRegisterLocalUserId(pharmacyLocalId);
+        }
+    }
 
     private void initialiseStatus()
     {
@@ -87,7 +74,7 @@ public class PharmacyRegistration extends AppCompatActivity implements View.OnCl
 
     private void reinitialiseData()
     {
-        reInitialiseData(userPreferences.getUserGid());
+        reInitialiseData(userPreferences.getPharmacyRegisterLocalUserId());
     }
 
 
@@ -95,7 +82,7 @@ public class PharmacyRegistration extends AppCompatActivity implements View.OnCl
     public void reInitialiseData(String id)
     {
         PharmacyDAO pharmacyDAO = new PharmacyDAO(this);
-        PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyData(id);
+        PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(id);
 
         if(pharmacyModel!=null)
         {
@@ -236,9 +223,9 @@ public class PharmacyRegistration extends AppCompatActivity implements View.OnCl
             pharmacyModel.Pincode       =   prPincode.getText().toString();
             pharmacyModel.DoorNo        =   prDoorNumber.getText().toString();
             pharmacyModel.UserID        =   userPreferences.getUserGid();
-
+            pharmacyModel.PharmacyLocalId = userPreferences.getPharmacyRegisterLocalUserId();
             PharmacyDAO pharmacyDAO = new PharmacyDAO(this);
-            long val = pharmacyDAO.insertOrUpdate(pharmacyModel);
+            long val = pharmacyDAO.insertOrUpdateAddNewPharmacy(pharmacyModel);
             Log.i("tag","value is"+val);
 
     }

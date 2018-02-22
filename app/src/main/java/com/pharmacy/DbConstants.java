@@ -42,6 +42,11 @@ public interface DbConstants {
     public final String COLUMN_AGENT_PHOTO_LOCAL_PATH    =   "agent_photo_local_path";
     public final String COLUMN_AGENT_ID_PROOF_PHOTO_LOCAL = "agent_id_proof_photo_local_path";
 
+    public final String COLUMN_AGENT_IS_APPROVED        =   "agent_is_approved";
+    public final String COLUMN_AGENT_IS_APPROVED_BY     =   "agent_is_approved_by";
+
+
+
 
 
     public final String TABLE_PHARMACY              =   "pharmacy";

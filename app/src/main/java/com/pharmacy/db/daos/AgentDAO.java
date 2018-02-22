@@ -36,6 +36,9 @@ public class AgentDAO extends AbstractDAO {
             values.put(COLUMN_UPDATED_TIME,agentModel.UpdatedTime);
             values.put(COLUMN_USERID,agentModel.UserID);
 
+            values.put(COLUMN_AGENT_IS_APPROVED,agentModel.IsApproved);
+            values.put(COLUMN_AGENT_IS_APPROVED_BY,agentModel.ApprovedBy);
+
             values.put(COLUMN_AGENT_PHOTO,agentModel.Image);
             if(agentModel.ImageLocalPath!=null)
                values.put(COLUMN_AGENT_PHOTO_LOCAL_PATH,agentModel.ImageLocalPath);
@@ -187,6 +190,26 @@ public class AgentDAO extends AbstractDAO {
                         agentModel.IdProofLocalPath =   "";
                     }
 
+                    if(cursor.getString(cursor.getColumnIndex(COLUMN_AGENT_IS_APPROVED))!=null)
+                    {
+
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_AGENT_IS_APPROVED)).equalsIgnoreCase("1"))
+                            agentModel.IsApproved  = true;
+                        else
+                            agentModel.IsApproved = false;
+                    }
+                    else
+                    {
+                        agentModel.IsApproved =   false;
+                    }
+                    if(cursor.getString(cursor.getColumnIndex(COLUMN_AGENT_IS_APPROVED_BY))!=null)
+                    {
+                        agentModel.ApprovedBy =   cursor.getString(cursor.getColumnIndex(COLUMN_AGENT_IS_APPROVED_BY));
+                    }
+                    else
+                    {
+                        agentModel.ApprovedBy =   "";
+                    }
 
 
 

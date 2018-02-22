@@ -67,6 +67,7 @@ public class AgentPharmacyListAdapter extends RecyclerView.Adapter<AgentPharmacy
             public void onClick(View v) {
                 if(pharmacyModel.IsApproved) {
                     Intent intent = new Intent(context, AgentRunningList.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK  |Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("pharmacy_object", gson.toJson(pharmacyModel).toString());
                     context.startActivity(intent);
                 }

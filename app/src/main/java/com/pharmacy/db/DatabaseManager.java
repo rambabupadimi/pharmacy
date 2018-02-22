@@ -158,6 +158,9 @@ public class DatabaseManager extends SQLiteOpenHelper implements DbConstants {
                 + COLUMN_AGENT_ID_PROOF_PHOTO + " TEXT ,"
                 + COLUMN_AGENT_ID_PROOF_PHOTO_LOCAL + " TEXT , "
 
+                + COLUMN_AGENT_IS_APPROVED+ " TEXT , "
+                + COLUMN_AGENT_IS_APPROVED_BY+ " TEXT, "
+
                 + COLUMN_USERID + " TEXT, "
                 + COLUMN_CREATED_TIME + " TEXT , "
                 + COLUMN_UPDATED_TIME + " TEXT )";
