@@ -77,6 +77,8 @@ public class CommonMethods implements AppConstants{
     public static String GET_ALL_MYLIST = SITE_URL+"User/GetPharmacyRunningList";
     public static String GET_AGENT_PHARMACY = SITE_URL+"User/GetAgentPharmacy";
 
+
+    long id =-1;
     public void maintainState(Context context,String status)
     {
         UserPreferences userPreferences = new UserPreferences(context);
@@ -571,7 +573,7 @@ public class CommonMethods implements AppConstants{
     }
 
 
-    private void updateAgentData(final Context context)
+    public long  updateAgentData(final Context context)
     {
         final Gson gson = new Gson();
         String json = getAgentRequestData(context,context.getString(R.string.agent));
@@ -592,7 +594,8 @@ public class CommonMethods implements AppConstants{
                                 try {
                                     if (jsonObject2.get("UserDetails") != null) {
                                         AgentModel agentModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), AgentModel.class);
-                                        Long id = renderLoginDataForAgent(context, agentModel);
+                                        id = renderLoginDataForAgent(context, agentModel);
+
                                     }
                                 }catch (Exception e)
                                 {
@@ -600,6 +603,7 @@ public class CommonMethods implements AppConstants{
                                 }
                                 String ticks = jsonObject2.get("LastUpdatedTimeTicks").toString();
                                 userPreferences.setGetAllUserDetailsTimeticks(ticks);
+
                             }
                         }
 
@@ -610,6 +614,7 @@ public class CommonMethods implements AppConstants{
             }
         };
         post.execute();
+        return id;
     }
 
 

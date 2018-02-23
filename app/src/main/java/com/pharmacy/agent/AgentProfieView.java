@@ -1,7 +1,10 @@
 package com.pharmacy.agent;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -40,6 +44,8 @@ public class AgentProfieView extends AppCompatActivity {
     ImageView agentPhoto,agentIdProof;
     CommonMethods commonMethods;
 
+    TextView edit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +55,7 @@ public class AgentProfieView extends AppCompatActivity {
         initialiseIDs();
         initialiseToolbar();
         inflateProfileView();
+        initialiseClickListeners();
 
     }
 
@@ -83,6 +90,8 @@ public class AgentProfieView extends AppCompatActivity {
         agentIdProof        =   findViewById(R.id.a_pro_agent_id_proof);
 
         agentProfileImageView   =   findViewById(R.id.a_pro_profile_image);
+
+        edit                =   findViewById(R.id.agent_profile_edit);
     }
 
     @Override
@@ -235,5 +244,20 @@ public class AgentProfieView extends AppCompatActivity {
 
 
         }
+    }
+
+    private void initialiseClickListeners()
+    {
+        edit.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AgentProfieView.this,EditAgentProfileView.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Bundle bndlanimation = ActivityOptions.makeCustomAnimation(AgentProfieView.this, R.anim.next_swipe2, R.anim.next_swipe1).toBundle();
+
+                startActivity(intent,bndlanimation);
+            }
+        });
     }
 }

@@ -94,9 +94,9 @@ public class OrderDAO  extends AbstractDAO{
             }
             else if(from.equalsIgnoreCase("approved")){
                if(pharmacyId==null)
-                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+val;
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+val+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs;
                else
-                   query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+val+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+" ";
+                   query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+val+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+"  ";
 
             }
             else if(from.equalsIgnoreCase("delivered")){

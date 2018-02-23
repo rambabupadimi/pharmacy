@@ -1,12 +1,15 @@
 package com.pharmacy.agent;
 
+import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -262,18 +265,22 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
     private void initialiseClickListeners()
     {
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(AgentPharmacyListWithNavigation.this,AddNewPharmacyStepOne.class);
-                    startActivity(intent);
+                    Bundle bndlanimation = ActivityOptions.makeCustomAnimation(AgentPharmacyListWithNavigation.this, R.anim.next_swipe2, R.anim.next_swipe1).toBundle();
+                    startActivity(intent,bndlanimation);
                 }
             });
 
             profileIcon.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(AgentPharmacyListWithNavigation.this,AgentProfieView.class);
-                    startActivity(intent);
+                    Bundle bndlanimation = ActivityOptions.makeCustomAnimation(AgentPharmacyListWithNavigation.this, R.anim.next_swipe2, R.anim.next_swipe1).toBundle();
+                    startActivity(intent,bndlanimation);
                 }
             });
     }
@@ -387,10 +394,8 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_orders) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -402,7 +407,7 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i("tag","yes its called");
-
+            initialiseAdapterData();
         }
     };
 

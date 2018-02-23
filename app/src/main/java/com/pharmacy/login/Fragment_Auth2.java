@@ -663,7 +663,7 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
         final VerifyUser verifyUser = new VerifyUser();
         verifyUser.DistributorID="1";
         verifyUser.UserType     =   userPreferences.getUserLoginType();
-        verifyUser.PhoneNumber  =  enter_phone_number.getText().toString();
+        verifyUser.PhoneNumber  =  _phoneNumber;
 
         Post post = new Post(getContext(),CommonMethods.REGISTRATION_VERIFY_USER,gson.toJson(verifyUser)) {
             @Override

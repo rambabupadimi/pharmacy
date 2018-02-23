@@ -13,15 +13,30 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:id="@+id/toolbar">
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
         <com.pharmacy.RobotoTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/toolbar_heading"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/toolbar_text_size"
+            android:text="title"
+            android:layout_weight="1"
             app:typeface="robotoMedium"/>
 
+        <com.pharmacy.RobotoTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EDIT"
+            android:layout_marginRight="24dp"
+            android:textSize="@dimen/toolbar_text_size"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/toolbar_edit"
+            />
+</LinearLayout>
     </android.support.v7.widget.Toolbar>
 
    <include layout="@layout/view_pharmacy_profile_snippet">

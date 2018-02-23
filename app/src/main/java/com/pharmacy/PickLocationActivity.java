@@ -47,6 +47,8 @@ import com.google.gson.Gson;
 import com.pharmacy.adapters.GooglePlacesSearchAdapter;
 import com.pharmacy.agent.AddNewPharmacyStepOne;
 import com.pharmacy.agent.AgentRegistration;
+import com.pharmacy.agent.EditAgentProfileView;
+import com.pharmacy.agent.EditPharmacyProfileView;
 import com.pharmacy.db.daos.AgentDAO;
 import com.pharmacy.db.models.AgentModel;
 import com.pharmacy.models.PickLocation;
@@ -233,6 +235,18 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
                     intent1 = new Intent(PickLocationActivity.this, AddNewPharmacyStepOne.class);
 
                 }
+                else if(getIntent().getStringExtra(getResources().getString(R.string.from)).equalsIgnoreCase(getResources().getString(R.string.agentEdit)))
+                {
+                    intent1 = new Intent(PickLocationActivity.this, EditAgentProfileView.class);
+
+                }
+                else if(getIntent().getStringExtra(getResources().getString(R.string.from)).equalsIgnoreCase(getResources().getString(R.string.pharmacy_new_edit)))
+                {
+                    intent1 = new Intent(PickLocationActivity.this, EditPharmacyProfileView.class);
+
+                }
+
+
                 Bundle bndlanimation1 = ActivityOptions
                         .makeCustomAnimation(getApplicationContext(),
                                 R.anim.back_swipe2, R.anim.back_swipe1).toBundle();
@@ -529,6 +543,19 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
                     intent = new Intent(PickLocationActivity.this, AddNewPharmacyStepOne.class);
 
                 }
+
+                else if(getIntent().getStringExtra(getResources().getString(R.string.from)).equalsIgnoreCase(getResources().getString(R.string.agentEdit)))
+                {
+                    intent = new Intent(PickLocationActivity.this, EditAgentProfileView.class);
+
+                }
+                else if(getIntent().getStringExtra(getResources().getString(R.string.from)).equalsIgnoreCase(getResources().getString(R.string.pharmacy_new_edit)))
+                {
+                    intent = new Intent(PickLocationActivity.this, EditPharmacyProfileView.class);
+
+                }
+
+
 
                 intent.putExtra("LocationJson", json);
                 Bundle bndlanimation = ActivityOptions

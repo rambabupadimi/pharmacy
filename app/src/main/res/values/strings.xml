@@ -311,6 +311,8 @@
     <string name="profile">Profile</string>
     <string name="edit">EDIT</string>
 
+    <string name="agentEdit">AgentEdit</string>
+    <string name="pharmacy_new_edit">PharmacyNewEdit</string>
     <string name="addnewpharmacy">AddNewPharmacy</string>
 
 

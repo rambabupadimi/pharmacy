@@ -44,12 +44,12 @@
           <com.pharmacy.RobotoTextView
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="view"
-              android:layout_marginRight="12dp"
+              android:text="View"
+              android:layout_marginRight="24dp"
               android:textColor="@color/colorWhite"
-              app:typeface="robotoLight"
+              app:typeface="robotoMedium"
               android:id="@+id/arl_toolbar_view_pharmacy"
-              android:textSize="16sp"
+              android:textSize="@dimen/toolbar_text_size"
               android:layout_marginLeft="6dp"/>
 
       </LinearLayout>

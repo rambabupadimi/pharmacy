@@ -1,7 +1,11 @@
 package com.pharmacy.agent;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +22,7 @@ import com.pharmacy.RobotoTextView;
 import com.pharmacy.db.daos.PharmacyDAO;
 import com.pharmacy.db.models.PharmacyModel;
 import com.pharmacy.pharmacy.PharmacyRegistration;
+import com.pharmacy.preferences.UserPreferences;
 
 public class ViewPharmacyDetails extends AppCompatActivity {
 
@@ -31,7 +36,8 @@ public class ViewPharmacyDetails extends AppCompatActivity {
             pharmacyCity,
             pharmacyState,
             pharmacyPincode,
-            pharmacyDoorNumber;
+            pharmacyDoorNumber,
+            edit;
 
     ImageView pharmacyLicencePhoto,
             pharmacyRegisterPhoto,
@@ -41,7 +47,8 @@ public class ViewPharmacyDetails extends AppCompatActivity {
     PharmacyModel pharmacyModel;
     Gson gson;
     Toolbar toolbar;
-
+    PharmacyDAO pharmacyDAO;
+    UserPreferences userPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,9 +58,24 @@ public class ViewPharmacyDetails extends AppCompatActivity {
         initialiseIDs();
         inflateProfileView();
         initialiseBackButton();
+        initialiseClickListeners();
     }
 
 
+
+    private void initialiseClickListeners()
+    {
+        edit.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ViewPharmacyDetails.this,EditPharmacyProfileView.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Bundle bndlanimation = ActivityOptions.makeCustomAnimation(ViewPharmacyDetails.this, R.anim.next_swipe2, R.anim.next_swipe1).toBundle();
+                startActivity(intent,bndlanimation);
+            }
+        });
+    }
 
 
     private void initialiseBackButton()
@@ -66,12 +88,14 @@ public class ViewPharmacyDetails extends AppCompatActivity {
     private void initialiseObjects()
     {
         gson    =   new Gson();
+        pharmacyDAO = new PharmacyDAO(this);
+        userPreferences =   new UserPreferences(this);
     }
 
     private void initialiseData()
     {
-        String json = getIntent().getStringExtra("pharmacy_object");
-        pharmacyModel = gson.fromJson(json,PharmacyModel.class);
+
+        pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getAgentSelectedLocalPharmacyId());
     }
     private void initialiseIDs()
     {
@@ -93,7 +117,7 @@ public class ViewPharmacyDetails extends AppCompatActivity {
         pharmacyHeading     =   findViewById(R.id.toolbar_heading);
 
         pharmacyProfileImage    =   findViewById(R.id.p_pro_pharmacy_photo);
-
+        edit                =   findViewById(R.id.toolbar_edit);
     }
 
 
@@ -238,6 +262,7 @@ public class ViewPharmacyDetails extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -248,10 +273,14 @@ public class ViewPharmacyDetails extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        ViewPharmacyDetails.this.finish();
+        Intent intent = new Intent(ViewPharmacyDetails.this,AgentRunningList.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Bundle bndlanimation = ActivityOptions.makeCustomAnimation(ViewPharmacyDetails.this, R.anim.back_swipe2, R.anim.back_swipe1).toBundle();
+        startActivity(intent,bndlanimation);
     }
 
 }

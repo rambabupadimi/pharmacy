@@ -40,7 +40,10 @@
                         android:scaleY="5"
                         android:background="@drawable/gradient_dark"
                         />
+
                 </FrameLayout>
+
+
                 <ImageView
                     android:id="@+id/profile_image_edit"
                     android:layout_width="wrap_content"
@@ -58,7 +61,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                android:visibility="visible"/>
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="EDIT"
+                    android:gravity="right"
+                    android:padding="16dp"
+                    android:id="@+id/agent_profile_edit"/>
+
+            </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

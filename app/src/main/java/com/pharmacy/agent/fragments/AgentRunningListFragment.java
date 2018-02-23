@@ -241,6 +241,7 @@ public class AgentRunningListFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i("tag","yes its called");
+            inflateData();
 
         }
     };

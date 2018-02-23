@@ -9,6 +9,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -53,6 +55,8 @@ dependencies {
 
     compile 'com.github.d-max:spots-dialog:0.7@aar'
 }
+
+
 
 
 

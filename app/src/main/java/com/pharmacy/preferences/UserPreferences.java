@@ -29,6 +29,7 @@ public class UserPreferences {
     public static final String DEVICE_UNIQUE_ID = "device_unique_id";
     public static final String SERVER_TOKEN = "server_token";
 
+    public static final String AGENT_SELECTED_LOCAL_PHARMACY_ID = "agent_selected_local_pharmacy_id";
 
     public static final String AGENT_SELECTED_PHARMACY_ID = "agent_selected_pharmacy_id";
     public static final String ADD_NEW_PHARMACY_ID = "add_new_pharmacy_id";
@@ -41,6 +42,8 @@ public class UserPreferences {
     public static final String GET_ALL_USER_DETAILS_TIMETICKS = "get_all_user_details_timeticks";
 
     public static final String FIREBASE_TOKEN = "firebase_token";
+
+
 
     public UserPreferences(Context context) {
         this.context = context;
@@ -222,6 +225,18 @@ public class UserPreferences {
     public String getAgentSelectedPharmacyId()
     {
         return pref.getString(AGENT_SELECTED_PHARMACY_ID, "");
+    }
+
+    public void setAgentSelectedLocalPharmacyId(String agentSelectedLocalPharmacyId)
+    {
+        editor.putString(AGENT_SELECTED_LOCAL_PHARMACY_ID, agentSelectedLocalPharmacyId);
+        editor.commit();
+    }
+
+
+    public String getAgentSelectedLocalPharmacyId()
+    {
+        return pref.getString(AGENT_SELECTED_LOCAL_PHARMACY_ID, "");
     }
     public String getDeviceUniqueId() {
         return pref.getString(DEVICE_UNIQUE_ID, "");

@@ -1,9 +1,12 @@
 package com.pharmacy.agent;
 
+import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,6 +30,7 @@ import com.pharmacy.agent.fragments.AgentApprovedListFragment;
 import com.pharmacy.agent.fragments.AgentDeliveredListFragment;
 import com.pharmacy.agent.fragments.AgentRunningListFragment;
 import com.pharmacy.db.daos.OrderDAO;
+import com.pharmacy.db.daos.PharmacyDAO;
 import com.pharmacy.db.daos.UserDAO;
 import com.pharmacy.db.models.OrderModel;
 import com.pharmacy.db.models.PharmacyModel;
@@ -54,6 +58,7 @@ public class AgentRunningList extends AppCompatActivity {
     Gson gson;
     UserPreferences userPreferences;
     OrderDAO orderDAO;
+    PharmacyDAO pharmacyDAO;
     ProgressBar agentHomeProgress;
 
     @Override
@@ -99,11 +104,14 @@ public class AgentRunningList extends AppCompatActivity {
     private void initialiseClickListeners()
     {
         viewPharmacy.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AgentRunningList.this,ViewPharmacyDetails.class);
                 intent.putExtra("pharmacy_object",gson.toJson(pharmacyModel));
-                startActivity(intent);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Bundle bndlanimation = ActivityOptions.makeCustomAnimation(AgentRunningList.this, R.anim.next_swipe2, R.anim.next_swipe1).toBundle();
+                startActivity(intent,bndlanimation);
             }
         });
     }
@@ -111,11 +119,10 @@ public class AgentRunningList extends AppCompatActivity {
     private void getIntentData()
     {
         try {
-            String json = getIntent().getStringExtra("pharmacy_object");
-             pharmacyModel = gson.fromJson(json,PharmacyModel.class);
+            pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getAgentSelectedLocalPharmacyId());
             toolbarHeading = pharmacyModel.StoreName;
             userPreferences.setAgentSelectedPharmacyId(pharmacyModel.PharmacyID);
-
+            //userPreferences.setAgentSelectedLocalPharmacyId(pharmacyModel.PharmacyLocalId);
 
 
         }catch (Exception e)
@@ -140,6 +147,7 @@ public class AgentRunningList extends AppCompatActivity {
 
         viewPharmacy    =   findViewById(R.id.arl_toolbar_view_pharmacy);
         agentHomeProgress   =   findViewById(R.id.agent_home_progress);
+        pharmacyDAO     =   new PharmacyDAO(this);
     }
 
     private void initialiseFragments()
@@ -177,6 +185,7 @@ public class AgentRunningList extends AppCompatActivity {
         CommonMethods.setToolbar(this,getSupportActionBar());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -187,12 +196,17 @@ public class AgentRunningList extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         userPreferences.setAgentSelectedPharmacyId("");
+        userPreferences.setAgentSelectedLocalPharmacyId("");
         Intent intent = new Intent(AgentRunningList.this,AgentPharmacyListWithNavigation.class);
-        startActivity(intent);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Bundle bndlanimation = ActivityOptions.makeCustomAnimation(AgentRunningList.this, R.anim.next_swipe2, R.anim.next_swipe1).toBundle();
+
+        startActivity(intent,bndlanimation);
     }
 
     // Adapter for the viewpager using FragmentPagerAdapter

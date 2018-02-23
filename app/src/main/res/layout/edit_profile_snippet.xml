@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true"
+                app:contentPadding="6dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:visibility="gone"
+                        android:id="@+id/a_pro_pharmacy_name_layout">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/pharmacy_name"
+                            android:padding="6dp"
+                            android:tint="@color/colorPrimary"
+                            />
+
+                        <com.pharmacy.RobotoEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/a_pro_pharmacy_name"
+                            android:hint="Name"
+                            android:textSize="@dimen/edit_text_size"
+                            android:padding="6dp"
+                            app:typeface ="robotoMedium"
+                            android:background="@android:color/transparent"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/user_icon"
+                            android:padding="6dp"
+                            android:tint="@color/colorPrimary"
+                            />
+
+                        <com.pharmacy.RobotoEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/a_pro_agent_name"
+                            android:hint="Name"
+                            android:textSize="@dimen/edit_text_size"
+                            android:padding="6dp"
+                            app:typeface ="robotoMedium"
+                            android:background="@android:color/transparent"/>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.6dp"
+                        android:background="@drawable/list_divider"
+                        android:layout_marginLeft="42dp"
+                        ></View>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/email"
+                            android:padding="6dp"
+                            android:tint="@color/colorPrimary"/>
+
+                        <com.pharmacy.RobotoEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/a_pro_agent_email"
+                            android:hint="Email"
+                            android:textSize="@dimen/edit_text_size"
+
+                            app:typeface ="robotoMedium"
+                            android:padding="6dp"
+                            android:background="@android:color/transparent"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="@string/select_location"
+                android:layout_marginRight="6dp"
+                android:padding="6dp"
+                android:id="@+id/a_pro_agent_select_location"/>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true"
+                app:contentPadding="6dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/location"
+                            android:padding="6dp"
+                            android:tint="@color/colorPrimary"/>
+
+                        <com.pharmacy.RobotoEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/a_pro_agent_address"
+                            android:text=""
+                            android:padding="6dp"
+                            android:textSize="@dimen/edit_text_size"
+
+                            app:typeface ="robotoMedium"
+                            android:background="@android:color/transparent"
+                            />
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.6dp"
+                        android:background="@drawable/list_divider"
+                        android:layout_marginLeft="42dp"
+                        ></View>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/landmark"
+                            android:padding="6dp"
+                            android:tint="@color/colorPrimary"/>
+
+                        <com.pharmacy.RobotoEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/a_pro_agent_landmark"
+                            android:text=""
+                            android:textSize="@dimen/edit_text_size"
+
+                            android:padding="6dp"
+                            app:typeface ="robotoMedium"
+                            android:background="@android:color/transparent"/>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.6dp"
+                        android:background="@drawable/list_divider"
+                        android:layout_marginLeft="42dp"
+                        ></View>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/city"
+                            android:padding="6dp"
+                            android:tint="@color/colorPrimary"/>
+
+                        <com.pharmacy.RobotoEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/a_pro_agent_city"
+                            android:text=""
+                            android:textSize="@dimen/edit_text_size"
+
+                            android:padding="6dp"
+                            app:typeface ="robotoMedium"
+                            android:background="@android:color/transparent"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.6dp"
+                        android:background="@drawable/list_divider"
+                        android:layout_marginLeft="42dp"
+                        ></View>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/state"
+                            android:padding="6dp"
+                            android:tint="@color/colorPrimary"/>
+
+                        <com.pharmacy.RobotoEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/a_pro_agent_state"
+                            android:text=""
+                            android:textSize="@dimen/edit_text_size"
+
+                            android:padding="6dp"
+                            app:typeface ="robotoMedium"
+                            android:background="@android:color/transparent"/>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.6dp"
+                        android:background="@drawable/list_divider"
+                        android:layout_marginLeft="42dp"
+                        ></View>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/pincode"
+                            android:padding="6dp"
+                            android:tint="@color/colorPrimary"/>
+
+
+                        <com.pharmacy.RobotoEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/a_pro_agent_pincode"
+                            android:text=""
+                            android:textSize="@dimen/edit_text_size"
+
+                            android:padding="6dp"
+                            app:typeface ="robotoMedium"
+                            android:background="@android:color/transparent"/>
+
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.6dp"
+                        android:background="@drawable/list_divider"
+                        android:layout_marginLeft="42dp"
+                        ></View>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/door_number"
+                            android:padding="6dp"
+                            android:tint="@color/colorPrimary"/>
+
+
+
+                        <com.pharmacy.RobotoEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/a_pro_agent_door_number"
+                            android:text=""
+                            android:textSize="@dimen/edit_text_size"
+
+                            android:padding="6dp"
+                            app:typeface ="robotoMedium"
+                            android:background="@android:color/transparent"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+
+
+        </LinearLayout>
+
+
