@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorWhite">
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
@@ -27,6 +28,12 @@
     android:gravity="center"
     android:orientation="vertical"
     android:layout_centerInParent="true">
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/logoss"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,19 +46,21 @@
         android:layout_height="wrap_content"
         android:id="@+id/request_processing_progressbar"
         android:visibility="gone"
+        android:layout_margin="12dp"
+        android:background="@drawable/progress_bar_color"
         />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:text="Refresh"
-        android:layout_margin="6dp"
-        android:background="@color/colorPrimaryDark"
-        android:gravity="center"
-        android:textColor="@color/colorWhite"
-        android:id="@+id/request_processing_refresh"/>
+
 </LinearLayout>
 
-
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Refresh"
+        android:layout_margin="6dp"
+        android:background="@drawable/rectangle_button"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/colorWhite"
+        android:id="@+id/request_processing_refresh"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

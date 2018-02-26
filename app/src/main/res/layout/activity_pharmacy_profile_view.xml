@@ -59,7 +59,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                android:visibility="visible"/>
+                android:visibility="visible">
+                <com.pharmacy.RobotoTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="EDIT"
+                    android:gravity="right"
+                    app:typeface="robotoMedium"
+                    android:padding="16dp"
+                    android:id="@+id/pharmacy_profile_edit"/>
+
+            </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

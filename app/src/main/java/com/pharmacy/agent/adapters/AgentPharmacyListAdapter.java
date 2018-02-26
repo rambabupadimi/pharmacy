@@ -15,7 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.pharmacy.R;
 import com.pharmacy.agent.AgentPharmacyListWithNavigation;
 import com.pharmacy.agent.AgentRunningList;
@@ -46,9 +48,14 @@ public class AgentPharmacyListAdapter extends RecyclerView.Adapter<AgentPharmacy
 
     @Override
     public AgentPharmacyListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.adapter_agent_pharmacy_list, parent, false);
 
+
+        View itemView =null;
+
+               if(userPreferences.getSelectListType().toString().equalsIgnoreCase("grid"))
+                  itemView  = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_agent_pharmacy_list_test, parent, false);
+               else
+                   itemView  = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_agent_pharmacy_list, parent, false);
         return new AgentPharmacyListAdapter.MyViewHolder(itemView);
     }
 
@@ -56,11 +63,15 @@ public class AgentPharmacyListAdapter extends RecyclerView.Adapter<AgentPharmacy
         TextView aplAdapterName;
         LinearLayout aplParentLayout;
         ImageView approvedIcon;
+
+        RoundedImageView pharmacyImage;
+
         public MyViewHolder(View view) {
             super(view);
             aplAdapterName   =   view.findViewById(R.id.apl_adapter_name);
             aplParentLayout  =   view.findViewById(R.id.apl_parent_layout);
             approvedIcon     =  view.findViewById(R.id.apl_approved_icon);
+            pharmacyImage   =   view.findViewById(R.id.pharmacy_image);
         }
 
     }
@@ -97,6 +108,30 @@ public class AgentPharmacyListAdapter extends RecyclerView.Adapter<AgentPharmacy
         {
             holder.approvedIcon.setVisibility(View.VISIBLE);
         }
+
+
+        try {
+            if (pharmacyModel.ImageLocalPath != null && pharmacyModel.ImageLocalPath.toString().length() > 0) {
+                Glide.with(context)
+                        .load(pharmacyModel.ImageLocalPath)
+
+                        .into(holder.pharmacyImage);
+            } else {
+            if(pharmacyModel.Image!=null && pharmacyModel.Image.toString().length()>0) {
+                Glide.with(context)
+                        .load(pharmacyModel.Image)
+
+                        .into(holder.pharmacyImage);
+            }
+
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
     }
 
     @Override

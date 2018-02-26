@@ -52,6 +52,7 @@ import com.pharmacy.agent.EditPharmacyProfileView;
 import com.pharmacy.db.daos.AgentDAO;
 import com.pharmacy.db.models.AgentModel;
 import com.pharmacy.models.PickLocation;
+import com.pharmacy.pharmacy.PharmacyProfileView;
 import com.pharmacy.pharmacy.PharmacyRegistration;
 
 import org.json.JSONArray;
@@ -241,6 +242,11 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
 
                 }
                 else if(getIntent().getStringExtra(getResources().getString(R.string.from)).equalsIgnoreCase(getResources().getString(R.string.pharmacy_new_edit)))
+                {
+                    intent1 = new Intent(PickLocationActivity.this, EditPharmacyProfileView.class);
+
+                }
+                else if(getIntent().getStringExtra(getResources().getString(R.string.from)).equalsIgnoreCase(getResources().getString(R.string.pharmacyEdit)))
                 {
                     intent1 = new Intent(PickLocationActivity.this, EditPharmacyProfileView.class);
 
@@ -550,6 +556,11 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
 
                 }
                 else if(getIntent().getStringExtra(getResources().getString(R.string.from)).equalsIgnoreCase(getResources().getString(R.string.pharmacy_new_edit)))
+                {
+                    intent = new Intent(PickLocationActivity.this, EditPharmacyProfileView.class);
+
+                }
+                else if(getIntent().getStringExtra(getResources().getString(R.string.from)).equalsIgnoreCase(getResources().getString(R.string.pharmacyEdit)))
                 {
                     intent = new Intent(PickLocationActivity.this, EditPharmacyProfileView.class);
 

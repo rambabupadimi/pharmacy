@@ -44,7 +44,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/p_pro_pharmacy_name"
-                            android:text="L Pharmacy"
+                            android:text=""
                             android:padding="6dp"/>
                     </LinearLayout>
 
@@ -71,7 +71,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/p_pro_pharmacy_owner_name"
-                            android:text="Rambabu"
+                            android:text=""
                             android:padding="6dp"/>
                     </LinearLayout>
                     <View
@@ -98,9 +98,43 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/p_pro_pharmacy_email"
-                            android:text="babu@gmail.com"
+                            android:text=""
                             android:padding="6dp"/>
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.6dp"
+                        android:background="@drawable/list_divider"
+                        android:layout_marginLeft="42dp"
+                        android:visibility="gone"
+                        android:id="@+id/p_pro_pharmacy_phone_layout_view"
+                        ></View>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:visibility="gone"
+                        android:id="@+id/p_pro_pharmacy_phone_layout"
+                        >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/phone"
+                            android:padding="6dp"
+                            android:tint="@color/colorPrimary"/>
+
+                        <com.pharmacy.RobotoTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/p_pro_pharmacy_phone_number"
+                            android:text=""
+                            android:padding="6dp"/>
+                    </LinearLayout>
+
                 </LinearLayout>
 
 

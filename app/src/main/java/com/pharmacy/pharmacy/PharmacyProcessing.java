@@ -1,8 +1,13 @@
 package com.pharmacy.pharmacy;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -37,6 +42,7 @@ public class PharmacyProcessing extends AppCompatActivity implements AppConstant
     UserDAO userDAO;
     UserPreferences userPreferences;
     Gson gson;
+    PharmacyModel pharmacyModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +69,16 @@ public class PharmacyProcessing extends AppCompatActivity implements AppConstant
 
             commonMethods.maintainState(this,USER_VERIFIED_STATUS);
 
-            PharmacyModel agentModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
-            if(agentModel.IsApproved)
+             pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
+            if(pharmacyModel.IsApproved)
             {
-                ppRequestMessage.setText("You are verified now, Click button to go Homepage");
+                ppRequestMessage.setText("Hi.."+pharmacyModel.Name+" Your "+pharmacyModel.StoreName+" is successfully verified, click home button go to Homepage");
                 ppGotoHomePage.setVisibility(View.VISIBLE);
                 ppRefresh.setVisibility(View.GONE);
             }
             else
             {
-                ppRequestMessage.setText("Admin not yet approved");
+                showFailMessage();
                 ppRefresh.setVisibility(View.VISIBLE);
                 ppGotoHomePage.setVisibility(View.GONE);
             }
@@ -105,65 +111,56 @@ public class PharmacyProcessing extends AppCompatActivity implements AppConstant
             @Override
             public void onClick(View v) {
 
-                UserModel userModel = userDAO.getUserData(userPreferences.getUserGid());
-                GetUserDetailsRequest getUserDetailsRequest = new GetUserDetailsRequest();
-                getUserDetailsRequest.UserID    =   userPreferences.getUserGid();
-                getUserDetailsRequest.UserType  =   getString(R.string.pharmacy);
-                getUserDetailsRequest.DistributorID =   userModel.DistributorID;
-                getUserDetailsRequest.LastUpdatedTimeTicks = userPreferences.getGetAllUserDetailsTimeticks();
-                String json = gson.toJson(getUserDetailsRequest);
-                ppProgressbar.setVisibility(View.VISIBLE);
-                Post post = new Post(PharmacyProcessing.this,CommonMethods.GET_USER_DETAILS,json) {
-                    @Override
-                    public void onResponseReceived(String result) {
-                        if(result!=null)
-                        {
-                            ppProgressbar.setVisibility(View.GONE);
-                            try {
-                                JSONObject jsonObject1 = new JSONObject(result);
-                                if(jsonObject1.get("Status").toString().equalsIgnoreCase("Success"))
-                                {
-                                    if(jsonObject1.get("Response")!=null) {
-                                        JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
-                                        if(jsonObject2.get("UserDetails")!=null) {
-                                            PharmacyModel pharmacyModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), PharmacyModel.class);
-                                            Long id = commonMethods.renderLoginDataForPharmacy(PharmacyProcessing.this, pharmacyModel);
-                                            if(id!=-1)
-                                            {
-                                                initialiseStatus();
-                                            }
-                                            else
-                                            {
+                if(CommonMethods.isInternetConnected(PharmacyProcessing.this)) {
+                    UserModel userModel = userDAO.getUserData(userPreferences.getUserGid());
+                    GetUserDetailsRequest getUserDetailsRequest = new GetUserDetailsRequest();
+                    getUserDetailsRequest.UserID = userPreferences.getUserGid();
+                    getUserDetailsRequest.UserType = getString(R.string.pharmacy);
+                    getUserDetailsRequest.DistributorID = userModel.DistributorID;
+                    getUserDetailsRequest.LastUpdatedTimeTicks = userPreferences.getGetAllUserDetailsTimeticks();
+                    String json = gson.toJson(getUserDetailsRequest);
+                    ppProgressbar.setVisibility(View.VISIBLE);
+                    Post post = new Post(PharmacyProcessing.this, CommonMethods.GET_USER_DETAILS, json) {
+                        @Override
+                        public void onResponseReceived(String result) {
+                            if (result != null) {
+                                ppProgressbar.setVisibility(View.GONE);
+                                try {
+                                    JSONObject jsonObject1 = new JSONObject(result);
+                                    if (jsonObject1.get("Status").toString().equalsIgnoreCase("Success")) {
+                                        if (jsonObject1.get("Response") != null) {
+                                            JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
+                                            if (jsonObject2.get("UserDetails") != null) {
+                                                PharmacyModel pharmacyModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), PharmacyModel.class);
+                                                Long id = commonMethods.renderLoginDataForPharmacy(PharmacyProcessing.this, pharmacyModel);
+                                                if (id != -1) {
+                                                    initialiseStatus();
+                                                } else {
+                                                    showFailMessage();
+                                                }
+
+                                            } else {
                                                 showFailMessage();
                                             }
-
+                                            String ticks = jsonObject2.get("LastUpdatedTimeTicks").toString();
+                                            userPreferences.setGetAllUserDetailsTimeticks(ticks);
                                         }
-                                        else
-                                        {
-                                            showFailMessage();
-                                        }
-                                        String ticks = jsonObject2.get("LastUpdatedTimeTicks").toString();
-                                        userPreferences.setGetAllUserDetailsTimeticks(ticks);
+                                    } else {
+                                        showFailMessage();
                                     }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                                else
-                                {
-                                    showFailMessage();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            } else {
+                                showFailMessage();
+                                ppProgressbar.setVisibility(View.GONE);
+
                             }
-                        }
-                        else{
-                            showFailMessage();
-                            ppProgressbar.setVisibility(View.GONE);
 
                         }
-
-                    }
-                };
-                post.execute();
-
+                    };
+                    post.execute();
+                }
 
             }
         });
@@ -173,7 +170,8 @@ public class PharmacyProcessing extends AppCompatActivity implements AppConstant
 
     private void showFailMessage()
     {
-        ppRequestMessage.setText("Admin not yet approved");
+
+        ppRequestMessage.setText("Hi.."+pharmacyModel.Name+" Your "+pharmacyModel.StoreName+" is verifying now. It will take few minutes..");
     }
 
 
@@ -182,4 +180,29 @@ public class PharmacyProcessing extends AppCompatActivity implements AppConstant
         super.onBackPressed();
         finish();
     }
+
+
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i("tag","yes its called");
+            initialiseStatus();
+        }
+    };
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,new IntentFilter("pharmacy_processing"));
+
+    }
+
 }

@@ -1,10 +1,14 @@
 package com.pharmacy.pharmacy.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +36,7 @@ import com.pharmacy.models.ProductModel;
 import com.pharmacy.operations.Post;
 import com.pharmacy.pharmacy.adapters.PharmacyCommonListAdapter;
 import com.pharmacy.preferences.UserPreferences;
+import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +44,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by PCCS-0007 on 05-Feb-18.
@@ -80,12 +91,6 @@ public class PharmacyRunningListFragment extends Fragment {
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        inflateData();
-
-    }
 
     private void inflateData()
     {
@@ -147,70 +152,97 @@ public class PharmacyRunningListFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if(newText.toString().trim().length()>0) {
-                    getProductsList(newText);
+                   // getProductsList(newText);
+                    getRxJavaSearch(newText);
                 } else {
                     searchCardView.setVisibility(View.GONE);
                     rlSearchView.clearFocus();
                 }
                 return false;
             }
-
         });
         rlSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
                 searchCardView.setVisibility(View.GONE);
                 rlSearchView.clearFocus();
+
                 return false;
             }
         });
     }
 
 
-    private void getProductsList(String text){
 
+    private void getRxJavaSearch(String text){
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("Name",text);
-            Post post = new Post(getContext(), CommonMethods.SEARCH_PRODUCT,jsonObject.toString()) {
-                @Override
-                public void onResponseReceived(String result) {
-                        if(result!=null)
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Rx2AndroidNetworking.post(CommonMethods.SEARCH_PRODUCT)
+                .addJSONObjectBody(jsonObject)
+                .build()
+                .getJSONObjectObservable()
+                .subscribeOn(Schedulers.io())
+                .debounce(300, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<JSONObject>() {
+
+                    @Override
+                    public void onError(Throwable e) {
+                        // handle error
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(JSONObject response) {
+                        //do anything with response
+
+                        if(response!=null)
                         {
                             try {
-                                JSONObject jsonObject1 = new JSONObject(result);
-                                if(jsonObject1.get("Status").toString().equalsIgnoreCase("Success")) {
 
-                                    ProductModel productModel = gson.fromJson(result, ProductModel.class);
-                                        ArrayList<ProductModel> productModelArrayList = productModel.Response;
-                                        if (productModelArrayList != null && productModelArrayList.size() > 0) {
-                                            searchCardView.setVisibility(View.VISIBLE);
-                                            showSearchProductList(productModelArrayList);
-                                        }
+                                if(response.get("Status").toString().equalsIgnoreCase("Success")) {
+                                    ProductModel productModel = gson.fromJson(response.toString(), ProductModel.class);
+                                    ArrayList<ProductModel> productModelArrayList = productModel.Response;
+                                    if (productModelArrayList != null && productModelArrayList.size() > 0) {
+                                        searchCardView.setVisibility(View.VISIBLE);
+                                        showSearchProductList(productModelArrayList);
                                     }
+                                }
                                 else
                                 {
                                     searchCardView.setVisibility(View.GONE);
 
                                 }
-                                }
-                                catch (JSONException e1) {
-                                    e1.printStackTrace();
-                                }
+                            }
+                            catch (JSONException e1) {
+                                e1.printStackTrace();
+                            }
 
                             catch (Exception e)
                             {
                                 e.printStackTrace();
                             }
                         }
-                }
-            };
-            post.execute();
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+                        Log.i("tag","response is"+response);
+                    }
+                });
     }
+
+
 
 
     private void showSearchProductList(ArrayList<ProductModel> productModelArrayList)
@@ -223,5 +255,33 @@ public class PharmacyRunningListFragment extends Fragment {
         searchRecyclerView.setAdapter(searchProductListAdapter);
         searchProductListAdapter.notifyDataSetChanged();
     }
+
+
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i("tag","yes its called");
+            inflateData();
+
+        }
+    };
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(broadcastReceiver);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        inflateData();
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,new IntentFilter("product_status_running"));
+
+    }
+
 
 }

@@ -43,7 +43,7 @@ public class UserPreferences {
 
     public static final String FIREBASE_TOKEN = "firebase_token";
 
-
+    public static final String SELECT_LIST_TYPE ="select_list_type";
 
     public UserPreferences(Context context) {
         this.context = context;
@@ -129,6 +129,20 @@ public class UserPreferences {
     {
         return pref.getString(PHARMACY_REGISTER_LOCAL_USER_ID,"");
     }
+
+
+    //getall user details
+
+    public void setSelectListType(String value)
+    {
+        editor.putString(SELECT_LIST_TYPE,value);
+        editor.commit();
+    }
+    public String getSelectListType()
+    {
+        return pref.getString(SELECT_LIST_TYPE,"grid");
+    }
+
 
  //getall user details
 

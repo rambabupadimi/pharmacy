@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -37,6 +38,7 @@ public class ViewPharmacyDetails extends AppCompatActivity {
             pharmacyState,
             pharmacyPincode,
             pharmacyDoorNumber,
+            pharmacyPhoneNumber,
             edit;
 
     ImageView pharmacyLicencePhoto,
@@ -49,6 +51,10 @@ public class ViewPharmacyDetails extends AppCompatActivity {
     Toolbar toolbar;
     PharmacyDAO pharmacyDAO;
     UserPreferences userPreferences;
+    LinearLayout pharmacyPhoneLayout;
+    View        pharmacyPhoneView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +124,13 @@ public class ViewPharmacyDetails extends AppCompatActivity {
 
         pharmacyProfileImage    =   findViewById(R.id.p_pro_pharmacy_photo);
         edit                =   findViewById(R.id.toolbar_edit);
+
+        pharmacyPhoneNumber =   findViewById(R.id.p_pro_pharmacy_phone_number);
+        pharmacyPhoneLayout =   findViewById(R.id.p_pro_pharmacy_phone_layout);
+        pharmacyPhoneView   =   findViewById(R.id.p_pro_pharmacy_phone_layout_view);
+
+        pharmacyPhoneLayout.setVisibility(View.VISIBLE);
+        pharmacyPhoneView.setVisibility(View.VISIBLE);
     }
 
 
@@ -125,6 +138,15 @@ public class ViewPharmacyDetails extends AppCompatActivity {
     {
          if(pharmacyModel!=null)
         {
+
+            if(pharmacyModel.PhoneNumber.toString().trim().length()>0)
+            {
+                pharmacyPhoneNumber.setText(pharmacyModel.PhoneNumber.toString());
+            }
+            else
+            {
+                pharmacyPhoneNumber.setVisibility(View.GONE);
+            }
 
             if(pharmacyModel.StoreName.toString().trim().length()>0)
             {

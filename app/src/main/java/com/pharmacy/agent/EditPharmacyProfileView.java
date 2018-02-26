@@ -31,6 +31,7 @@ import com.pharmacy.db.models.PharmacyModel;
 import com.pharmacy.db.models.UserModel;
 import com.pharmacy.models.PickLocation;
 import com.pharmacy.operations.Post;
+import com.pharmacy.pharmacy.PharmacyProfileView;
 import com.pharmacy.preferences.UserPreferences;
 
 import org.json.JSONException;
@@ -64,12 +65,13 @@ public class EditPharmacyProfileView extends AppCompatActivity {
     PharmacyDAO pharmacyDAO;
 
     LinearLayout aPharmacyNameLayout;
-
+    String userType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_pharmacy_profile_view);
+
         initialiseObjects();
         initialiseIDs();
         inflateProfile();
@@ -106,8 +108,14 @@ public class EditPharmacyProfileView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 persistAgentData();
+
                 Intent intent = new Intent(EditPharmacyProfileView.this,PickLocationActivity.class);
-                intent.putExtra(getResources().getString(R.string.from),getResources().getString(R.string.pharmacy_new_edit));
+
+                if(userType.equalsIgnoreCase(getString(R.string.agent)))
+                    intent.putExtra(getResources().getString(R.string.from),getResources().getString(R.string.pharmacy_new_edit));
+                else
+                    intent.putExtra(getResources().getString(R.string.from),getResources().getString(R.string.pharmacyEdit));
+
                 startActivity(intent);
             }
         });
@@ -127,11 +135,17 @@ public class EditPharmacyProfileView extends AppCompatActivity {
                     {
                         persistAgentData();
                        alertDialog.show();
-                        PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getAgentSelectedLocalPharmacyId());
+
+                        PharmacyModel pharmacyModel=null;
+
+                        if(userType.equalsIgnoreCase(getString(R.string.agent)))
+                           pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getAgentSelectedLocalPharmacyId());
+                        else
+                            pharmacyModel =pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
+
                         UserModel userModel = userDAO.getUserData(userPreferences.getUserGid());
                         pharmacyModel.DistributorID = userModel.DistributorID;
                         String json = gson.toJson(pharmacyModel);
-
 
 
                         // we
@@ -149,7 +163,14 @@ public class EditPharmacyProfileView extends AppCompatActivity {
                                             long id = pharmacyDAO.insertOrUpdateAddNewPharmacy(pharmacyModel1);
                                             if(id!= -1) {
                                                 userPreferences.setAddNewPharmacyId("");
-                                                Intent intent = new Intent(EditPharmacyProfileView.this, ViewPharmacyDetails.class);
+
+                                                Intent intent =null;
+                                                if(userType.toString().equalsIgnoreCase(getString(R.string.agent)))
+                                                    intent    = new Intent(EditPharmacyProfileView.this, ViewPharmacyDetails.class);
+                                                else
+                                                    intent    = new Intent(EditPharmacyProfileView.this, PharmacyProfileView.class);
+
+
                                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                                         Intent.FLAG_ACTIVITY_CLEAR_TOP |
                                                         Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -219,10 +240,16 @@ public class EditPharmacyProfileView extends AppCompatActivity {
         alertDialog =   new SpotsDialog(this);
         userDAO     =   new UserDAO(this);
         pharmacyDAO =   new PharmacyDAO(this);
+        userType    =   userPreferences.getUserLoginType();
     }
 
     private void inflateProfile(){
-        PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getAgentSelectedLocalPharmacyId());
+        PharmacyModel pharmacyModel=null;
+        if(userType.equalsIgnoreCase(getString(R.string.agent)))
+             pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getAgentSelectedLocalPharmacyId());
+        else
+            pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
+
         if(pharmacyModel!=null)
         {
             if(pharmacyModel.Name!=null)
@@ -270,7 +297,13 @@ public class EditPharmacyProfileView extends AppCompatActivity {
     private void persistAgentData()
     {
 
-        PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getAgentSelectedLocalPharmacyId());
+
+        PharmacyModel pharmacyModel =null;
+        if(userType.toString().equalsIgnoreCase(getString(R.string.agent)))
+           pharmacyModel      = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getAgentSelectedLocalPharmacyId());
+        else
+            pharmacyModel      = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
+
         pharmacyModel.Name        =   agentName.getText().toString();
         pharmacyModel.Email       =   agentEmail.getText().toString();
         pharmacyModel.Address     =   agentAddress.getText().toString();
@@ -283,7 +316,6 @@ public class EditPharmacyProfileView extends AppCompatActivity {
 
         PharmacyDAO pharmacyDAO = new PharmacyDAO(this);
         long val = pharmacyDAO.insertOrUpdateAddNewPharmacy(pharmacyModel);
-
 
         Log.i("tag","value is"+val);
     }
@@ -304,7 +336,14 @@ public class EditPharmacyProfileView extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
 
-        Intent intent = new Intent(this,ViewPharmacyDetails.class);
+        Intent intent=null;
+        if(userType.equalsIgnoreCase(getString(R.string.agent))) {
+            intent = new Intent(this, ViewPharmacyDetails.class);
+        }
+        else
+        {
+            intent = new Intent(this, PharmacyProfileView.class);
+        }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Bundle bndlanimation = ActivityOptions.makeCustomAnimation(EditPharmacyProfileView.this, R.anim.back_swipe2, R.anim.back_swipe1).toBundle();
         startActivity(intent,bndlanimation);

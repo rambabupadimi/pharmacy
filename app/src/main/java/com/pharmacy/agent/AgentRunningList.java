@@ -203,7 +203,7 @@ public class AgentRunningList extends AppCompatActivity {
         userPreferences.setAgentSelectedPharmacyId("");
         userPreferences.setAgentSelectedLocalPharmacyId("");
         Intent intent = new Intent(AgentRunningList.this,AgentPharmacyListWithNavigation.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Bundle bndlanimation = ActivityOptions.makeCustomAnimation(AgentRunningList.this, R.anim.next_swipe2, R.anim.next_swipe1).toBundle();
 
         startActivity(intent,bndlanimation);

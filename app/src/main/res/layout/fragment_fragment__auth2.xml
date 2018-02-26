@@ -90,7 +90,7 @@
                 android:layout_height="1dp"
                 android:layout_below="@+id/enter_phone_number"
                 android:layout_marginTop="3dp"
-                android:background="@color/bottom_bar_color" />
+                android:background="@color/colorPrimary" />
 
         </RelativeLayout>
 
@@ -189,14 +189,16 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/bottom_bar_color">
+        android:background="@color/colorPrimary">
 
-        <TextView
+        <com.pharmacy.RobotoTextView
+
             android:id="@+id/bottom_bar_textview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="Continue"
+            app:typeface="robotoMedium"
             android:textColor="@color/colorWhite"
             android:textSize="16sp"
   />

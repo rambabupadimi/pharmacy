@@ -1,5 +1,12 @@
 <resources>
+
+
+    <!-- config changes start -->
     <string name="app_name">Xampr Distributor</string>
+    <string name="verify_number_text">Please verify your number so that your collegues, friends and family can find you on Xampr Distributor.</string>
+    <!-- config changes end -->
+
+
 
     <!-- SignupOrLogin Page -->
     <string name="register">Register</string>
@@ -17,7 +24,6 @@
     <string name="certificates">Upload Certificates : </string>
     <string name="resend_otp"><u>Didn\'t get otp? Resend</u></string>
     <string name="verify_otp">Verify your number</string>
-    <string name="verify_number_text">Please verify your number so that your collegues, friends and family can find you on Xampr.</string>
     <string name="verify_otp_text">OTP has been sent to your number. Please check your message box and submit.</string>
     <string name="verify_number">Enter OTP</string>
     <string name="check_internet">Check your internet connection</string>
@@ -312,6 +318,7 @@
     <string name="edit">EDIT</string>
 
     <string name="agentEdit">AgentEdit</string>
+    <string name="pharmacyEdit">PharmacyEdit</string>
     <string name="pharmacy_new_edit">PharmacyNewEdit</string>
     <string name="addnewpharmacy">AddNewPharmacy</string>
 

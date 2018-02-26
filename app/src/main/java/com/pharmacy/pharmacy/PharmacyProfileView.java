@@ -1,8 +1,11 @@
 package com.pharmacy.pharmacy;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +18,8 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.pharmacy.R;
 import com.pharmacy.RobotoTextView;
+import com.pharmacy.agent.EditPharmacyProfileView;
+import com.pharmacy.agent.ViewPharmacyDetails;
 import com.pharmacy.db.daos.PharmacyDAO;
 import com.pharmacy.db.models.PharmacyModel;
 import com.pharmacy.preferences.UserPreferences;
@@ -30,7 +35,8 @@ public class PharmacyProfileView extends AppCompatActivity {
                     pharmacyCity,
                     pharmacyState,
                     pharmacyPincode,
-                    pharmacyDoorNumber;
+                    pharmacyDoorNumber,
+                    edit;
 
     ImageView       pharmacyLicencePhoto,
                     pharmacyRegisterPhoto,
@@ -39,6 +45,8 @@ public class PharmacyProfileView extends AppCompatActivity {
     LinearLayout    pharmacyProfileViewLayout;
     UserPreferences userPreferences;
     CollapsingToolbarLayout collapsingToolbarLayout;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +56,23 @@ public class PharmacyProfileView extends AppCompatActivity {
         initialiseIDs();
         initialiseToolbar();
         inflateProfileView();
+        initialiseClickListeners();
     }
 
 
+    private void initialiseClickListeners()
+    {
+        edit.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PharmacyProfileView.this,EditPharmacyProfileView.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Bundle bndlanimation = ActivityOptions.makeCustomAnimation(PharmacyProfileView.this, R.anim.next_swipe2, R.anim.next_swipe1).toBundle();
+                startActivity(intent,bndlanimation);
+            }
+        });
+    }
     private void initialiseObjects()
     {
         userPreferences = new UserPreferences(this);
@@ -83,6 +105,8 @@ public class PharmacyProfileView extends AppCompatActivity {
 
         pharmacyProfileViewLayout   =   findViewById(R.id.p_pro_pharmacy_photo_layout);
         pharmacyProfileViewLayout.setVisibility(View.GONE);
+
+        edit                =   findViewById(R.id.pharmacy_profile_edit);
     }
 
     @Override

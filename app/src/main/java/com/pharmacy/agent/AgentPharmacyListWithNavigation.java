@@ -13,6 +13,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -77,22 +78,51 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
     ImageView notFoundIcon;
     Gson gson;
 
+    ImageView gridViewIcon,listViewIcon;
+
+
+
     SwipeRefreshLayout swipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agent_pharmacy_list_with_navigation);
+
         initialiseObjects();
         initialiseIDs();
         initialiseNavigationDrawer();
+        initialiseDisplayListType();
 
-        initialiseAdapterData();
         initialiseClickListeners();
         initialiseStatus();
         setToolbarAndNavbarData();
         refreshList();
+        initialiseAdapterData();
 
+    }
 
+    private void initialiseDisplayListType()
+    {
+        gridViewIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userPreferences.setSelectListType("list");
+                gridViewIcon.setVisibility(View.GONE);
+                listViewIcon.setVisibility(View.VISIBLE);
+                initialiseAdapterData();
+
+            }
+        });
+
+        listViewIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listViewIcon.setVisibility(View.GONE);
+                gridViewIcon.setVisibility(View.VISIBLE);
+                userPreferences.setSelectListType("grid");
+                initialiseAdapterData();
+            }
+        });
     }
 
     private void refreshList()
@@ -249,6 +279,17 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
 
         swipeRefreshLayout      =   findViewById(R.id.swipeRefreshLayout);
         setSupportActionBar(aplnToolbar);
+
+           gridViewIcon            =   findViewById(R.id.grid_view_icon);
+        listViewIcon            =   findViewById(R.id.list_view_icon);
+
+        if(userPreferences.getSelectListType().toString().equalsIgnoreCase("grid")) {
+            gridViewIcon.setVisibility(View.VISIBLE);
+            listViewIcon.setVisibility(View.GONE);
+        }else {
+            listViewIcon.setVisibility(View.VISIBLE);
+            gridViewIcon.setVisibility(View.GONE);
+        }
     }
 
 
@@ -292,13 +333,19 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
 
         if(pharmacyModelArrayList!=null && pharmacyModelArrayList.size()>0) {
             notFoundLayout.setVisibility(View.GONE);
+            aplnRecyclerView.setVisibility(View.VISIBLE);
             agentPharmacyListAdapter = new AgentPharmacyListAdapter(this, pharmacyModelArrayList);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-            aplnRecyclerView.setLayoutManager(linearLayoutManager);
+           // LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+                   // aplnRecyclerView.setLayoutManager(linearLayoutManager);
+            if(userPreferences.getSelectListType().toString().equalsIgnoreCase("grid"))
+                aplnRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            else
+                aplnRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             aplnRecyclerView.setAdapter(agentPharmacyListAdapter);
         }
         else
         {
+            aplnRecyclerView.setVisibility(View.GONE);
             notFoundLayout.setVisibility(View.VISIBLE);
             notFoundText.setText("CLICK + TO ADD NEW PHARMACY");
         }

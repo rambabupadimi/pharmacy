@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/apl_parent_layout"
+    android:background="@color/colorWhite">
+
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+           >
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/pharmacy_default_image"
+            android:tint="@color/gray"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/pharmacy_image"
+
+            android:layout_margin="12dp"
+            app:riv_oval="true"
+            />
+
+
+        <com.pharmacy.RobotoTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="L-Pharmacy"
+            android:gravity="center"
+            android:layout_below="@+id/pharmacy_image"
+            app:typeface ="robotoMedium"
+
+            android:textColor="@color/colorBlack"
+            android:id="@+id/apl_adapter_name"/>
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/approved_icon"
+                android:tint="@color/gray"
+                android:layout_alignParentRight="true"
+                android:id="@+id/apl_approved_icon"/>
+        </RelativeLayout>
+
+</android.support.v7.widget.CardView>
+</LinearLayout>

@@ -1,8 +1,13 @@
 package com.pharmacy.pharmacy.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -68,11 +73,7 @@ public class PharmacyDeliveredListFragment extends Fragment {
         gson = new Gson();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        inflateData();
-    }
+
 
 
     private void inflateData()
@@ -96,5 +97,31 @@ public class PharmacyDeliveredListFragment extends Fragment {
            notFoundText.setText("NO DELIVERED PRODUCTS");
            notFoundIcon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.delived_icon));
        }
+    }
+
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i("tag","yes its called");
+            inflateData();
+
+        }
+    };
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(broadcastReceiver);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        inflateData();
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,new IntentFilter("product_status_delivered"));
+
     }
 }

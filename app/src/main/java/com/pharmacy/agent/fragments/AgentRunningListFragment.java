@@ -30,8 +30,8 @@ import com.pharmacy.db.daos.OrderDAO;
 import com.pharmacy.db.models.OrderModel;
 import com.pharmacy.models.ProductModel;
 import com.pharmacy.operations.Post;
-import com.pharmacy.pharmacy.adapters.PharmacyCommonListAdapter;
 import com.pharmacy.preferences.UserPreferences;
+import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +39,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by PCCS-0007 on 06-Feb-18.
@@ -153,7 +159,9 @@ public class AgentRunningListFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if(newText.toString().trim().length()>0) {
-                    getProductsList(newText);
+                    //getProductsList(newText);
+                    getRxJavaSearch(newText);
+
                 }
                 else {
                     searchCardView.setVisibility(View.GONE);
@@ -174,6 +182,76 @@ public class AgentRunningListFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+
+
+    private void getRxJavaSearch(String text){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("Name",text);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Rx2AndroidNetworking.post(CommonMethods.SEARCH_PRODUCT)
+                .addJSONObjectBody(jsonObject)
+                .build()
+                .getJSONObjectObservable()
+                .subscribeOn(Schedulers.io())
+                .debounce(300, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<JSONObject>() {
+
+                    @Override
+                    public void onError(Throwable e) {
+                        // handle error
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(JSONObject response) {
+                        //do anything with response
+
+                        if(response!=null)
+                        {
+                            try {
+
+                                if(response.get("Status").toString().equalsIgnoreCase("Success")) {
+                                    ProductModel productModel = gson.fromJson(response.toString(), ProductModel.class);
+                                    ArrayList<ProductModel> productModelArrayList = productModel.Response;
+                                    if (productModelArrayList != null && productModelArrayList.size() > 0) {
+                                        searchCardView.setVisibility(View.VISIBLE);
+                                        showSearchProductList(productModelArrayList);
+                                    }
+                                }
+                                else
+                                {
+                                    searchCardView.setVisibility(View.GONE);
+
+                                }
+                            }
+                            catch (JSONException e1) {
+                                e1.printStackTrace();
+                            }
+
+                            catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                        Log.i("tag","response is"+response);
+                    }
+                });
     }
 
 

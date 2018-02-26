@@ -69,7 +69,7 @@ public class AgentProcessing extends AppCompatActivity  implements AppConstants{
         }
         else
         {
-            apRequestMessage.setText("Admin not yet approved");
+            showFailMessage();
             apRefresh.setVisibility(View.VISIBLE);
             ppGotoHomePage.setVisibility(View.GONE);
         }
@@ -186,7 +186,7 @@ public class AgentProcessing extends AppCompatActivity  implements AppConstants{
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i("tag","yes its called");
-
+                initialiseStatus();
         }
     };
 

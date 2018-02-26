@@ -1,6 +1,8 @@
 package com.pharmacy;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -53,6 +55,7 @@ import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -573,91 +576,32 @@ public class CommonMethods implements AppConstants{
     }
 
 
-    public long  updateAgentData(final Context context)
-    {
-        final Gson gson = new Gson();
-        String json = getAgentRequestData(context,context.getString(R.string.agent));
-        final UserPreferences userPreferences =new UserPreferences(context);
 
-        Post post = new Post(context, CommonMethods.GET_USER_DETAILS,json) {
-            @Override
-            public void onResponseReceived(String result) {
-                if(result!=null)
-                {
-                    try {
-                        JSONObject jsonObject1 = new JSONObject(result);
-                        if(jsonObject1.get("Status").toString().equalsIgnoreCase("Success"))
-                        {
-                            if(jsonObject1.get("Response")!=null) {
-                                JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
 
-                                try {
-                                    if (jsonObject2.get("UserDetails") != null) {
-                                        AgentModel agentModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), AgentModel.class);
-                                        id = renderLoginDataForAgent(context, agentModel);
-
-                                    }
-                                }catch (Exception e)
-                                {
-                                    e.printStackTrace();
-                                }
-                                String ticks = jsonObject2.get("LastUpdatedTimeTicks").toString();
-                                userPreferences.setGetAllUserDetailsTimeticks(ticks);
-
-                            }
+    public static boolean isAppIsInBackground(Context context) {
+        boolean isInBackground = false;
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
+            List<ActivityManager.RunningAppProcessInfo> runningProcesses = am.getRunningAppProcesses();
+            for (ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
+                if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    for (String activeProcess : processInfo.pkgList) {
+                        if (activeProcess.equals(context.getPackageName())) {
+                            isInBackground = true;
+                            break;
                         }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
             }
-        };
-        post.execute();
-        return id;
-    }
-
-
-
-    private void updatePharmacyData(final Context context)
-    {
-        final Gson gson = new Gson();
-        String json = getAgentRequestData(context,context.getString(R.string.pharmacy));
-        final UserPreferences userPreferences =new UserPreferences(context);
-
-        Post post = new Post(context, CommonMethods.GET_USER_DETAILS,json) {
-            @Override
-            public void onResponseReceived(String result) {
-                if(result!=null)
-                {
-                    try {
-                        JSONObject jsonObject1 = new JSONObject(result);
-                        if(jsonObject1.get("Status").toString().equalsIgnoreCase("Success"))
-                        {
-                            if(jsonObject1.get("Response")!=null) {
-                                JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
-
-                                try {
-                                    if (jsonObject2.get("UserDetails") != null) {
-                                        PharmacyModel pharmacyModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), PharmacyModel.class);
-                                        Long id = renderLoginDataForPharmacy(context, pharmacyModel);
-                                    }
-                                }catch (Exception e)
-                                {
-                                    e.printStackTrace();
-                                }
-                                String ticks = jsonObject2.get("LastUpdatedTimeTicks").toString();
-                                userPreferences.setGetAllUserDetailsTimeticks(ticks);
-                            }
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+        } else {
+            List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+            ComponentName componentInfo = taskInfo.get(0).topActivity;
+            if (componentInfo.getPackageName().equals(context.getPackageName())) {
+                isInBackground = true;
             }
-        };
-        post.execute();
+        }
+
+        return isInBackground;
     }
 
 }
