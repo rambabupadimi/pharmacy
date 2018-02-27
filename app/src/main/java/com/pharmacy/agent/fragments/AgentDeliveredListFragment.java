@@ -77,10 +77,9 @@ public class AgentDeliveredListFragment extends Fragment {
     private void inflateData()
     {
 
-        String pharmacyLocalId =  getArguments().getString("pharmacy_id");
+        String pharmacyLocalId =   userPreferences.getAgentSelectedPharmacyId();
         OrderDAO orderDAO = new OrderDAO(getContext());
         List<OrderModel> orderModelList =orderDAO.getOrderData("delivered",pharmacyLocalId);
-        Log.i("tag","order list is"+gson.toJson(orderModelList));
         if(orderModelList!=null && orderModelList.size()>0) {
             notFoundLayout.setVisibility(View.GONE);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

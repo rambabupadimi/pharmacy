@@ -98,7 +98,6 @@ public class PharmacyRunningListFragment extends Fragment {
         List<OrderModel> orderModelList =orderDAO.getOrderData("running",null);
      if(orderModelList!=null && orderModelList.size()>0) {
          notFoundLayout.setVisibility(View.GONE);
-         Log.i("tag", "order list is" + gson.toJson(orderModelList));
          LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
          runningListRecyclerView.setLayoutManager(linearLayoutManager);
          Collections.reverse(orderModelList);

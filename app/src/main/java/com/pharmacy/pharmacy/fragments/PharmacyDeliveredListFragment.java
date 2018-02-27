@@ -82,7 +82,6 @@ public class PharmacyDeliveredListFragment extends Fragment {
         List<OrderModel> orderModelList =orderDAO.getOrderData("delivered",null);
 
        if(orderModelList!=null && orderModelList.size()>0) {
-           Log.i("tag", "order list is" + gson.toJson(orderModelList));
            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
            deliveredListRecyclerView.setLayoutManager(linearLayoutManager);
            Collections.reverse(orderModelList);

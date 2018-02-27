@@ -29,6 +29,7 @@
         android:layout_below="@+id/anp2_toolbar"
         android:layout_above="@+id/pr_save_pharmacy_details"
         android:layout_margin="12dp"
+        android:layout_marginBottom="48dp"
         >
         <LinearLayout
             android:layout_width="match_parent"

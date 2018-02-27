@@ -79,7 +79,6 @@ public class PharmacyApprovedListFragment extends Fragment {
         OrderDAO orderDAO = new OrderDAO(getContext());
         List<OrderModel> orderModelList =orderDAO.getOrderData("approved",null);
         if(orderModelList!=null && orderModelList.size()>0) {
-            Log.i("tag", "order list is" + gson.toJson(orderModelList));
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
             approvedListRecyclerView.setLayoutManager(linearLayoutManager);
             Collections.reverse(orderModelList);

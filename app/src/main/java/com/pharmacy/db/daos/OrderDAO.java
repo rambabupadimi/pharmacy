@@ -275,4 +275,208 @@ public class OrderDAO  extends AbstractDAO{
         }
         return orderModels;
     }
+
+
+
+    public List<OrderModel> getOrderDataPagination( String from,String pharmacyId,int row) {
+
+        ArrayList<OrderModel> orderModels = new ArrayList<>();
+
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            String  query=null;
+
+
+            int val=1,valIs=0;
+            if(from.equalsIgnoreCase("running")) {
+
+                if(pharmacyId==null)
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+valIs+ " AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" LIMIT "+row;
+                else
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+valIs+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+" ";
+            }
+            else if(from.equalsIgnoreCase("approved")){
+                if(pharmacyId==null)
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+val+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs;
+                else
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+val+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+"  ";
+
+            }
+            else if(from.equalsIgnoreCase("delivered")){
+                if(pharmacyId==null)
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_DELIVERED+" = "+val;
+                else
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_DELIVERED+" = "+val+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+" ";
+
+            }
+            Cursor cursor = db.rawQuery(query,null);
+            if (cursor!=null && cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    try {
+
+
+                        OrderModel orderModel  =new OrderModel();
+
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_USERID))!=null)
+                        {
+                            orderModel.UserID  =  cursor.getString(cursor.getColumnIndex(COLUMN_USERID));
+                        }
+                        else
+                        {
+                            orderModel.UserID     =   "";
+                        }
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_ID))!=null)
+                        {
+                            orderModel.PharmacyID    =   cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_ID));
+                        }
+                        else
+                        {
+                            orderModel.PharmacyID     =   "";
+                        }
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_PRODUCT_ID))!=null)
+                        {
+                            orderModel.ProductID  =   cursor.getString(cursor.getColumnIndex(COLUMN_PRODUCT_ID));
+                        }
+                        else
+                        {
+                            orderModel.ProductID  =   "";
+                        }
+                        if(cursor.getInt(cursor.getColumnIndex(COLUMN_PRODUCT_QUANTITY))!=0)
+                        {
+                            orderModel.Quantity  =  Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_PRODUCT_QUANTITY)));
+                        }
+                        else
+                        {
+                            orderModel.Quantity  =   0;
+                        }
+
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_IS_DELIVERED))!=null)
+                        {
+                            orderModel.IsDelivered  = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_IS_DELIVERED)));
+                        }
+                        else
+                        {
+                            orderModel.IsDelivered  =   false;
+                        }
+
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_IS_APPROVED))!=null)
+                        {
+                            orderModel.IsApproved  = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_IS_APPROVED)));
+                        }
+                        else
+                        {
+                            orderModel.IsApproved  =   false;
+                        }
+
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_IS_RUNNING))!=null)
+                        {
+                            orderModel.IsRunning  = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_IS_RUNNING)));
+                        }
+                        else
+                        {
+                            orderModel.IsRunning  =   false;
+                        }
+
+                        try {
+                            if (cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_IS_RUNNING_DATE)) != null) {
+                                orderModel.CreatedDate = cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_IS_RUNNING_DATE));
+                            } else {
+                                orderModel.CreatedDate = "";
+                            }
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_IS_APPROVED_BY))!=null)
+                        {
+                            orderModel.ApprovedBy  = cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_IS_APPROVED_BY));
+                        }
+                        else
+                        {
+                            orderModel.ApprovedBy  =   "";
+                        }
+
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_IS_APPROVED_DATE))!=null)
+                        {
+                            orderModel.ApprovedDate  = cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_IS_APPROVED_DATE));
+                        }
+                        else
+                        {
+                            orderModel.ApprovedDate  =   "";
+                        }
+                        if(cursor.getInt(cursor.getColumnIndex(COLUMN_ORDER_APPROVED_QUANTITY))!=0)
+                        {
+                            orderModel.ApprovedQuantity  = cursor.getInt(cursor.getColumnIndex(COLUMN_ORDER_APPROVED_QUANTITY));
+                        }
+                        else
+                        {
+                            orderModel.ApprovedQuantity  =   0;
+                        }
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_IS_DELIVERED_DATE))!=null)
+                        {
+                            orderModel.DeliveredDate  = cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_IS_DELIVERED_DATE));
+                        }
+                        else
+                        {
+                            orderModel.DeliveredDate  =   "";
+                        }
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_ID))!=null)
+                        {
+                            orderModel.OrderID  = cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_ID));
+                        }
+                        else
+                        {
+                            orderModel.OrderID  =   "";
+                        }
+
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_PRODUCT_NAME))!=null)
+                        {
+                            orderModel.ProductName  = cursor.getString(cursor.getColumnIndex(COLUMN_PRODUCT_NAME));
+                        }
+                        else
+                        {
+                            orderModel.ProductName  =   "";
+                        }
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_PRODUCT_IMAGE))!=null)
+                        {
+                            orderModel.Image  = cursor.getString(cursor.getColumnIndex(COLUMN_PRODUCT_IMAGE));
+                        }
+                        else
+                        {
+                            orderModel.Image  =   "";
+                        }
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_PRODUCT_TYPE))!=null)
+                        {
+                            orderModel.ProductType  = cursor.getString(cursor.getColumnIndex(COLUMN_PRODUCT_TYPE));
+                        }
+                        else
+                        {
+                            orderModel.ProductType  =   "";
+                        }
+
+                        if(cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_DETAIL_ID))!=null)
+                        {
+                            orderModel.OrderDetailID  = cursor.getString(cursor.getColumnIndex(COLUMN_ORDER_DETAIL_ID));
+                        }
+                        else
+                        {
+                            orderModel.OrderDetailID  =   "";
+                        }
+
+                        orderModels.add(orderModel);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+
+                    }
+
+                    cursor.moveToNext();
+                }
+            }
+            closeDatabase();
+        }catch (Exception e) {
+            closeDatabase();
+        }
+        return orderModels;
+    }
+
 }

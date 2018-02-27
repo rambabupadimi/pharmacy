@@ -6,7 +6,9 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -40,6 +43,8 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             "android.permission.WRITE_EXTERNAL_STORAGE",
             "android.permission.READ_EXTERNAL_STORAGE"};
     private static final int PERMISSION_REQUEST_CODE = 1;
+
+    ImageView settings;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -87,25 +92,43 @@ public class SignupOrLoginActivity extends AppCompatActivity {
             case PERMISSION_REQUEST_CODE:
                 try {
                     boolean isPhoneStateDone = false,
-                            isReadSMS = false, isAccessCoarseDone = false,
                             isShowRationalePhoneState = false,
-                            isShowRationaleReadSMS = false,isWriteExtStorageDone = false, isReadExtStorageDone = false, isShowRationaleWriteExtStorage = false, isShowRationaleReadExtStorage = false;
+
+                            isAccessFineLocation=false,
+                            isShowRationaleAccessFineLocation =false,
+
+                            isAccessCoarseLocation = false,
+                            isShowRationaleCoarseLocation = false,
+
+                            isWriteExtStorageDone = false,
+                            isShowRationaleWriteExtStorage = false,
+
+                            isReadExtStorageDone = false,
+                            isShowRationaleReadExtStorage = false;
                     for (int i = 0; i < permissions.length; i++) {
                         String permission = permissions[i];
                         int grantResult = grantResults[i];
                         if (permission.equals(android.Manifest.permission.READ_PHONE_STATE)) {
-                            isShowRationalePhoneState = ActivityCompat.shouldShowRequestPermissionRationale(this, permission);
+                            isShowRationaleAccessFineLocation = ActivityCompat.shouldShowRequestPermissionRationale(this, permission);
                             if (grantResult == PackageManager.PERMISSION_GRANTED) {
                                 isPhoneStateDone = true;
                             } else {
                                 isPhoneStateDone = false;
                             }
-                        } else if (permission.equals(android.Manifest.permission.READ_CONTACTS)) {
-                            isShowRationaleReadSMS = ActivityCompat.shouldShowRequestPermissionRationale(this, permission);
+                        } else if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                            isShowRationaleAccessFineLocation = ActivityCompat.shouldShowRequestPermissionRationale(this, permission);
                             if (grantResult == PackageManager.PERMISSION_GRANTED) {
-                                isReadSMS = true;
+                                isAccessFineLocation = true;
                             } else {
-                                isReadSMS = false;
+                                isAccessFineLocation = false;
+                            }
+                        }
+                        else if (permission.equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                            isShowRationaleCoarseLocation = ActivityCompat.shouldShowRequestPermissionRationale(this, permission);
+                            if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                                isAccessCoarseLocation = true;
+                            } else {
+                                isAccessCoarseLocation = false;
                             }
                         }
                         else if (permission.equals(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -124,22 +147,48 @@ public class SignupOrLoginActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    boolean isRationale = (isShowRationalePhoneState || isShowRationaleReadSMS || isShowRationaleWriteExtStorage ||
-                            isShowRationaleReadExtStorage);
-                   /* if (isRationale) {
-                        nextTextV.setVisibility(View.VISIBLE);
-                        settingTextV.setVisibility(View.GONE);
-                    } else if (!isRationale && (isPhoneStateDone && isReadSMS && isWriteExtStorageDone &&
-                            isReadExtStorageDone)) {
-                        nextTextV.setVisibility(View.VISIBLE);
-                        settingTextV.setVisibility(View.GONE);
-                    } else if (!isRationale && (!isPhoneStateDone || !isReadSMS || !isWriteExtStorageDone || !isReadExtStorageDone)) {
-                        nextTextV.setVisibility(View.GONE);
-                        settingTextV.setVisibility(View.VISIBLE);
+
+
+                    Log.i("tag","isPhoneStateDone"+isPhoneStateDone);
+                    Log.i("tag","isShowRationalePhoneState"+isShowRationalePhoneState);
+                    Log.i("tag","isAccessFineLocation"+isAccessFineLocation);
+                    Log.i("tag","isShowRationaleAccessFineLocation"+isShowRationaleAccessFineLocation);
+                    Log.i("tag","isAccessCoarseLocation"+isAccessCoarseLocation);
+                    Log.i("tag","isShowRationaleCoarseLocation"+isShowRationaleCoarseLocation);
+                    Log.i("tag","isWriteExtStorageDone"+isWriteExtStorageDone);
+                    Log.i("tag","isShowRationaleWriteExtStorage"+isShowRationaleWriteExtStorage);
+                    Log.i("tag","isReadExtStorageDone"+isReadExtStorageDone);
+                    Log.i("tag","isShowRationaleReadExtStorage"+isShowRationaleReadExtStorage);
+
+
+
+                    boolean isRationale = (isShowRationalePhoneState
+                            && isShowRationaleAccessFineLocation
+                            && isShowRationaleCoarseLocation
+                            && isShowRationaleReadExtStorage
+                            && isShowRationaleWriteExtStorage);
+
+                   if (isRationale) {
+                        solLoginButton.setVisibility(View.VISIBLE);
+                        settings.setVisibility(View.GONE);
+                    } else if (!isRationale && (isPhoneStateDone &&
+                                                isAccessFineLocation &&
+                                                isAccessCoarseLocation &&
+                                                isWriteExtStorageDone &&
+                                                isReadExtStorageDone)) {
+                       solLoginButton.setVisibility(View.VISIBLE);
+                       settings.setVisibility(View.GONE);
+                    } else if (!isRationale && (!isPhoneStateDone ||
+                                                !isAccessFineLocation ||
+                                                !isAccessCoarseLocation ||
+                                                !isWriteExtStorageDone ||
+                                                !isReadExtStorageDone)) {
+                       solLoginButton.setVisibility(View.GONE);
+                       settings.setVisibility(View.VISIBLE);
                     } else {
-                        nextTextV.setVisibility(View.GONE);
-                        settingTextV.setVisibility(View.VISIBLE);
-                    }*/
+                       solLoginButton.setVisibility(View.GONE);
+                       settings.setVisibility(View.VISIBLE);
+                    }
                     break;
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -186,6 +235,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
         solPharmacy         =   findViewById(R.id.sol_pharmacy);
         solAgent            =   findViewById(R.id.sol_agent);
         solRadioGroup       =   findViewById(R.id.sol_group);
+        settings            =   findViewById(R.id.settings);
     }
 
     private void initialiseListeners()
@@ -245,5 +295,24 @@ public class SignupOrLoginActivity extends AppCompatActivity {
 
 
 
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                marshmallowSetting();
+            }
+        });
+
+}
+
+    private void marshmallowSetting() {
+        try {
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:" + getPackageName()));
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

@@ -2,10 +2,9 @@
 
 
     <!-- config changes start -->
-    <string name="app_name">Xampr Distributor</string>
-    <string name="verify_number_text">Please verify your number so that your collegues, friends and family can find you on Xampr Distributor.</string>
+    <string name="app_name">Zibew Distributor</string>
+    <string name="verify_number_text">Please verify your number so that your collegues, friends and family can find you on Zibew Distributor.</string>
     <!-- config changes end -->
-
 
 
     <!-- SignupOrLogin Page -->
@@ -13,7 +12,7 @@
     <string name="login">Login</string>
     <string name="pharmacy">Pharmacy</string>
     <string name="agent">Agent</string>
-    <string name="xampr_distributor">XAMPR Distributor</string>
+
     <string name="register_pharmacy">Register Pharmacy</string>
     <string name="pharmacy_name">Pharmacy Name</string>
     <string name="owner_name">Owner Name</string>

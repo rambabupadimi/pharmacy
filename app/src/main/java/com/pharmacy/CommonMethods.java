@@ -27,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidnetworking.interfaces.UploadProgressListener;
 import com.google.gson.Gson;
 import com.pharmacy.agent.AgentPharmacyListWithNavigation;
 import com.pharmacy.db.daos.AgentDAO;
@@ -41,6 +42,7 @@ import com.pharmacy.models.GetUserDetailsRequest;
 import com.pharmacy.operations.Post;
 import com.pharmacy.operations.UploadFiles;
 import com.pharmacy.preferences.UserPreferences;
+import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
@@ -59,47 +61,47 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by PCCS-0007 on 05-Feb-18.
  */
 
-public class CommonMethods implements AppConstants{
+public class CommonMethods implements AppConstants {
 
 
-    public static  String  SITE_URL = "http://rameshbookmeds-001-site1.ftempurl.com/api/";
+    public static String SITE_URL = "http://rameshbookmeds-001-site1.ftempurl.com/api/";
 
-    public static String REGISTRATION_USER = ""+SITE_URL+"Registration/RegisterUser";
-    public static String REGISTRATION_VERIFY_USER = ""+SITE_URL+"Registration/VerifyUser";
-    public static String MEDIA_UPLOAD = SITE_URL+"Upload/MediaUpload";
-    public static String CONFIRM_USER_REGISTRATION = SITE_URL+"Registration/ConfirmUserRegistration";
-    public static String SEARCH_PRODUCT =   SITE_URL+"User/SearchProduct";
-    public static String ADD_TO_RUNNING_LIST    =   SITE_URL+"User/AddToRunningList";
-    public static String ADD_NEW_PHARMACY = SITE_URL+ "User/AddPharmacy";
+    public static String REGISTRATION_USER = "" + SITE_URL + "Registration/RegisterUser";
+    public static String REGISTRATION_VERIFY_USER = "" + SITE_URL + "Registration/VerifyUser";
+    public static String MEDIA_UPLOAD = SITE_URL + "Upload/MediaUpload";
+    public static String CONFIRM_USER_REGISTRATION = SITE_URL + "Registration/ConfirmUserRegistration";
+    public static String SEARCH_PRODUCT = SITE_URL + "User/SearchProduct";
+    public static String ADD_TO_RUNNING_LIST = SITE_URL + "User/AddToRunningList";
+    public static String ADD_NEW_PHARMACY = SITE_URL + "User/AddPharmacy";
 
-    public static String GET_USER_DETAILS =SITE_URL+"Registration/GetUserDetails";
-    public static String GET_ALL_MYLIST = SITE_URL+"User/GetPharmacyRunningList";
-    public static String GET_AGENT_PHARMACY = SITE_URL+"User/GetAgentPharmacy";
+    public static String GET_USER_DETAILS = SITE_URL + "Registration/GetUserDetails";
+    public static String GET_ALL_MYLIST = SITE_URL + "User/GetPharmacyRunningList";
+    public static String GET_AGENT_PHARMACY = SITE_URL + "User/GetAgentPharmacy";
 
 
-    long id =-1;
-    public void maintainState(Context context,String status)
-    {
+    long id = -1;
+
+    public void maintainState(Context context, String status) {
         UserPreferences userPreferences = new UserPreferences(context);
-        if(status.toString().equalsIgnoreCase(LOGIN_REGISTRATION_STATUS))
-        {
+        if (status.toString().equalsIgnoreCase(LOGIN_REGISTRATION_STATUS)) {
             userPreferences.setUserBasicRegistrationStatus(true);
             userPreferences.setUserHomePageStatus(false);
             userPreferences.setUserProcssingStatus(false);
-        }
-        else if(status.toString().equalsIgnoreCase(USER_HOME_PAGE_STATUS))
-        {
+        } else if (status.toString().equalsIgnoreCase(USER_HOME_PAGE_STATUS)) {
             userPreferences.setUserBasicRegistrationStatus(false);
             userPreferences.setUserHomePageStatus(true);
             userPreferences.setUserProcssingStatus(false);
 
-        }
-        else if(status.toString().equalsIgnoreCase(USER_VERIFIED_STATUS))
-        {
+        } else if (status.toString().equalsIgnoreCase(USER_VERIFIED_STATUS)) {
             userPreferences.setUserBasicRegistrationStatus(false);
             userPreferences.setUserHomePageStatus(false);
             userPreferences.setUserProcssingStatus(true);
@@ -127,10 +129,9 @@ public class CommonMethods implements AppConstants{
     }
 
 
-    public static void setToolbar(Activity context, ActionBar toolbar)
-    {
+    public static void setToolbar(Activity context, ActionBar toolbar) {
         toolbar.setDisplayHomeAsUpEnabled(true);
-        final Drawable upArrow =context.getResources().getDrawable(R.drawable.vector_back_white_icon);
+        final Drawable upArrow = context.getResources().getDrawable(R.drawable.vector_back_white_icon);
         upArrow.setColorFilter(context.getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
         toolbar.setHomeAsUpIndicator(upArrow);
 
@@ -276,7 +277,6 @@ public class CommonMethods implements AppConstants{
     }
 
 
-
     public static String containsPinCode(String addressDetails) {
         String result = "";
         try {
@@ -293,11 +293,8 @@ public class CommonMethods implements AppConstants{
     }
 
 
-
-
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public static void showSnackBar(RelativeLayout relativeLayout, Context context, String message)
-    {
+    public static void showSnackBar(RelativeLayout relativeLayout, Context context, String message) {
         Snackbar.make(relativeLayout, message, Snackbar.LENGTH_LONG)
                 .setAction("CLOSE", new View.OnClickListener() {
                     @Override
@@ -305,7 +302,7 @@ public class CommonMethods implements AppConstants{
 
                     }
                 })
-                .setActionTextColor(context.getColor(android.R.color.holo_red_light ))
+                .setActionTextColor(context.getColor(android.R.color.holo_red_light))
                 .show();
     }
 
@@ -314,28 +311,24 @@ public class CommonMethods implements AppConstants{
     }
 
 
-
-
     public void uploadPhotoToBlob(final ProgressBar uploadProgress,
                                   final ImageView uploadProgressSent,
-                                  final TextView  uploadProgressTryAgain,
-                                  final   String filename,
+                                  final TextView uploadProgressTryAgain,
+                                  final String filename,
                                   final String path,
                                   final PharmacyDAO pharmacyDAO,
                                   final UserPreferences userPreferences,
                                   Context context,
-                                  final String type)
-    {
+                                  final String type) {
         uploadProgress.setVisibility(View.VISIBLE);
-        UploadFiles uploadFiles = new UploadFiles(filename,path,context) {
+        UploadFiles uploadFiles = new UploadFiles(filename, path, context) {
             @Override
             public void onResponseReceived(String result) {
-                Log.i("tag","result of image"+result);
-                if(result!=null)
-                {
+                Log.i("tag", "result of image" + result);
+                if (result != null) {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
-                        if(jsonObject.get("Status").toString().equalsIgnoreCase("Success")){
+                        if (jsonObject.get("Status").toString().equalsIgnoreCase("Success")) {
 
                             try {
                                 JSONObject urlObject = (JSONObject) jsonObject.get("Response");
@@ -343,40 +336,32 @@ public class CommonMethods implements AppConstants{
                                 uploadProgress.setVisibility(View.GONE);
                                 uploadProgressSent.setVisibility(View.VISIBLE);
 
-                                if(type.toString().equalsIgnoreCase("licence_photo"))
-                                {
+                                if (type.toString().equalsIgnoreCase("licence_photo")) {
                                     com.pharmacy.db.models.PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
                                     pharmacyModel.LicenceLocalPath = path;
-                                    pharmacyModel.Licence       =   url;
+                                    pharmacyModel.Licence = url;
                                     pharmacyDAO.insertOrUpdateAddNewPharmacy(pharmacyModel);
 
-                                }
-                                else if(type.toString().equalsIgnoreCase("register_photo"))
-                                {
+                                } else if (type.toString().equalsIgnoreCase("register_photo")) {
                                     com.pharmacy.db.models.PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
-                                    pharmacyModel.BillingLocalPath  =   path;
-                                    pharmacyModel.Billing           =   url;
+                                    pharmacyModel.BillingLocalPath = path;
+                                    pharmacyModel.Billing = url;
                                     pharmacyDAO.insertOrUpdateAddNewPharmacy(pharmacyModel);
 
-                                }
-                                else if(type.toString().equalsIgnoreCase("pharmacy_photo"))
-                                {
+                                } else if (type.toString().equalsIgnoreCase("pharmacy_photo")) {
                                     com.pharmacy.db.models.PharmacyModel pharmacyModel = pharmacyDAO.getPharmacyDataByPharmacyID(userPreferences.getPharmacyRegisterLocalUserId());
-                                    pharmacyModel.ImageLocalPath    =   path;
-                                    pharmacyModel.Image     =   url;
+                                    pharmacyModel.ImageLocalPath = path;
+                                    pharmacyModel.Image = url;
                                     pharmacyDAO.insertOrUpdateAddNewPharmacy(pharmacyModel);
 
                                 }
 
-                            }catch (Exception e)
-                            {
+                            } catch (Exception e) {
                                 uploadProgress.setVisibility(View.GONE);
                                 uploadProgressTryAgain.setVisibility(View.VISIBLE);
 
                             }
-                        }
-                        else
-                        {
+                        } else {
                             uploadProgress.setVisibility(View.GONE);
                             uploadProgressTryAgain.setVisibility(View.VISIBLE);
                         }
@@ -384,9 +369,7 @@ public class CommonMethods implements AppConstants{
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }
-                else
-                {
+                } else {
                     uploadProgress.setVisibility(View.GONE);
                     uploadProgressTryAgain.setVisibility(View.VISIBLE);
                 }
@@ -397,8 +380,6 @@ public class CommonMethods implements AppConstants{
 
 
     }
-
-
 
 
     public void uploadPhotoToBlobNewPharmacy(final ProgressBar uploadProgress,

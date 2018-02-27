@@ -292,7 +292,6 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
         }
     }
 
-
     private void initialiseNavigationDrawer()
     {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -424,7 +423,6 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent dbmanager = new Intent(AgentPharmacyListWithNavigation.this, AndroidDatabaseManager.class);

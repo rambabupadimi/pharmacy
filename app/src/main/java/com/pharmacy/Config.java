@@ -5,8 +5,11 @@ package com.pharmacy;
  */
 
 public class Config {
+
  // strings.xml change text
  // colors.xml change colors
  // logo icons
+ // firebase account
+ // google console for maps
 
 }

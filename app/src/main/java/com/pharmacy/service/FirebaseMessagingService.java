@@ -241,6 +241,7 @@ CommonMethods commonMethods;
 
 
 
+
     public void showNotification(Context context,String type) {
       PendingIntent pendingClickIntent = null, pendingSwipeIntent = null;
         Intent swipeIntent = null, clickIntent = null;

@@ -12,6 +12,7 @@ import com.pharmacy.R;
 import com.pharmacy.db.models.OrderModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by PCCS-0007 on 15-Feb-18.
@@ -62,6 +63,11 @@ public class AgentCommonListAdapter extends RecyclerView.Adapter<AgentCommonList
         return (productModelArrayList != null) ? productModelArrayList.size() : 0;
     }
 
-
+    public void addItems( List<OrderModel> prod)
+    {
+       productModelArrayList.clear();
+        productModelArrayList.addAll(prod);
+        notifyDataSetChanged();
+    }
 
 }

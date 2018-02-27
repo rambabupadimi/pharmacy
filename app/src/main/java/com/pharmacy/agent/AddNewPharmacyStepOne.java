@@ -222,7 +222,7 @@ public class AddNewPharmacyStepOne extends AppCompatActivity implements AppConst
     private boolean doValidatation()
     {
 
-        if(anpPharmacyName.getText().toString().length()>3)
+        if(anpPharmacyName.getText().toString().length()>1)
         {
 
         }
@@ -232,7 +232,7 @@ public class AddNewPharmacyStepOne extends AppCompatActivity implements AppConst
             return false;
         }
 
-        if(anpOwnerName.getText().toString().length()>3)
+        if(anpOwnerName.getText().toString().length()>1)
         {
 
         }
@@ -302,7 +302,7 @@ public class AddNewPharmacyStepOne extends AppCompatActivity implements AppConst
 
         }
 
-        if(anpDoorNumber.getText().toString().length()>3)
+        if(anpDoorNumber.getText().toString().length()>1)
         {
 
         }

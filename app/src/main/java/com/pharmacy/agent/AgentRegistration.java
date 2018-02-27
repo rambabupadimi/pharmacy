@@ -184,7 +184,7 @@ public class AgentRegistration extends AppCompatActivity implements View.OnClick
     private boolean doValidatation()
     {
 
-        if(arAgentName.getText().toString().length()>3)
+        if(arAgentName.getText().toString().length()>1)
         {
 
         }
@@ -213,7 +213,7 @@ public class AgentRegistration extends AppCompatActivity implements View.OnClick
             return false;
         }
 
-        if(arAddress.getText().toString().length()>3)
+        if(arAddress.getText().toString().length()>1)
         {
 
         }
@@ -223,7 +223,7 @@ public class AgentRegistration extends AppCompatActivity implements View.OnClick
             return false;
         }
 
-        if(arLandmark.getText().toString().length()>3)
+        if(arLandmark.getText().toString().length()>1)
         {
 
         }
@@ -264,7 +264,7 @@ public class AgentRegistration extends AppCompatActivity implements View.OnClick
 
         }
 
-        if(arDoorNumber.getText().toString().length()>3)
+        if(arDoorNumber.getText().toString().length()>1)
         {
 
         }

@@ -65,6 +65,11 @@ public class AgentRunningListFragment extends Fragment {
     LinearLayout notFoundLayout;
     TextView notFoundText;
     ImageView notFoundIcon;
+    LinearLayoutManager runningListLayoutManager;
+    private int lastVisibleItem, totalItemCount;
+    private boolean loading = false;
+    private final int VISIBLE_THRESHOLD = 1;
+    private int pageNumber = 1;
 
     public AgentRunningListFragment()
     {
@@ -79,7 +84,34 @@ public class AgentRunningListFragment extends Fragment {
         initialiseIDs(view);
         initialiseClickListeners();
         hideKeyboard(view);
+       // initialiseScrollListeners();
         return view;
+    }
+
+
+    private void initialiseScrollListeners()
+    {
+        runningListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView,
+                                   int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                totalItemCount = runningListLayoutManager.getItemCount();
+                lastVisibleItem = runningListLayoutManager.findLastVisibleItemPosition();
+                if (!loading
+                        && totalItemCount <= (lastVisibleItem + VISIBLE_THRESHOLD)) {
+
+                   int n = pageNumber++;
+                    Log.i("tag","page number total item count "+totalItemCount);
+                    Log.i("tag","page number last visibile item count "+lastVisibleItem);
+
+                   Log.i("tag","page number is "+n);
+                    //paginator.onNext(pageNumber);
+                    loading = true;
+                }
+            }
+        });
     }
 
     private void hideKeyboard(View view)
@@ -101,11 +133,10 @@ public class AgentRunningListFragment extends Fragment {
 
         OrderDAO orderDAO = new OrderDAO(getContext());
         List<OrderModel> orderModelList =orderDAO.getOrderData("running",pharmacyLocalId);
-        Log.i("tag","order list is"+gson.toJson(orderModelList));
         if(orderModelList!=null && orderModelList.size()>0) {
             notFoundLayout.setVisibility(View.GONE);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            runningListRecyclerView.setLayoutManager(linearLayoutManager);
+            runningListLayoutManager = new LinearLayoutManager(getContext());
+            runningListRecyclerView.setLayoutManager(runningListLayoutManager);
             Collections.reverse(orderModelList);
             runningList.clear();
             runningList.addAll(orderModelList);
