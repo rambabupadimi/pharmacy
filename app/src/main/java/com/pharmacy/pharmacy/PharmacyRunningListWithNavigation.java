@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -38,6 +39,7 @@ import com.pharmacy.db.models.AgentModel;
 import com.pharmacy.db.models.OrderModel;
 import com.pharmacy.db.models.PharmacyModel;
 import com.pharmacy.db.models.UserModel;
+import com.pharmacy.interfaces.RefreshFragment;
 import com.pharmacy.models.GetUserDetailsRequest;
 import com.pharmacy.operations.Post;
 import com.pharmacy.pharmacy.fragments.PharmacyApprovedListFragment;
@@ -70,6 +72,8 @@ public class PharmacyRunningListWithNavigation extends AppCompatActivity
     UserDAO userDAO;
     Gson gson;
     OrderDAO orderDAO;
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,13 +115,13 @@ public class PharmacyRunningListWithNavigation extends AppCompatActivity
                     if (result != null) {
                         try {
                             JSONObject jsonObject1 = new JSONObject(result);
-                            if (jsonObject1.get("Status").toString().equalsIgnoreCase("Success")) {
-                                JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
+                            if (jsonObject1.get(getString(R.string.status)).toString().equalsIgnoreCase(getString(R.string.success))) {
+                                JSONObject jsonObject2 = jsonObject1.getJSONObject(getString(R.string.response));
 
-                                String lastUpdatedTicks = jsonObject2.get("LastUpdatedTimeTicks").toString();
+                                String lastUpdatedTicks = jsonObject2.get(getString(R.string.LastUpdatedTimeTicks)).toString();
                                 userPreferences.setGetAllMyListTimeticks(lastUpdatedTicks);
-                                if (jsonObject2.get("OrderList") != null) {
-                                    JSONArray jsonArray = jsonObject2.getJSONArray("OrderList");
+                                if (jsonObject2.get(getString(R.string.orderList)) != null) {
+                                    JSONArray jsonArray = jsonObject2.getJSONArray(getString(R.string.orderList));
                                     if (jsonArray.length() > 0) {
                                         ArrayList<OrderModel> orderModelArrayList = new ArrayList<>();
                                         for (int i = 0; i < jsonArray.length(); i++) {
@@ -232,6 +236,7 @@ public class PharmacyRunningListWithNavigation extends AppCompatActivity
         profileName =   headerLayout.findViewById(R.id.pr_nav_title);
         toolbarHeading  =   findViewById(R.id.prln_toolbar_heading);
 
+        swipeRefreshLayout  =   findViewById(R.id.swipeRefreshLayout);
     }
 
     private void initialiseFragments()
@@ -252,6 +257,13 @@ public class PharmacyRunningListWithNavigation extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+      /*  swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                viewPager.getAdapter().notifyDataSetChanged();
+            }
+        });*/
     }
 
 

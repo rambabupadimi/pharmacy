@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,12 +25,14 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.pharmacy.CommonMethods;
 import com.pharmacy.R;
 import com.pharmacy.adapters.SearchProductListAdapter;
+import com.pharmacy.agent.AgentPharmacyListWithNavigation;
 import com.pharmacy.db.daos.OrderDAO;
 import com.pharmacy.db.models.OrderModel;
 import com.pharmacy.models.ProductModel;
@@ -74,7 +77,7 @@ public class PharmacyRunningListFragment extends Fragment {
 
     public PharmacyRunningListFragment()
     {
-        pharmacyCommonListAdapter = new PharmacyCommonListAdapter(getContext(),runningList);
+        pharmacyCommonListAdapter = new PharmacyCommonListAdapter(getContext(),runningList,"running_list");
     }
 
 
@@ -169,6 +172,8 @@ public class PharmacyRunningListFragment extends Fragment {
                 return false;
             }
         });
+
+
     }
 
 

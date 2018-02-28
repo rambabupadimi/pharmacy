@@ -19,7 +19,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+
         app:headerLayout="@layout/nav_header_agent_pharmacy_list_with_navigation"
         app:menu="@menu/activity_agent_pharmacy_list_with_navigation_drawer" />
+
 
 </android.support.v4.widget.DrawerLayout>

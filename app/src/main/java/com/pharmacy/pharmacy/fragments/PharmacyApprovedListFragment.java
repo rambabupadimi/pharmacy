@@ -46,7 +46,7 @@ public class PharmacyApprovedListFragment extends Fragment {
 
     public PharmacyApprovedListFragment()
     {
-        pharmacyCommonListAdapter = new PharmacyCommonListAdapter(getContext(),approvedList);
+        pharmacyCommonListAdapter = new PharmacyCommonListAdapter(getContext(),approvedList,"approved_list");
     }
 
     @Nullable
@@ -122,6 +122,11 @@ public class PharmacyApprovedListFragment extends Fragment {
         super.onResume();
         inflateData();
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,new IntentFilter("product_status_approved"));
+
+    }
+
+    public static void reload()
+    {
 
     }
 }

@@ -157,8 +157,8 @@ public class EditPharmacyProfileView extends AppCompatActivity {
 
                                     try {
                                         JSONObject jsonObject = new JSONObject(result);
-                                        if (jsonObject.get("Status").toString().equalsIgnoreCase("Success")) {
-                                            String response = jsonObject.get("Response").toString();
+                                        if (jsonObject.get(getString(R.string.status)).toString().equalsIgnoreCase(getString(R.string.success))) {
+                                            String response = jsonObject.get(getString(R.string.response)).toString();
                                             PharmacyModel pharmacyModel1 = gson.fromJson(response,PharmacyModel.class);
                                             long id = pharmacyDAO.insertOrUpdateAddNewPharmacy(pharmacyModel1);
                                             if(id!= -1) {

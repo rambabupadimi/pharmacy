@@ -135,7 +135,7 @@ public class EditAgentProfileView extends AppCompatActivity {
 
                                     try {
                                         JSONObject jsonObject = new JSONObject(result);
-                                        if (jsonObject.get("Status").toString().equalsIgnoreCase("Success")) {
+                                        if (jsonObject.get(getString(R.string.status)).toString().equalsIgnoreCase(getString(R.string.success))) {
 
                                             Intent intent = new Intent(EditAgentProfileView.this, AgentProfieView.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |

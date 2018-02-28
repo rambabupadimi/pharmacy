@@ -172,7 +172,7 @@ public class AgentRegistrationTwo extends AppCompatActivity implements AppConsta
 
                                     try {
                                         JSONObject jsonObject = new JSONObject(result);
-                                        if (jsonObject.get("Status").toString().equalsIgnoreCase("Success")) {
+                                        if (jsonObject.get(getString(R.string.status)).toString().equalsIgnoreCase(getString(R.string.success))) {
 
                                             Intent intent = new Intent(AgentRegistrationTwo.this, AgentProcessing.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |
@@ -398,10 +398,10 @@ public class AgentRegistrationTwo extends AppCompatActivity implements AppConsta
                                             {
                                                 try {
                                                     JSONObject jsonObject = new JSONObject(result);
-                                                    if(jsonObject.get("Status").toString().equalsIgnoreCase("Success")){
+                                                    if(jsonObject.get(getString(R.string.status)).toString().equalsIgnoreCase(getString(R.string.success))){
 
                                                         try {
-                                                            JSONObject urlObject = (JSONObject) jsonObject.get("Response");
+                                                            JSONObject urlObject = (JSONObject) jsonObject.get(getString(R.string.response));
                                                             String url = urlObject.get("url").toString();
                                                             ar2UploadIdProofProgress.setVisibility(View.GONE);
                                                             ar2UploadIdProofSent.setVisibility(View.VISIBLE);
@@ -451,10 +451,10 @@ public class AgentRegistrationTwo extends AppCompatActivity implements AppConsta
                                             {
                                                 try {
                                                     JSONObject jsonObject = new JSONObject(result);
-                                                    if(jsonObject.get("Status").toString().equalsIgnoreCase("Success")){
+                                                    if(jsonObject.get(getString(R.string.status)).toString().equalsIgnoreCase(getString(R.string.success))){
 
                                                         try {
-                                                            JSONObject urlObject = (JSONObject) jsonObject.get("Response");
+                                                            JSONObject urlObject = (JSONObject) jsonObject.get(getString(R.string.response));
                                                             String url = urlObject.get("url").toString();
                                                             ar2UploadPhotoProgress.setVisibility(View.GONE);
                                                             ar2UploadPhotoSent.setVisibility(View.VISIBLE);

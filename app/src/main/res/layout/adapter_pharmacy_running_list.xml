@@ -5,6 +5,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/date_time_layout"
+        android:orientation="vertical"
+        android:visibility="visible"
+        >
+        <com.pharmacy.RobotoTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:typeface="robotoLight"
+            android:padding="12dp"
+            android:textColor="@color/heading_color"
+            android:id="@+id/date_time_layout_textview"
+            android:gravity="center"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.6dp"
+            android:background="@drawable/list_divider"></View>
+    </LinearLayout>
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,14 +36,48 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="24dp">
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:gravity="center_vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/done"
+        android:paddingRight="12dp"
+
+        android:id="@+id/done"
+        android:visibility="gone"
+        android:layout_gravity="center_vertical"/>
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/done_all"
+            android:paddingRight="6dp"
+
+            android:visibility="gone"
+            android:id="@+id/done_all"
+            android:layout_gravity="center_vertical"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/done_all_color"
+            android:paddingRight="6dp"
+
+            android:visibility="gone"
+            android:id="@+id/done_all_color"
+            android:layout_gravity="center_vertical"/>
     <com.pharmacy.RobotoTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Paracetamol"
         android:layout_weight="1"
         android:id="@+id/pharmacy_list_title"
-        app:typeface="robotoMedium"
+        app:typeface="robotoLight"
         android:textColor="@color/colorBlack"/>
     <com.pharmacy.RobotoTextView
         android:layout_width="wrap_content"

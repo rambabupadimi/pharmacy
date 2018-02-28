@@ -268,6 +268,7 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
         navigationView          =  findViewById(R.id.nav_view);
         aplnRecyclerView        =   findViewById(R.id.apln_recyclerview);
 
+
         View headerLayout = navigationView.getHeaderView(0);
         profileIcon =   headerLayout.findViewById(R.id.ar_nav_profile_imageview);
         profileName =   headerLayout.findViewById(R.id.ar_nav_profile_name);

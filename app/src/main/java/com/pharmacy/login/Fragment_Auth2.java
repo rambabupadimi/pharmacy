@@ -1081,14 +1081,14 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
                                                 {
                                                     try {
                                                         JSONObject jsonObject1 = new JSONObject(result);
-                                                        if(jsonObject1.get("Status").toString().equalsIgnoreCase("Success"))
+                                                        if(jsonObject1.get(getContext().getString(R.string.status)).toString().equalsIgnoreCase(getContext().getString(R.string.success)))
                                                         {
-                                                           if(jsonObject1.get("Response")!=null) {
-                                                               JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
+                                                           if(jsonObject1.get(getContext().getString(R.string.response))!=null) {
+                                                               JSONObject jsonObject2 = jsonObject1.getJSONObject(getContext().getString(R.string.response));
 
                                                                try {
-                                                                   if (jsonObject2.get("UserDetails") != null) {
-                                                                       AgentModel agentModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), AgentModel.class);
+                                                                   if (jsonObject2.get(getContext().getString(R.string.userdetails)) != null) {
+                                                                       AgentModel agentModel = gson.fromJson(jsonObject2.get(getContext().getString(R.string.userdetails)).toString(), AgentModel.class);
                                                                        Long id = commonMethods.renderLoginDataForAgent(getContext(), agentModel);
                                                                        if (id != -1) {
                                                                            alertDialog.dismiss();
@@ -1101,7 +1101,7 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
                                                                {
                                                                    e.printStackTrace();
                                                                }
-                                                               String ticks = jsonObject2.get("LastUpdatedTimeTicks").toString();
+                                                               String ticks = jsonObject2.get(getContext().getString(R.string.LastUpdatedTimeTicks)).toString();
                                                                userPreferences.setGetAllUserDetailsTimeticks(ticks);
 
                                                            }
@@ -1150,18 +1150,19 @@ public class Fragment_Auth2 extends Fragment implements AdapterView.OnItemSelect
                                                 {
                                                     try {
                                                         JSONObject jsonObject1 = new JSONObject(result);
-                                                        if(jsonObject1.get("Status").toString().equalsIgnoreCase("Success"))
+                                                        if(jsonObject1.get(getContext().getString(R.string.status)).toString().equalsIgnoreCase(getContext().getString(R.string.success)))
                                                         {
-                                                            if(jsonObject1.get("Response")!=null) {
-                                                                JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
+                                                            if(jsonObject1.get(getContext().getString(R.string.response))!=null) {
+                                                                JSONObject jsonObject2 = jsonObject1.getJSONObject(getContext().getString(R.string.response));
 
-                                                                String ticks = jsonObject2.get("LastUpdatedTimeTicks").toString();
+                                                                String ticks = jsonObject2.get(getContext().getString(R.string.LastUpdatedTimeTicks)).toString();
                                                                 userPreferences.setGetAllUserDetailsTimeticks(ticks);
 
-                                                                if(jsonObject2.get("UserDetails")!=null) {
-                                                                    PharmacyModel pharmacyModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), PharmacyModel.class);
+                                                                if(jsonObject2.get(getContext().getString(R.string.userdetails))!=null) {
+                                                                    PharmacyModel pharmacyModel = gson.fromJson(jsonObject2.get(getContext().getString(R.string.userdetails)).toString(), PharmacyModel.class);
                                                                     Long id = commonMethods.renderLoginDataForPharmacy(getContext(), pharmacyModel);
                                                                     if (id != -1) {
+                                                                        userPreferences.setPharmacyRegisterLocalUserId(pharmacyModel.PharmacyLocalId);
                                                                         alertDialog.dismiss();
                                                                         Intent intent = new Intent(getContext(), PharmacyRunningListWithNavigation.class);
                                                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

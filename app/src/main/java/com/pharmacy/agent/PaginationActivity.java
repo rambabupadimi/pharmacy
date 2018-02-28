@@ -61,7 +61,7 @@ public class PaginationActivity extends AppCompatActivity {
         gson    =   new Gson();
         orderDAO  = new OrderDAO(this);
         recyclerView = findViewById(R.id.recyclerview);
-        agentCommonListAdapter = new AgentCommonListAdapter(this,runningList);
+        agentCommonListAdapter = new AgentCommonListAdapter(this,runningList,"running_list");
         layoutManager   =new LinearLayoutManager(this);
         progressBar = findViewById(R.id.progress_bar);
         recyclerView.setLayoutManager(layoutManager);

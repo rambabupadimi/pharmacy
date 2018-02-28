@@ -130,13 +130,13 @@ CommonMethods commonMethods;
                     if (result != null) {
                         try {
                             JSONObject jsonObject1 = new JSONObject(result);
-                            if (jsonObject1.get("Status").toString().equalsIgnoreCase("Success")) {
-                                if (jsonObject1.get("Response") != null) {
-                                    JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
+                            if (jsonObject1.get(getString(R.string.status)).toString().equalsIgnoreCase(getString(R.string.success))) {
+                                if (jsonObject1.get(getString(R.string.response)) != null) {
+                                    JSONObject jsonObject2 = jsonObject1.getJSONObject(getString(R.string.response));
 
                                     try {
-                                        if (jsonObject2.get("UserDetails") != null) {
-                                            PharmacyModel pharmacyModel = gson.fromJson(jsonObject2.get("UserDetails").toString(), PharmacyModel.class);
+                                        if (jsonObject2.get(getString(R.string.userdetails)) != null) {
+                                            PharmacyModel pharmacyModel = gson.fromJson(jsonObject2.get(getString(R.string.userdetails)).toString(), PharmacyModel.class);
                                             long id = commonMethods.renderLoginDataForPharmacy(FirebaseMessagingService.this, pharmacyModel);
                                             if (id != -1) {
                                                 callBroadcast(message);
@@ -145,7 +145,7 @@ CommonMethods commonMethods;
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-                                    String ticks = jsonObject2.get("LastUpdatedTimeTicks").toString();
+                                    String ticks = jsonObject2.get(getString(R.string.LastUpdatedTimeTicks)).toString();
                                     userPreferences.setGetAllUserDetailsTimeticks(ticks);
 
                                 }

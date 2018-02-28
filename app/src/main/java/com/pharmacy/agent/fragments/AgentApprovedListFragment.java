@@ -44,9 +44,11 @@ public class AgentApprovedListFragment  extends Fragment{
     LinearLayout notFoundLayout;
     TextView notFoundText;
     ImageView notFoundIcon;
+    boolean _approvedlistloaded=false;
+
     public AgentApprovedListFragment()
     {
-        agentCommonListAdapter  = new AgentCommonListAdapter(getContext(),approvedList);
+        agentCommonListAdapter  = new AgentCommonListAdapter(getContext(),approvedList,"approved_list");
     }
     @Nullable
     @Override
@@ -120,9 +122,19 @@ public class AgentApprovedListFragment  extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        inflateData();
+       // inflateData();
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,new IntentFilter("product_status_approved"));
 
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            inflateData();
+            _approvedlistloaded = true;
+        }
+    }
+
 
 }

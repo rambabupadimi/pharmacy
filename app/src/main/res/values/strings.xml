@@ -329,4 +329,15 @@
     <string name="register_certificate">Register Certificate</string>
     <string name="pharmacy_photo">Pharmacy Photo</string>
 
+
+
+
+    <!-- response parameters -->
+    <string name="success">Success</string>
+    <string name="status">Status</string>
+    <string name="response">Response</string>
+    <string name="userdetails">UserDetails</string>
+    <string name="LastUpdatedTimeTicks">LastUpdatedTimeTicks</string>
+    <string name="orderList">OrderList</string>
+
 </resources>

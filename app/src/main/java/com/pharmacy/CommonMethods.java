@@ -45,6 +45,7 @@ import com.pharmacy.preferences.UserPreferences;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,10 +55,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -585,4 +588,29 @@ public class CommonMethods implements AppConstants {
         return isInBackground;
     }
 
+
+
+    public static String getCurrentOnlyDate() {
+        String strDate = "";
+        try {
+            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);//dd/MM/yyyy
+            Date now = new Date();
+            strDate = sdfDate.format(now);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return strDate;
+    }
+
+    public static String getYesterdayDate() {
+
+        Date date = DateUtils.addDays(new Date(), -1);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
+    }
+
+    public static String getConvertedTime(String currentDate) {
+        return currentDate.split("-")[2] + " " + new DateFormatSymbols().getMonths()[Integer.parseInt(currentDate.split("-")[1]) - 1] + " " + currentDate.split("-")[0];
+    }
 }

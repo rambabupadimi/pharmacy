@@ -46,7 +46,7 @@ public class PharmacyDeliveredListFragment extends Fragment {
 
     public PharmacyDeliveredListFragment()
     {
-        pharmacyCommonListAdapter = new PharmacyCommonListAdapter(getContext(),deliveredList);
+        pharmacyCommonListAdapter = new PharmacyCommonListAdapter(getContext(),deliveredList,"delivered_list");
     }
     @Nullable
     @Override

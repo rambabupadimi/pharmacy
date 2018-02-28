@@ -43,10 +43,11 @@ public class AgentDeliveredListFragment extends Fragment {
     LinearLayout notFoundLayout;
     TextView notFoundText;
     ImageView notFoundIcon;
+    boolean _delivedlistloaded=false;
 
     public AgentDeliveredListFragment()
     {
-        agentCommonListAdapter  = new AgentCommonListAdapter(getContext(),deliveredList);
+        agentCommonListAdapter  = new AgentCommonListAdapter(getContext(),deliveredList,"delivered_list");
     }
 
     @Nullable
@@ -120,8 +121,17 @@ public class AgentDeliveredListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        inflateData();
+       // inflateData();
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,new IntentFilter("product_status_delivered"));
 
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser ) {
+            inflateData();
+            _delivedlistloaded = true;
+        }
     }
 }

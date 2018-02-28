@@ -260,13 +260,13 @@ public class AgentRunningList extends AppCompatActivity {
                         agentHomeProgress.setVisibility(View.GONE);
                         try {
                             JSONObject jsonObject1 = new JSONObject(result);
-                            if(jsonObject1.get("Status").toString().equalsIgnoreCase("Success")){
-                                JSONObject jsonObject2 = jsonObject1.getJSONObject("Response");
+                            if(jsonObject1.get(getString(R.string.status)).toString().equalsIgnoreCase(getString(R.string.success))){
+                                JSONObject jsonObject2 = jsonObject1.getJSONObject(getString(R.string.response));
 
-                                String lastUpdatedTicks = jsonObject2.get("LastUpdatedTimeTicks").toString();
+                                String lastUpdatedTicks = jsonObject2.get(getString(R.string.LastUpdatedTimeTicks)).toString();
                                 userPreferences.setGetAllMyListTimeticks(lastUpdatedTicks);
-                                if(jsonObject2.get("OrderList")!=null){
-                                   JSONArray jsonArray = jsonObject2.getJSONArray("OrderList");
+                                if(jsonObject2.get(getString(R.string.orderList))!=null){
+                                   JSONArray jsonArray = jsonObject2.getJSONArray(getString(R.string.orderList));
                                    if(jsonArray.length()>0)
                                    {
                                        ArrayList<OrderModel> orderModelArrayList = new ArrayList<>();

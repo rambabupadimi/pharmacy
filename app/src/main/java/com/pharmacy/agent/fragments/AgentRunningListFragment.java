@@ -4,8 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
@@ -16,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -70,12 +74,15 @@ public class AgentRunningListFragment extends Fragment {
     private boolean loading = false;
     private final int VISIBLE_THRESHOLD = 1;
     private int pageNumber = 1;
+    boolean _areLecturesLoaded = false;
+    LinearLayout frlLayout;
 
     public AgentRunningListFragment()
     {
-        agentCommonListAdapter = new AgentCommonListAdapter(getContext(),runningList);
+        agentCommonListAdapter = new AgentCommonListAdapter(getContext(),runningList,"running_list");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -171,6 +178,7 @@ public class AgentRunningListFragment extends Fragment {
         notFoundText    =   view.findViewById(R.id.not_found_text);
         notFoundIcon    =   view.findViewById(R.id.not_found_icon);
 
+        frlLayout       =   view.findViewById(R.id.frl_layout);
 
         //afrlSearchView.setActivated(true);
         afrlSearchView.onActionViewExpanded();
@@ -179,6 +187,7 @@ public class AgentRunningListFragment extends Fragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void initialiseClickListeners()
     {
         afrlSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -213,8 +222,36 @@ public class AgentRunningListFragment extends Fragment {
                 return false;
             }
         });
-    }
 
+        runningListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                       // frlLayout.setVisibility(View.VISIBLE);
+                        //slideUp(frlLayout);
+                        break;
+
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                       // frlLayout.setVisibility(View.GONE);
+                       // slideDown(frlLayout);
+                        break;
+                    case RecyclerView.SCROLL_STATE_SETTLING:
+                        break;
+
+                }
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+            }
+        });
+    }
 
 
     private void getRxJavaSearch(String text){
@@ -363,12 +400,27 @@ public class AgentRunningListFragment extends Fragment {
 
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
-        inflateData();
+       inflateData();
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,new IntentFilter("product_status_running"));
 
     }
 
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+
+        if (isVisibleToUser && !_areLecturesLoaded ) {
+         //   inflateData();
+            _areLecturesLoaded = true;
+
+
+        }
+    }
 }
