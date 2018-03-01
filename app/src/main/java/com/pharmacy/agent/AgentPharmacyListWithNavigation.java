@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -37,6 +38,7 @@ import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.pharmacy.AppConstants;
 import com.pharmacy.CommonMethods;
+import com.pharmacy.InformationBottomSheet;
 import com.pharmacy.R;
 import com.pharmacy.agent.adapters.AgentPharmacyListAdapter;
 import com.pharmacy.db.AndroidDatabaseManager;
@@ -468,6 +470,13 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
     public void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,new IntentFilter("add_new_pharmacy"));
+
+    }
+
+    public void showDialog()
+    {
+        BottomSheetDialogFragment bottomSheetDialogFragment = new InformationBottomSheet();
+        bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
 
     }
 

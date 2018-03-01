@@ -24,9 +24,9 @@
             android:tint="@color/gray"
             android:layout_centerHorizontal="true"
             android:id="@+id/pharmacy_image"
-
             android:layout_margin="12dp"
-            app:riv_oval="true"
+            app:riv_corner_radius="12dp"
+
             />
 
 
@@ -37,7 +37,6 @@
             android:gravity="center"
             android:layout_below="@+id/pharmacy_image"
             app:typeface ="robotoMedium"
-
             android:textColor="@color/colorBlack"
             android:id="@+id/apl_adapter_name"/>
 

@@ -77,6 +77,7 @@ public class SignupOrLoginActivity extends AppCompatActivity {
                 requestPermissions(PERMISSIONS, PERMISSION_REQUEST_CODE);
             } else {
              //   isPermissionDeniedNever = true;
+
                 requestPermissions(PERMISSIONS, PERMISSION_REQUEST_CODE);
             }
         } catch (Exception ex) {

@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/pharmacy_image"
         android:layout_margin="12dp"
-        app:riv_oval="true"
+       app:riv_corner_radius="12dp"
         />
 
     <com.pharmacy.RobotoTextView

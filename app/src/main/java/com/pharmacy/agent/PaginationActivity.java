@@ -106,19 +106,7 @@ public class PaginationActivity extends AppCompatActivity {
                         }
                     }
                 }
-/*
-                Log.i("tag","dx and dy "+dx+" and "+dy);
-               if(dy>0)
-               {
-                   if (!loading && totalItemCount <= (lastVisibleItem + VISIBLE_THRESHOLD)) {
-                       if (orderListSize >= totalItemCount) {
-                           pageNumber++;
-                           paginator.onNext(pageNumber);
-                           loading = true;
-                       }
-                   }
-               }
-*/
+
             }
         });
     }
@@ -152,6 +140,8 @@ public class PaginationActivity extends AppCompatActivity {
         paginator.onNext(pageNumber);
 
     }
+
+
 
 
     private Flowable<List<OrderModel>> dataFromNetwork(final int page) {

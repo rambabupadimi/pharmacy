@@ -133,16 +133,30 @@
         </LinearLayout>
 
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="right|center_vertical"
+            >
+            <com.pharmacy.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/select_location"
+                android:id="@+id/pr_select_location"
+                android:layout_margin="4dp"
+                app:typeface="robotoRegular"
+                android:textColor="@color/heading_color"
+                android:layout_gravity="center_vertical"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/state"
+                android:tint="@color/heading_color"
+                android:padding="6dp"/>
+        </LinearLayout>
 
-        <com.pharmacy.RobotoTextView
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:text="@string/select_location"
-             android:gravity="right"
-             android:id="@+id/pr_select_location"
-             android:layout_margin="4dp"
-            app:typeface="robotoRegular"
-            />
 
 
 

@@ -121,7 +121,7 @@ public class AgentDeliveredListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-       // inflateData();
+        inflateData();
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,new IntentFilter("product_status_delivered"));
 
     }
@@ -130,7 +130,7 @@ public class AgentDeliveredListFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser ) {
-            inflateData();
+          //  inflateData();
             _delivedlistloaded = true;
         }
     }

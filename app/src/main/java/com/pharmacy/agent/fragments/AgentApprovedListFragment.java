@@ -122,7 +122,7 @@ public class AgentApprovedListFragment  extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-       // inflateData();
+        inflateData();
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,new IntentFilter("product_status_approved"));
 
     }
@@ -131,7 +131,7 @@ public class AgentApprovedListFragment  extends Fragment{
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            inflateData();
+           // inflateData();
             _approvedlistloaded = true;
         }
     }

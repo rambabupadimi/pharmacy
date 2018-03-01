@@ -57,11 +57,24 @@
         android:layout_below="@+id/frl_layout"
 
         android:visibility="visible"
+        android:layout_above="@+id/progress_bar"
         android:id="@+id/frl_runninglist_recyclerview">
 
     </android.support.v7.widget.RecyclerView>
 
 
     <include layout="@layout/not_found_layout"></include>
+
+
+    <ProgressBar
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:id="@+id/progress_bar"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="6dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:background="@drawable/progress_bar_color"
+        />
 
 </RelativeLayout>

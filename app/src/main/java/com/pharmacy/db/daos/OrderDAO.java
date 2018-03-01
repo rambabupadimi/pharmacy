@@ -293,7 +293,7 @@ public class OrderDAO  extends AbstractDAO{
                 if(pharmacyId==null)
                     query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+valIs+ " AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" LIMIT "+row;
                 else
-                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+valIs+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+" ";
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+valIs+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+" LIMIT "+row;
             }
             else if(from.equalsIgnoreCase("approved")){
                 if(pharmacyId==null)

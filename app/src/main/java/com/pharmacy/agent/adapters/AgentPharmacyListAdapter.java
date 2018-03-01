@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.pharmacy.InformationBottomSheet;
 import com.pharmacy.R;
 import com.pharmacy.agent.AgentPharmacyListWithNavigation;
 import com.pharmacy.agent.AgentRunningList;
@@ -95,7 +97,9 @@ public class AgentPharmacyListAdapter extends RecyclerView.Adapter<AgentPharmacy
                 }
                 else
                 {
-                    Toast.makeText(context,"Admin needs to approve",Toast.LENGTH_LONG).show();
+
+                    ((AgentPharmacyListWithNavigation)context).showDialog();
+                  //  Toast.makeText(context,"Admin needs to approve",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -129,6 +133,15 @@ public class AgentPharmacyListAdapter extends RecyclerView.Adapter<AgentPharmacy
         }catch (Exception e)
         {
             e.printStackTrace();
+        }
+
+        if(pharmacyModel.PharmacyID!=null && pharmacyModel.PharmacyID.length()>0){
+            holder.aplParentLayout.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            holder.aplParentLayout.setVisibility(View.GONE);
+
         }
 
 
