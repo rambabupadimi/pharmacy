@@ -301,7 +301,7 @@ public class ViewPharmacyDetails extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent(ViewPharmacyDetails.this,AgentRunningList.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        Bundle bndlanimation = ActivityOptions.makeCustomAnimation(ViewPharmacyDetails.this, R.anim.back_swipe2, R.anim.back_swipe1).toBundle();
+        Bundle bndlanimation = ActivityOptions.makeCustomAnimation(ViewPharmacyDetails.this, R.anim.next_swipe2, R.anim.next_swipe1).toBundle();
         startActivity(intent,bndlanimation);
     }
 

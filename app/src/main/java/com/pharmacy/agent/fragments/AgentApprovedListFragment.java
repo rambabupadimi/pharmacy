@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -26,9 +27,21 @@ import com.pharmacy.db.daos.OrderDAO;
 import com.pharmacy.db.models.OrderModel;
 import com.pharmacy.preferences.UserPreferences;
 
+import org.reactivestreams.Publisher;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.processors.PublishProcessor;
 
 /**
  * Created by PCCS-0007 on 06-Feb-18.
@@ -46,6 +59,21 @@ public class AgentApprovedListFragment  extends Fragment{
     ImageView notFoundIcon;
     boolean _approvedlistloaded=false;
 
+    LinearLayoutManager layoutManager;
+    private int  totalItemCount,lastVisibleItem;
+    ProgressBar progressBar;
+    int orderListSize;
+    int pageWithSelectedItemsSize;
+    int firstVisibleItemPosition;
+    int visibleItemCount;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private PublishProcessor<Integer> paginator = PublishProcessor.create();
+    private boolean loading = false;
+    private boolean isLastPage= false;
+    private int pageNumber = 1;
+
+
+
     public AgentApprovedListFragment()
     {
         agentCommonListAdapter  = new AgentCommonListAdapter(getContext(),approvedList,"approved_list");
@@ -56,7 +84,7 @@ public class AgentApprovedListFragment  extends Fragment{
        View view = inflater.inflate(R.layout.fragment_agent_approved_list, container, false);
         initialiseObjects();
         initialiseIDs(view);
-
+        initialiseScrollListener();
        return view;
     }
 
@@ -73,6 +101,14 @@ public class AgentApprovedListFragment  extends Fragment{
         notFoundLayout  =   view.findViewById(R.id.not_found_layout);
         notFoundText    =   view.findViewById(R.id.not_found_text);
         notFoundIcon    =   view.findViewById(R.id.not_found_icon);
+        progressBar     =   view.findViewById(R.id.progress_bar);
+
+
+        agentCommonListAdapter = new AgentCommonListAdapter(getContext(),approvedList,"approved_list");
+        layoutManager = new LinearLayoutManager(getContext());
+        approvedListRecyclerView.setLayoutManager(layoutManager);
+        approvedListRecyclerView.setAdapter(agentCommonListAdapter);
+
     }
 
 
@@ -102,12 +138,128 @@ public class AgentApprovedListFragment  extends Fragment{
     }
 
 
+
+    private void initialiseScrollListener()
+    {
+        approvedListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView,
+                                   int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                totalItemCount = layoutManager.getItemCount();
+                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+                firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                visibleItemCount = layoutManager.getChildCount();
+                if(dy>0) {
+                    if (!loading && !isLastPage) {
+                        if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                                && firstVisibleItemPosition >= 0) {
+                            pageNumber++;
+                            paginator.onNext(pageNumber);
+                            loading = true;
+                        }
+                    }
+                }
+
+            }
+        });
+    }
+
+
+    private void subscribeForData() {
+
+        Disposable disposable = paginator
+                .onBackpressureDrop()
+                .concatMap(new Function<Integer, Publisher<List<OrderModel>>>() {
+                    @Override
+                    public Publisher<List<OrderModel>> apply(@NonNull Integer page) throws Exception {
+                        loading = true;
+                        if(isLastPage) {
+                            progressBar.setVisibility(View.GONE);
+                        }
+                        else if(page==1)
+                        {
+                            progressBar.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
+
+
+                        return dataFromNetwork(page);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<OrderModel>>() {
+                    @Override
+                    public void accept(@NonNull List<OrderModel> items) throws Exception {
+
+                        if(items!=null && items.size()>0) {
+                            showLayout();
+                            agentCommonListAdapter.addItems(items);
+                            loading = false;
+                            progressBar.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+                            hideLayout();
+                        }
+                    }
+                });
+
+        compositeDisposable.add(disposable);
+
+        paginator.onNext(pageNumber);
+
+    }
+
+    private void showLayout()
+    {
+        notFoundLayout.setVisibility(View.GONE);
+        approvedListRecyclerView.setVisibility(View.VISIBLE);
+
+    }
+
+    private void hideLayout()
+    {
+        approvedListRecyclerView.setVisibility(View.GONE);
+        notFoundLayout.setVisibility(View.VISIBLE);
+        notFoundText.setText("CLICK SEARCH ICON TO ADD MEDICINE");
+        notFoundIcon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.running_icon));
+
+    }
+    private Flowable<List<OrderModel>> dataFromNetwork(final int page) {
+        return Flowable.just(true)
+                .delay(1, TimeUnit.SECONDS)
+                .map(new Function<Boolean, List<OrderModel>>() {
+                    @Override
+                    public List<OrderModel> apply(@NonNull Boolean value) throws Exception {
+                        int val = page*30;
+                        pageWithSelectedItemsSize = val;
+                        String pharmacyLocalId =  userPreferences.getAgentSelectedPharmacyId();
+                        OrderDAO orderDAO = new OrderDAO(getContext());
+                        List<OrderModel> orderModelList =orderDAO.getOrderDataPagination("approved",pharmacyLocalId,val);
+                        orderListSize = orderModelList.size();
+                        Collections.reverse(orderModelList);
+                        if(totalItemCount==orderListSize){
+                            isLastPage = true;
+                        }
+                        return orderModelList;
+                    }
+                });
+    }
+
+
+
+
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i("tag","yes its called");
-            inflateData();
-
+          //  inflateData();
+            subscribeForData();
         }
     };
 
@@ -122,7 +274,8 @@ public class AgentApprovedListFragment  extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        inflateData();
+     //   inflateData();
+        subscribeForData();
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,new IntentFilter("product_status_approved"));
 
     }

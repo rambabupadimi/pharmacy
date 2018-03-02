@@ -10,7 +10,8 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
-      android:gravity="center_vertical">
+      android:gravity="center_vertical"
+      android:padding="6dp">
     <com.makeramen.roundedimageview.RoundedImageView
         android:layout_width="42dp"
         android:layout_height="42dp"
@@ -22,19 +23,52 @@
        app:riv_corner_radius="12dp"
         />
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
     <com.pharmacy.RobotoTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="L-Pharmacy"
         android:paddingLeft="6dp"
         android:paddingRight="6dp"
-        android:paddingTop="24dp"
-        android:paddingBottom="24dp"
         app:typeface ="robotoMedium"
-        android:layout_weight="1"
         android:textColor="@color/colorBlack"
         android:id="@+id/apl_adapter_name"/>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:paddingLeft="6dp"
+          android:paddingRight="6dp"
+          android:gravity="center_vertical"
+          android:layout_marginTop="6dp"
+          android:id="@+id/apl_rl_layout"
+          android:visibility="gone">
 
+        <ImageView
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/done"
+
+            />
+        <com.pharmacy.RobotoTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+
+            android:textSize="12sp"
+            app:typeface="robotoMedium"
+            android:id="@+id/apl_rl_count"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginLeft="2dp"
+            />
+      </LinearLayout>
+
+    </LinearLayout>
       <ImageView
           android:layout_width="32dp"
           android:layout_height="32dp"

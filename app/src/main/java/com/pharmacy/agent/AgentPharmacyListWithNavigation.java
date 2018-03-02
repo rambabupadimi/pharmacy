@@ -54,7 +54,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AgentPharmacyListWithNavigation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener , AppConstants{
@@ -85,6 +84,7 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
 
 
     SwipeRefreshLayout swipeRefreshLayout;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +101,10 @@ public class AgentPharmacyListWithNavigation extends AppCompatActivity
         refreshList();
         initialiseAdapterData();
 
+
+
     }
+
 
     private void initialiseDisplayListType()
     {

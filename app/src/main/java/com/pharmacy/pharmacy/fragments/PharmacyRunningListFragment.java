@@ -121,7 +121,7 @@ public class PharmacyRunningListFragment extends Fragment {
     private void initialiseObjects()
     {
         gson    =   new Gson();
-        searchProductListAdapter    =   new SearchProductListAdapter(getContext(),searchProductList);
+        searchProductListAdapter    =   new SearchProductListAdapter(getContext(),searchProductList,PharmacyRunningListFragment.this);
         userPreferences =   new UserPreferences(getContext());
     }
 

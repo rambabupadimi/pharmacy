@@ -55,12 +55,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -611,6 +614,27 @@ public class CommonMethods implements AppConstants {
     }
 
     public static String getConvertedTime(String currentDate) {
+        Log.i("tag","current date"+currentDate);
+
         return currentDate.split("-")[2] + " " + new DateFormatSymbols().getMonths()[Integer.parseInt(currentDate.split("-")[1]) - 1] + " " + currentDate.split("-")[0];
+    }
+
+    public String getOnlyTime(String dateTime)
+    {
+        String dateStr  = dateTime;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("PST"));
+
+        try {
+            Date date = simpleDateFormat.parse(dateStr);
+            SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("hh:mm a");
+            dateStr = simpleDateFormat1.format(date);
+            Log.i("tag","date value is"+dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return dateStr;
+
+
     }
 }

@@ -30,6 +30,7 @@
             />
 
 
+
         <com.pharmacy.RobotoTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,6 +40,31 @@
             app:typeface ="robotoMedium"
             android:textColor="@color/colorBlack"
             android:id="@+id/apl_adapter_name"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/apl_rl_layout"
+                android:visibility="gone"
+                android:layout_alignParentRight="true">
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/done"
+                    android:layout_gravity="center"/>
+                <com.pharmacy.RobotoTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="12sp"
+                    app:typeface="robotoMedium"
+                    android:id="@+id/apl_rl_count"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_marginLeft="2dp"
+                    />
+            </LinearLayout>
 
             <ImageView
                 android:layout_width="32dp"

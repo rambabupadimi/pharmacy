@@ -1,10 +1,12 @@
 package com.pharmacy.db.models;
 
+import java.io.Serializable;
+
 /**
  * Created by PCCS-0007 on 09-Feb-18.
  */
 
-public class OrderModel {
+public class OrderModel implements Serializable {
 
     public String DistributorID;
     public String PharmacyID;

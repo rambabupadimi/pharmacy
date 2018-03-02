@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.pharmacy.CommonMethods;
 import com.pharmacy.R;
+import com.pharmacy.ViewProductDetailsBottomSheet;
 import com.pharmacy.agent.fragments.AgentApprovedListFragment;
 import com.pharmacy.agent.fragments.AgentDeliveredListFragment;
 import com.pharmacy.agent.fragments.AgentRunningListFragment;
@@ -311,7 +313,15 @@ public class AgentRunningList extends AppCompatActivity {
 
 
 
-
+    public void showProductDetailsBottomSheet(OrderModel orderModel,String from)
+    {
+        BottomSheetDialogFragment bottomSheetDialogFragment = new ViewProductDetailsBottomSheet();
+        bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+        Bundle bundle = new Bundle(1);
+        bundle.putSerializable("object", orderModel);
+        bundle.putString("from",from);
+        bottomSheetDialogFragment.setArguments(bundle);
+    }
 
 
 }

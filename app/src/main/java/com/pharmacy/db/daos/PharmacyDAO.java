@@ -135,7 +135,21 @@ public class PharmacyDAO  extends AbstractDAO{
                 {
                     do {
 
+
                         PharmacyModel pharmacyModel = new PharmacyModel();
+                       try {
+                            int valIs=0;
+                            String pharmacyID = cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_ID));
+                            String query1 = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+valIs+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyID+" ";
+                            Cursor cursor1 = db.rawQuery(query1,null);
+                            if(cursor1!=null)
+                            {
+                                pharmacyModel.PharmacyRunningListCount = cursor1.getCount();
+                            }
+                       }catch (Exception e)
+                       {
+                           e.printStackTrace();
+                       }
 
                         if (cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_NAME)) != null) {
                             pharmacyModel.StoreName = cursor.getString(cursor.getColumnIndex(COLUMN_PHARMACY_NAME));

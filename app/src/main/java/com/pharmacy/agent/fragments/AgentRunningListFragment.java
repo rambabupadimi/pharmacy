@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.pharmacy.CommonMethods;
 import com.pharmacy.R;
+import com.pharmacy.ViewProductDetailsBottomSheet;
 import com.pharmacy.adapters.SearchProductListAdapter;
 import com.pharmacy.agent.adapters.AgentCommonListAdapter;
 import com.pharmacy.db.daos.OrderDAO;
@@ -100,7 +102,7 @@ public class AgentRunningListFragment extends Fragment {
 
     public AgentRunningListFragment()
     {
-            }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
@@ -163,9 +165,9 @@ public class AgentRunningListFragment extends Fragment {
                        }
                        else
                        {
+
                            progressBar.setVisibility(View.VISIBLE);
                        }
-
 
                         return dataFromNetwork(page);
                     }
@@ -188,6 +190,7 @@ public class AgentRunningListFragment extends Fragment {
                     }
                 });
 
+        compositeDisposable.clear();
         compositeDisposable.add(disposable);
 
         paginator.onNext(pageNumber);
@@ -211,7 +214,7 @@ public class AgentRunningListFragment extends Fragment {
     }
     private Flowable<List<OrderModel>> dataFromNetwork(final int page) {
         return Flowable.just(true)
-                .delay(1, TimeUnit.SECONDS)
+                //.delay(1, TimeUnit.SECONDS)
                 .map(new Function<Boolean, List<OrderModel>>() {
                     @Override
                     public List<OrderModel> apply(@NonNull Boolean value) throws Exception {
@@ -221,7 +224,7 @@ public class AgentRunningListFragment extends Fragment {
                         OrderDAO orderDAO = new OrderDAO(getContext());
                         List<OrderModel> orderModelList =orderDAO.getOrderDataPagination("running",pharmacyLocalId,val);
                          orderListSize = orderModelList.size();
-                        Collections.reverse(orderModelList);
+                        //Collections.reverse(orderModelList);
                         if(totalItemCount==orderListSize){
                             isLastPage = true;
                         }
@@ -241,37 +244,11 @@ public class AgentRunningListFragment extends Fragment {
 
     }
 
-    private void inflateData()
-    {
-
-         String pharmacyLocalId =  userPreferences.getAgentSelectedPharmacyId();
-
-        OrderDAO orderDAO = new OrderDAO(getContext());
-        List<OrderModel> orderModelList =orderDAO.getOrderData("running",pharmacyLocalId);
-        if(orderModelList!=null && orderModelList.size()>0) {
-            notFoundLayout.setVisibility(View.GONE);
-            runningListLayoutManager = new LinearLayoutManager(getContext());
-            runningListRecyclerView.setLayoutManager(runningListLayoutManager);
-            Collections.reverse(orderModelList);
-            runningList.clear();
-            runningList.addAll(orderModelList);
-            runningListRecyclerView.setAdapter(agentCommonListAdapter);
-            agentCommonListAdapter.notifyDataSetChanged();
-        }
-        else
-        {
-            notFoundLayout.setVisibility(View.VISIBLE);
-            notFoundText.setText("CLICK SEARCH ICON TO ADD MEDICINE");
-            notFoundIcon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.running_icon));
-        }
-
-    }
-
 
     private void initialiseObjects()
     {
         gson    =   new Gson();
-        searchProductListAdapter    =   new SearchProductListAdapter(getContext(),searchProductList);
+        searchProductListAdapter    =   new SearchProductListAdapter(getContext(),searchProductList,AgentRunningListFragment.this);
         userPreferences =   new UserPreferences(getContext());
     }
 
@@ -477,10 +454,7 @@ public class AgentRunningListFragment extends Fragment {
     public void onResume() {
         super.onResume();
       // inflateData();
-
         subscribeForData();
-
-
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver,new IntentFilter("product_status_running"));
 
     }
@@ -498,4 +472,18 @@ public class AgentRunningListFragment extends Fragment {
 
         }
     }
+
+
+    public void closeListAndKeyboard()
+    {
+        searchCardView.setVisibility(View.GONE);
+        afrlSearchView.setQuery("", false);
+        afrlSearchView.clearFocus();
+
+        InputMethodManager mgr = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.hideSoftInputFromWindow(afrlSearchView.getWindowToken(), 0);
+    }
+
+
+
 }

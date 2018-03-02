@@ -1,9 +1,12 @@
 package com.pharmacy.agent.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.pharmacy.CommonMethods;
 import com.pharmacy.R;
+import com.pharmacy.agent.AgentRunningList;
 import com.pharmacy.db.models.OrderModel;
 
 import java.util.ArrayList;
@@ -32,12 +36,14 @@ public class AgentCommonListAdapter extends RecyclerView.Adapter<AgentCommonList
     ArrayList<OrderModel> productModelArrayList;
     Gson gson;
     String from;
+    CommonMethods commonMethods;
     public AgentCommonListAdapter(Context context, ArrayList<OrderModel> productModelArrayList,String from) {
 
         this.context    =   context;
         this.productModelArrayList =   productModelArrayList;
         gson    = new Gson();
         this.from = from;
+        commonMethods   =   new CommonMethods();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -54,7 +60,9 @@ public class AgentCommonListAdapter extends RecyclerView.Adapter<AgentCommonList
         TextView pharmacyTitle,pharmacyQuantity;
         ImageView done,doneAll,doneAllColor;
         LinearLayout dateTimeLayout;
-        TextView dateTimeLayoutTextView;
+        TextView dateTimeLayoutTextView,productType,productCreatedTime;
+        LinearLayout parentLayout;
+
          @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
          public MyViewHolder(View view) {
             super(view);
@@ -65,6 +73,11 @@ public class AgentCommonListAdapter extends RecyclerView.Adapter<AgentCommonList
             doneAllColor        =   view.findViewById(R.id.done_all_color);
             dateTimeLayout      =   view.findViewById(R.id.date_time_layout);
             dateTimeLayoutTextView  =   view.findViewById(R.id.date_time_layout_textview);
+            productType         =   view.findViewById(R.id.pharmacy_list_product_type);
+            productCreatedTime  =   view.findViewById(R.id.pharmacy_list_created_time);
+
+            parentLayout        =   view.findViewById(R.id.parent_layout);
+
 
             if(from.toString().equalsIgnoreCase("running_list"))
             {
@@ -83,10 +96,25 @@ public class AgentCommonListAdapter extends RecyclerView.Adapter<AgentCommonList
 
     @Override
     public void onBindViewHolder(final AgentCommonListAdapter.MyViewHolder holder, final int position) {
-       OrderModel orderModel = productModelArrayList.get(position);
+       final OrderModel orderModel = productModelArrayList.get(position);
         holder.pharmacyTitle.setText(orderModel.ProductName);
         holder.pharmacyQuantity.setText(""+orderModel.Quantity);
+        if(orderModel.ProductType!=null && orderModel.ProductType.toString().length()>0) {
+            holder.productType.setText(orderModel.ProductType+" - ");
+            holder.productType.setVisibility(View.VISIBLE);
+        } else {
+            holder.productType.setVisibility(View.GONE);
+        }
         showDateAndTimeLayout(holder,productModelArrayList,position);
+
+        holder.productCreatedTime.setText(commonMethods.getOnlyTime(orderModel.CreatedDate));
+
+        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((AgentRunningList) context).showProductDetailsBottomSheet(orderModel,from);
+            }
+        });
 
     }
 

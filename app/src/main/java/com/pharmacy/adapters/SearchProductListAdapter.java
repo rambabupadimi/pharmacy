@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.pharmacy.R;
 import com.pharmacy.ShowProductQuantityDialog;
+import com.pharmacy.agent.fragments.AgentRunningListFragment;
 import com.pharmacy.models.ProductModel;
 
 import java.util.ArrayList;
@@ -38,11 +40,13 @@ public class SearchProductListAdapter extends RecyclerView.Adapter<SearchProduct
     Context context;
     ArrayList<ProductModel> productModelArrayList;
     Gson gson;
-    public SearchProductListAdapter(Context context, ArrayList<ProductModel> productModelArrayList) {
+    Fragment fragment;
+    public SearchProductListAdapter(Context context, ArrayList<ProductModel> productModelArrayList,Fragment agentRunningListFragment) {
 
         this.context    =   context;
         this.productModelArrayList =   productModelArrayList;
         gson    = new Gson();
+        this.fragment = agentRunningListFragment;
     }
 
     @Override
@@ -78,12 +82,11 @@ public class SearchProductListAdapter extends RecyclerView.Adapter<SearchProduct
                 @Override
                 public void onClick(View v) {
                     intent.putExtra("product_model",gson.toJson(productModel));
-                    Pair[] pairs = new Pair[1];
-                    pairs[0]    =  new  Pair<View,String>(holder.spProductName,"product_name");
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+
+                    if(fragment instanceof AgentRunningListFragment)
+                        ((AgentRunningListFragment) fragment).closeListAndKeyboard();
 
                     Bundle bndlanimation = ActivityOptions.makeCustomAnimation(context, R.anim.fade_in, R.anim.fade_out).toBundle();
-
                     context.startActivity(intent,bndlanimation);
 
                 }

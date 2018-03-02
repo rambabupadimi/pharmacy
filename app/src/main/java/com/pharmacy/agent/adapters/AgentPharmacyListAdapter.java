@@ -62,11 +62,12 @@ public class AgentPharmacyListAdapter extends RecyclerView.Adapter<AgentPharmacy
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView aplAdapterName;
+        TextView aplAdapterName,rlCount;
         LinearLayout aplParentLayout;
         ImageView approvedIcon;
 
         RoundedImageView pharmacyImage;
+        LinearLayout aplRlLayout;
 
         public MyViewHolder(View view) {
             super(view);
@@ -74,6 +75,9 @@ public class AgentPharmacyListAdapter extends RecyclerView.Adapter<AgentPharmacy
             aplParentLayout  =   view.findViewById(R.id.apl_parent_layout);
             approvedIcon     =  view.findViewById(R.id.apl_approved_icon);
             pharmacyImage   =   view.findViewById(R.id.pharmacy_image);
+            rlCount         =   view.findViewById(R.id.apl_rl_count);
+            aplRlLayout     =   view.findViewById(R.id.apl_rl_layout);
+
         }
 
     }
@@ -113,6 +117,15 @@ public class AgentPharmacyListAdapter extends RecyclerView.Adapter<AgentPharmacy
             holder.approvedIcon.setVisibility(View.VISIBLE);
         }
 
+        if(pharmacyModel.PharmacyRunningListCount>0)
+        {
+            holder.aplRlLayout.setVisibility(View.VISIBLE);
+           holder.rlCount.setText(""+pharmacyModel.PharmacyRunningListCount);
+        }
+        else
+        {
+            holder.aplRlLayout.setVisibility(View.GONE);
+        }
 
         try {
             if (pharmacyModel.ImageLocalPath != null && pharmacyModel.ImageLocalPath.toString().length() > 0) {

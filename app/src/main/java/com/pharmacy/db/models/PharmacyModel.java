@@ -57,4 +57,6 @@ public class PharmacyModel {
     public ArrayList<PharmacyModel> PharmacyList;
     public ArrayList<OrderModel> RunningList;
 
+
+    public int PharmacyRunningListCount;
 }

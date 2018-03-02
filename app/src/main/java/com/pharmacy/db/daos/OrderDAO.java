@@ -293,20 +293,20 @@ public class OrderDAO  extends AbstractDAO{
                 if(pharmacyId==null)
                     query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+valIs+ " AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" LIMIT "+row;
                 else
-                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+valIs+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+" LIMIT "+row;
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+valIs+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+" ORDER BY "+COLUMN_ORDER_IS_RUNNING_DATE+" DESC LIMIT "+row;
             }
             else if(from.equalsIgnoreCase("approved")){
                 if(pharmacyId==null)
-                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+val+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs;
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+val+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" LIMIT "+row;
                 else
-                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+val+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+"  ";
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_APPROVED+" = "+val+" AND "+COLUMN_ORDER_IS_DELIVERED+" = "+valIs+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+" LIMIT "+row;
 
             }
             else if(from.equalsIgnoreCase("delivered")){
                 if(pharmacyId==null)
-                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_DELIVERED+" = "+val;
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_DELIVERED+" = "+val+" LIMIT "+row;
                 else
-                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_DELIVERED+" = "+val+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+" ";
+                    query = " SELECT  * FROM " + TABLE_ORDERS + "  WHERE " +COLUMN_ORDER_IS_DELIVERED+" = "+val+" AND "+COLUMN_PHARMACY_ID+" ="+pharmacyId+" LIMIT "+row;
 
             }
             Cursor cursor = db.rawQuery(query,null);
